@@ -46,6 +46,11 @@
               ],
               "outputHashing": "all"
             },
+            "local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -62,6 +67,9 @@
             },
             "development": {
               "buildTarget": "angular-app:build:development"
+            },
+            "local": {
+              "buildTarget": "angular-app:build:local"
             }
           },
           "defaultConfiguration": "development"

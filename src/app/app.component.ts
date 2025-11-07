@@ -1,47 +1,55 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, inject, signal, effect } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
-import { CommonModule } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { client } from '../sdk/api/client.gen'
 import { getMyCharactersMyCharactersGet } from '../sdk/api'
-import { environment } from '../environments/environment'
+import { environmentLocal } from '../environments/environment.local'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'angular-app'
-  characters: any[] = []
-  loading = true
-  error: string | null = null
+
+  // Reactive state using signals
+  characters = signal<any[]>([])
+  loading = signal(true)
+  error = signal<string | null>(null)
 
   private httpClient = inject(HttpClient)
 
-  async ngOnInit() {
-    try {
-      this.loading = true
+  constructor() {
+    // Configure client on initialization
+    client.setConfig({
+      baseUrl: 'https://api.artifactsmmo.com',
+      httpClient: this.httpClient,
+      headers: {
+        Authorization: `Bearer ${environmentLocal.token}`,
+      },
+    })
 
-      client.setConfig({
-        baseUrl: 'https://api.artifactsmmo.com',
-        httpClient: this.httpClient,
-        headers: {
-          Authorization: `Bearer ${environment.token}`,
-        },
-      })
+    // Load characters
+    this.loadCharacters()
+  }
+
+  private async loadCharacters() {
+    try {
+      this.loading.set(true)
+      this.error.set(null)
 
       const response = await getMyCharactersMyCharactersGet()
       if (response && 'data' in response) {
-        this.characters = (response.data as any)?.data || []
+        this.characters.set((response.data as any)?.data || [])
       }
     } catch (err: any) {
-      this.error = err?.message || 'Failed to load characters'
+      this.error.set(err?.message || 'Failed to load characters')
       console.error('Error loading characters:', err)
     } finally {
-      this.loading = false
+      this.loading.set(false)
     }
   }
 }
