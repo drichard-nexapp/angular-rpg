@@ -1,0 +1,74 @@
+<main class="main">
+  <div class="content">
+    <h1>Maps</h1>
+
+    @if (loading()) {
+      <div class="loading">
+        Loading maps...
+      </div>
+    }
+
+    @if (error()) {
+      <div class="error">
+        {{ error() }}
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      @for (layer of layers(); track layer.name) {
+        <section class="layer-section">
+          <h2>{{ layer.name }}</h2>
+          <div class="map-container">
+            <div class="map-grid">
+              @for (row of layer.grid; track $index) {
+                <div class="map-row">
+                  @for (tile of row; track $index) {
+                    @if (tile) {
+                      <div
+                        class="map-tile"
+                        [class.clickable]="
+                          selectedCharacter() &&
+                          !isCharacterOnCooldown(selectedCharacter())
+                        "
+                        [class.has-character]="hasCharacter(tile)"
+                        [style.background-color]="getSkinColor(tile.skin)"
+                        (click)="onTileClick(tile)">
+                        @if (hasCharacter(tile)) {
+                          <div class="character-marker">
+                            {{ getCharacterOnTile(tile)?.name }}
+                          </div>
+                        } @else {
+                          <div class="tile-code">{{ tile.skin || '' }}</div>
+                          <div class="tile-name">{{ tile.name || '' }}</div>
+                        }
+                      </div>
+                    } @else {
+                      <div class="map-tile empty"></div>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </section>
+      }
+    }
+
+    <div class="characters-layer">
+      @for (character of characters(); track character.name) {
+        <div
+          class="character"
+          [class.selected]="isSelected(character)"
+          [class.on-cooldown]="isCharacterOnCooldown(character)"
+          (click)="selectCharacter(character)">
+          <div class="character-name">{{ character.name }}</div>
+          @if (isCharacterOnCooldown(character)) {
+            <div class="cooldown-indicator">
+              {{ getCharacterCooldown(character.name)?.remainingSeconds }}s
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</main>
