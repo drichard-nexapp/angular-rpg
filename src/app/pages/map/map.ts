@@ -3,6 +3,10 @@ import {
   getLayerMapsMapsLayerGet,
   getMyCharactersMyCharactersGet,
   actionMoveMyNameActionMovePost,
+  actionRestMyNameActionRestPost,
+  getMapByPositionMapsLayerXYGet,
+  actionFightMyNameActionFightPost,
+  actionGatheringMyNameActionGatheringPost,
 } from '../../../sdk/api'
 import mapSkins from '../../../assets/map-skins.json'
 
@@ -23,10 +27,13 @@ export class Map implements OnInit, OnDestroy {
   characters = signal<any[]>([])
   selectedCharacter = signal<any | null>(null)
   characterCooldowns = signal<Record<string, any>>({})
+  currentTileDetails = signal<any | null>(null)
+  fightResult = signal<any | null>(null)
   loading = signal(true)
   error = signal<string | null>(null)
   skinColors: Record<string, string> = {}
   private cooldownIntervals: Record<string, any> = {}
+  private fightResultTimeout: any = null
 
   ngOnInit() {
     this.initializeSkinColors()
@@ -129,11 +136,128 @@ export class Map implements OnInit, OnDestroy {
     return this.skinColors[skin] || '#e0e0e0'
   }
 
+  getTileAscii(tile: any): string {
+    if (!tile) return '   '
+
+    const skin = tile.skin?.toLowerCase() || ''
+
+    // Forest tiles
+    if (skin.includes('forest')) {
+      if (skin.includes('tree')) return ' T '
+      if (skin.includes('road')) return '==='
+      if (skin.includes('village')) return ' H '
+      if (skin.includes('bank')) return ' $ '
+      return ' * '
+    }
+
+    // Water tiles
+    if (
+      skin.includes('water') ||
+      skin.includes('lake') ||
+      skin.includes('coastline') ||
+      skin.includes('sea')
+    ) {
+      return '~~~'
+    }
+
+    // Desert tiles
+    if (skin.includes('desert')) {
+      return '...'
+    }
+
+    // Mountain tiles
+    if (skin.includes('mountain')) {
+      return '/^\\'
+    }
+
+    return ':::'
+  }
+
+  getMonsterEmoji(tile: any): string | null {
+    if (!tile || !tile.interactions.content) return null
+
+    const content = tile.interactions.content
+    if (content.type !== 'monster') return null
+
+    const code = content.code?.toLowerCase() || ''
+
+    // Map monster codes to emojis
+    if (code.includes('slime')) {
+      if (code.includes('blue')) return '🔵'
+      if (code.includes('green')) return '🟢'
+      if (code.includes('red')) return '🔴'
+      if (code.includes('yellow')) return '🟡'
+      if (code.includes('king')) return '👑'
+      return '🟣'
+    }
+    if (code.includes('chicken')) return '🐔'
+    if (code.includes('cow')) return '🐄'
+    if (code.includes('pig')) return '🐷'
+    if (code.includes('sheep')) return '🐑'
+    if (code.includes('wolf')) return '🐺'
+    if (code.includes('spider')) return '🕷️'
+    if (code.includes('skeleton')) return '💀'
+    if (code.includes('goblin')) return '👺'
+    if (code.includes('orc')) return '🧟'
+    if (code.includes('ogre')) return '👹'
+    if (code.includes('cyclops')) return '👁️'
+    if (code.includes('dragon')) return '🐉'
+    if (code.includes('serpent')) return '🐍'
+    if (code.includes('bat')) return '🦇'
+    if (code.includes('rat')) return '🐀'
+    if (code.includes('bear')) return '🐻'
+    if (code.includes('owlbear')) return '🦉'
+    if (code.includes('imp')) return '😈'
+    if (code.includes('demon')) return '👿'
+    if (code.includes('hellhound')) return '🔥'
+    if (code.includes('cultist')) return '🧙'
+    if (code.includes('highwayman')) return '🗡️'
+
+    return '👾'
+  }
+
+  hasNpcInteraction(tile: any): boolean {
+    if (!tile || !tile.interactions || !tile.interactions.content) return false
+    return tile.interactions.content.type === 'npc'
+  }
+
+  hasResourceInteraction(tile: any): boolean {
+    if (!tile || !tile.interactions || !tile.interactions.content) return false
+    return tile.interactions.content.type === 'resource'
+  }
+
   selectCharacter(character: any) {
     if (this.selectedCharacter() === character) {
       this.selectedCharacter.set(null)
+      this.currentTileDetails.set(null)
     } else {
       this.selectedCharacter.set(character)
+      this.loadCurrentTileDetails(character)
+    }
+  }
+
+  private async loadCurrentTileDetails(character: any) {
+    if (!character) {
+      this.currentTileDetails.set(null)
+      return
+    }
+
+    try {
+      const response = await getMapByPositionMapsLayerXYGet({
+        // @ts-ignore
+        path: {
+          layer: 'overworld',
+          x: character.x,
+          y: character.y,
+        },
+      })
+
+      if (response && 'data' in response) {
+        this.currentTileDetails.set((response.data as any)?.data || null)
+      }
+    } catch (err) {
+      console.error('Error loading tile details:', err)
+      this.currentTileDetails.set(null)
     }
   }
 
@@ -142,8 +266,15 @@ export class Map implements OnInit, OnDestroy {
   }
 
   async onTileClick(tile: any) {
+    if (!tile) return
+
     const selected = this.selectedCharacter()
-    if (!selected || !tile) return
+
+    // If no character selected, just load tile details
+    if (!selected) {
+      this.loadTileDetailsAtPosition(tile.x, tile.y)
+      return
+    }
 
     // Don't allow moving if character is on cooldown
     if (this.isCharacterOnCooldown(selected)) {
@@ -167,6 +298,8 @@ export class Map implements OnInit, OnDestroy {
             c.name === selected.name ? { ...character } : c,
           )
           this.characters.set(chars)
+          this.selectedCharacter.set(character)
+          this.loadCurrentTileDetails(character)
         }
 
         // Update cooldown
@@ -177,6 +310,30 @@ export class Map implements OnInit, OnDestroy {
     } catch (err) {
       console.error('Error moving character:', err)
     }
+  }
+
+  private async loadTileDetailsAtPosition(x: number, y: number) {
+    try {
+      const response = await getMapByPositionMapsLayerXYGet({
+        // @ts-ignore
+        path: {
+          layer: 'overworld',
+          x: x,
+          y: y,
+        },
+      })
+
+      if (response && 'data' in response) {
+        this.currentTileDetails.set((response.data as any)?.data || null)
+      }
+    } catch (err) {
+      console.error('Error loading tile details:', err)
+      this.currentTileDetails.set(null)
+    }
+  }
+
+  closeTileDetails() {
+    this.currentTileDetails.set(null)
   }
 
   updateCharacterCooldown(characterName: string, cooldown: any) {
@@ -224,6 +381,166 @@ export class Map implements OnInit, OnDestroy {
     return !!this.characterCooldowns()[character.name]
   }
 
+  isCharacterHpFull(character: any): boolean {
+    if (!character) return false
+    return character.hp >= character.max_hp
+  }
+
+  async restCharacter() {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    // Don't allow resting if character is on cooldown
+    if (this.isCharacterOnCooldown(selected)) {
+      return
+    }
+
+    try {
+      const response = await actionRestMyNameActionRestPost({
+        path: { name: selected.name },
+      })
+
+      // Update character and cooldown from response
+      if (response && 'data' in response) {
+        const data = response.data as any
+        const character = data.character
+        const cooldown = data.cooldown
+
+        // Update character in the list
+        if (character) {
+          const chars = this.characters().map((c) =>
+            c.name === selected.name ? { ...character } : c,
+          )
+          this.characters.set(chars)
+        }
+
+        // Update cooldown
+        if (cooldown) {
+          this.updateCharacterCooldown(selected.name, cooldown)
+        }
+      }
+    } catch (err) {
+      console.error('Error resting character:', err)
+    }
+  }
+
+  async fightMonster() {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    // Don't allow fighting if character is on cooldown
+    if (this.isCharacterOnCooldown(selected)) {
+      return
+    }
+
+    try {
+      const response = await actionFightMyNameActionFightPost({
+        path: { name: selected.name },
+      })
+
+      // Update character and cooldown from response
+      if (response && 'data' in response) {
+        const data = response.data as any
+        const character = data.character
+        const cooldown = data.cooldown
+        const fight = data.fight
+
+        // Update character in the list
+        if (character) {
+          const chars = this.characters().map((c) =>
+            c.name === selected.name ? { ...character } : c,
+          )
+          this.characters.set(chars)
+          this.selectedCharacter.set(character)
+        }
+
+        // Update cooldown
+        if (cooldown) {
+          this.updateCharacterCooldown(selected.name, cooldown)
+        }
+
+        // Show fight result if it was a win
+        if (fight && fight.result === 'win') {
+          this.showFightResult({
+            result: fight.result,
+            xp: fight.xp,
+            gold: fight.gold,
+            drops: fight.drops || [],
+            character: character,
+          })
+        }
+
+        // Reload tile details to see if monster is defeated
+        this.loadCurrentTileDetails(character)
+      }
+    } catch (err) {
+      console.error('Error fighting monster:', err)
+    }
+  }
+
+  showFightResult(result: any) {
+    // Clear existing timeout if any
+    if (this.fightResultTimeout) {
+      clearTimeout(this.fightResultTimeout)
+    }
+
+    this.fightResult.set(result)
+
+    // Auto-hide after 8 seconds
+    this.fightResultTimeout = setTimeout(() => {
+      this.fightResult.set(null)
+    }, 8000)
+  }
+
+  closeFightResult() {
+    if (this.fightResultTimeout) {
+      clearTimeout(this.fightResultTimeout)
+    }
+    this.fightResult.set(null)
+  }
+
+  async gatherResource() {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    // Don't allow gathering if character is on cooldown
+    if (this.isCharacterOnCooldown(selected)) {
+      return
+    }
+
+    try {
+      const response = await actionGatheringMyNameActionGatheringPost({
+        path: { name: selected.name },
+      })
+
+      // Update character and cooldown from response
+      if (response && 'data' in response) {
+        const data = response.data as any
+        const character = data.character
+        const cooldown = data.cooldown
+
+        // Update character in the list
+        if (character) {
+          const chars = this.characters().map((c) =>
+            c.name === selected.name ? { ...character } : c,
+          )
+          this.characters.set(chars)
+          this.selectedCharacter.set(character)
+        }
+
+        // Update cooldown
+        if (cooldown) {
+          this.updateCharacterCooldown(selected.name, cooldown)
+        }
+
+        // Reload tile details to see if resource is depleted
+        this.loadCurrentTileDetails(character)
+      }
+    } catch (err) {
+      console.error('Error gathering resource:', err)
+    }
+  }
+
   hasCharacter(tile: any): boolean {
     if (!tile) return false
     return this.characters().some(
@@ -245,5 +562,10 @@ export class Map implements OnInit, OnDestroy {
     Object.values(this.cooldownIntervals).forEach((interval) =>
       clearInterval(interval),
     )
+
+    // Clean up fight result timeout
+    if (this.fightResultTimeout) {
+      clearTimeout(this.fightResultTimeout)
+    }
   }
 }

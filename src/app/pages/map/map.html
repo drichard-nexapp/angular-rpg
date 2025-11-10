@@ -14,7 +14,118 @@
       </div>
     }
 
+    @if (fightResult()) {
+      <div class="fight-result-toast">
+        <div class="toast-header">
+          <h3>Victory!</h3>
+          <button class="close-button" (click)="closeFightResult()">×</button>
+        </div>
+        <div class="toast-content">
+          <div class="result-item">
+            <strong>XP Gained:</strong> {{ fightResult().xp }}
+          </div>
+          <div class="result-item">
+            <strong>Gold Gained:</strong> {{ fightResult().gold }}
+          </div>
+          @if (fightResult().drops && fightResult().drops.length > 0) {
+            <div class="result-item drops-section">
+              <strong>Drops:</strong>
+              <div class="drops-list">
+                @for (drop of fightResult().drops; track $index) {
+                  <div class="drop-item">
+                    {{ drop.code }} (x{{ drop.quantity }})
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          <div class="character-stats">
+            <h4>Character Status</h4>
+            <div class="stat-item">
+              <strong>Level:</strong> {{ fightResult().character.level }}
+            </div>
+            <div class="stat-item">
+              <strong>XP:</strong> {{ fightResult().character.xp }} / {{
+                fightResult().character.max_xp
+              }}
+            </div>
+            <div class="stat-item">
+              <strong>Gold:</strong> {{ fightResult().character.gold }}
+            </div>
+            <div class="stat-item">
+              <strong>HP:</strong> {{ fightResult().character.hp }} / {{
+                fightResult().character.max_hp
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     @if (!loading() && !error()) {
+      @if (currentTileDetails()) {
+        <div class="tile-details-popup">
+          <div class="tile-details-header">
+            <h3>Tile Details</h3>
+            <button
+              class="close-button tile-close"
+              (click)="closeTileDetails()">
+              ×
+            </button>
+          </div>
+          <div class="tile-detail-item">
+            <strong>Position:</strong> ({{ currentTileDetails().x }}, {{
+              currentTileDetails().y
+            }})
+          </div>
+          <div class="tile-detail-item">
+            <strong>Skin:</strong> {{ currentTileDetails().skin }}
+          </div>
+          @if (
+            currentTileDetails().interactions &&
+            currentTileDetails().interactions.content
+          ) {
+            <div class="interactions-section">
+              <strong>Interaction:</strong>
+              <div class="interaction-item">
+                <div class="interaction-type">
+                  {{ currentTileDetails().interactions.content.type }}
+                </div>
+                <div class="interaction-code">
+                  {{ currentTileDetails().interactions.content.code }}
+                </div>
+                @if (
+                  currentTileDetails().interactions.content.type === 'monster'
+                ) {
+                  <button
+                    class="fight-button"
+                    [disabled]="
+                      !selectedCharacter() ||
+                      isCharacterOnCooldown(selectedCharacter())
+                    "
+                    (click)="fightMonster()">
+                    Fight
+                  </button>
+                }
+                @if (
+                  currentTileDetails().interactions.content.type === 'resource'
+                ) {
+                  <button
+                    class="gather-button"
+                    [disabled]="
+                      !selectedCharacter() ||
+                      isCharacterOnCooldown(selectedCharacter())
+                    "
+                    (click)="gatherResource()">
+                    Gather
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
       @for (layer of layers(); track layer.name) {
         <section class="layer-section">
           <h2>{{ layer.name }}</h2>
@@ -25,21 +136,22 @@
                   @for (tile of row; track $index) {
                     @if (tile) {
                       <div
-                        class="map-tile"
-                        [class.clickable]="
-                          selectedCharacter() &&
-                          !isCharacterOnCooldown(selectedCharacter())
-                        "
+                        class="map-tile ascii clickable"
                         [class.has-character]="hasCharacter(tile)"
                         [style.background-color]="getSkinColor(tile.skin)"
                         (click)="onTileClick(tile)">
                         @if (hasCharacter(tile)) {
-                          <div class="character-marker">
-                            {{ getCharacterOnTile(tile)?.name }}
+                          <div class="character-marker-ascii">@</div>
+                        } @else if (getMonsterEmoji(tile)) {
+                          <div class="monster-emoji">
+                            {{ getMonsterEmoji(tile) }}
                           </div>
+                        } @else if (hasNpcInteraction(tile)) {
+                          <div class="npc-marker">!</div>
+                        } @else if (hasResourceInteraction(tile)) {
+                          <div class="resource-marker">💎</div>
                         } @else {
-                          <div class="tile-code">{{ tile.skin || '' }}</div>
-                          <div class="tile-name">{{ tile.name || '' }}</div>
+                          <div class="tile-ascii">{{ getTileAscii(tile) }}</div>
                         }
                       </div>
                     } @else {
@@ -62,12 +174,31 @@
           [class.on-cooldown]="isCharacterOnCooldown(character)"
           (click)="selectCharacter(character)">
           <div class="character-name">{{ character.name }}</div>
+          <div class="character-stats-inline">
+            <div class="stat-inline">
+              HP: {{ character.hp }}/{{ character.max_hp }}
+            </div>
+            <div class="stat-inline">
+              XP: {{ character.xp }}/{{ character.max_xp }}
+            </div>
+          </div>
           @if (isCharacterOnCooldown(character)) {
             <div class="cooldown-indicator">
               {{ getCharacterCooldown(character.name)?.remainingSeconds }}s
             </div>
           }
         </div>
+      }
+      @if (selectedCharacter()) {
+        <button
+          class="rest-button"
+          [disabled]="
+            isCharacterOnCooldown(selectedCharacter()) ||
+            isCharacterHpFull(selectedCharacter())
+          "
+          (click)="restCharacter()">
+          Rest
+        </button>
       }
     </div>
   </div>
