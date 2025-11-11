@@ -1,5 +1,6 @@
-import { Component, OnInit, signal, inject } from '@angular/core'
+import { Component, computed, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { injectQuery } from '@tanstack/angular-query-experimental'
 import { getCharacterCharactersNameGet } from '../../../sdk/api'
 
 @Component({
@@ -8,42 +9,35 @@ import { getCharacterCharactersNameGet } from '../../../sdk/api'
   templateUrl: './character-detail.html',
   styleUrl: './character-detail.scss',
 })
-export class CharacterDetail implements OnInit {
+export class CharacterDetail {
   private route = inject(ActivatedRoute)
+  private characterName = this.route.snapshot.paramMap.get('name')
 
-  character = signal<any>(null)
-  loading = signal(true)
-  error = signal<string | null>(null)
-
-  ngOnInit() {
-    this.loadCharacter()
-  }
-
-  private async loadCharacter() {
-    const name = this.route.snapshot.paramMap.get('name')
-
-    if (!name) {
-      this.error.set('Character name not provided')
-      this.loading.set(false)
-      return
-    }
-
-    try {
-      this.loading.set(true)
-      this.error.set(null)
+  characterQuery = injectQuery(() => ({
+    queryKey: ['character', this.characterName],
+    queryFn: async () => {
+      if (!this.characterName) {
+        throw new Error('Character name not provided')
+      }
 
       const response = await getCharacterCharactersNameGet({
-        path: { name },
+        path: { name: this.characterName },
       })
 
       if (response && 'data' in response) {
-        this.character.set((response.data as any)?.data)
+        return (response.data as any)?.data
       }
-    } catch (err: any) {
-      this.error.set(err?.message || 'Failed to load character')
-      console.error('Error loading character:', err)
-    } finally {
-      this.loading.set(false)
-    }
-  }
+      throw new Error('Failed to load character')
+    },
+    enabled: !!this.characterName,
+    staleTime: 1000 * 60,
+  }))
+
+  character = computed(() => this.characterQuery.data() ?? null)
+  loading = computed(() => this.characterQuery.isPending())
+  error = computed(() => {
+    if (!this.characterName) return 'Character name not provided'
+    const err = this.characterQuery.error()
+    return err ? (err as Error).message : null
+  })
 }

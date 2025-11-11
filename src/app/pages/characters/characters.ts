@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core'
+import { Component, computed } from '@angular/core'
 import { RouterLink } from '@angular/router'
+import { injectQuery } from '@tanstack/angular-query-experimental'
 import { getMyCharactersMyCharactersGet } from '../../../sdk/api'
 
 @Component({
@@ -8,29 +9,23 @@ import { getMyCharactersMyCharactersGet } from '../../../sdk/api'
   templateUrl: './characters.html',
   styleUrl: './characters.scss',
 })
-export class Characters implements OnInit {
-  characters = signal<any[]>([])
-  loading = signal(true)
-  error = signal<string | null>(null)
-
-  ngOnInit() {
-    this.loadCharacters()
-  }
-
-  private async loadCharacters() {
-    try {
-      this.loading.set(true)
-      this.error.set(null)
-
+export class Characters {
+  charactersQuery = injectQuery(() => ({
+    queryKey: ['my-characters'],
+    queryFn: async () => {
       const response = await getMyCharactersMyCharactersGet()
       if (response && 'data' in response) {
-        this.characters.set((response.data as any)?.data || [])
+        return (response.data as any)?.data || []
       }
-    } catch (err: any) {
-      this.error.set(err?.message || 'Failed to load characters')
-      console.error('Error loading characters:', err)
-    } finally {
-      this.loading.set(false)
-    }
-  }
+      return []
+    },
+    staleTime: 1000 * 30,
+  }))
+
+  characters = computed(() => this.charactersQuery.data() ?? [])
+  loading = computed(() => this.charactersQuery.isPending())
+  error = computed(() => {
+    const err = this.charactersQuery.error()
+    return err ? (err as Error).message : null
+  })
 }

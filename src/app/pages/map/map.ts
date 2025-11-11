@@ -1,4 +1,8 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core'
+import { Component, OnDestroy, computed, signal } from '@angular/core'
+import {
+  injectQuery,
+  injectQueryClient,
+} from '@tanstack/angular-query-experimental'
 import {
   getLayerMapsMapsLayerGet,
   getMyCharactersMyCharactersGet,
@@ -7,14 +11,12 @@ import {
   getMapByPositionMapsLayerXYGet,
   actionFightMyNameActionFightPost,
   actionGatheringMyNameActionGatheringPost,
+  getMonsterMonstersCodeGet,
+  getResourceResourcesCodeGet,
+  getNpcNpcsDetailsCodeGet,
 } from '../../../sdk/api'
 import mapSkins from '../../../assets/map-skins.json'
-
-interface MapLayer {
-  name: string
-  tiles: any[]
-  grid: any[][]
-}
+import { TileBase, TileFactory, MonsterTile } from '../../domain/tile'
 
 @Component({
   selector: 'app-map',
@@ -22,64 +24,206 @@ interface MapLayer {
   templateUrl: './map.html',
   styleUrl: './map.scss',
 })
-export class Map implements OnInit, OnDestroy {
-  layers = signal<MapLayer[]>([])
-  characters = signal<any[]>([])
+export class Map implements OnDestroy {
+  queryClient = injectQueryClient()
   selectedCharacter = signal<any | null>(null)
   characterCooldowns = signal<Record<string, any>>({})
-  currentTileDetails = signal<any | null>(null)
-  fightResult = signal<any | null>(null)
-  loading = signal(true)
-  error = signal<string | null>(null)
+  currentTilePosition = signal<{ x: number; y: number } | null>(null)
+  currentMonsterCode = signal<string | null>(null)
+  currentResourceCode = signal<string | null>(null)
+  currentNpcCode = signal<string | null>(null)
   skinColors: Record<string, string> = {}
   private cooldownIntervals: Record<string, any> = {}
-  private fightResultTimeout: any = null
 
-  ngOnInit() {
-    this.initializeSkinColors()
-    this.loadAllMaps()
-    this.loadCharacters()
-  }
+  mapsQuery = injectQuery(() => ({
+    queryKey: ['maps', 'overworld'],
+    queryFn: async () => {
+      const tiles = await this.fetchAllLayerPages('overworld')
+      const grid = this.createGrid(tiles)
+      return [{ name: 'overworld', tiles, grid }]
+    },
+    staleTime: 1000 * 60 * 10,
+  }))
 
-  private async loadCharacters() {
-    try {
+  charactersQuery = injectQuery(() => ({
+    queryKey: ['my-characters'],
+    queryFn: async () => {
       const response = await getMyCharactersMyCharactersGet()
       if (response && 'data' in response) {
         const charactersData = (response.data as any)?.data || []
-        this.characters.set(charactersData)
-
-        // Initialize cooldowns for characters that have them
         charactersData.forEach((char: any) => {
           if (char.cooldown && char.cooldown.remaining_seconds > 0) {
             this.updateCharacterCooldown(char.name, char.cooldown)
           }
         })
+        return charactersData
       }
-    } catch (err) {
-      console.error('Error loading characters:', err)
+      return []
+    },
+    staleTime: 1000 * 30,
+  }))
+
+  tileDetailsQuery = injectQuery(() => ({
+    queryKey: [
+      'tile-details',
+      this.currentTilePosition()?.x,
+      this.currentTilePosition()?.y,
+    ],
+    queryFn: async () => {
+      const pos = this.currentTilePosition()
+      if (!pos) return null
+
+      const response = await getMapByPositionMapsLayerXYGet({
+        path: {
+          layer: 'overworld',
+          x: pos.x,
+          y: pos.y,
+        },
+      })
+
+      if (response && 'data' in response) {
+        return (response.data as any)?.data || null
+      }
+      return null
+    },
+    enabled: !!this.currentTilePosition(),
+    staleTime: 1000 * 60 * 30,
+  }))
+
+  monsterDetailsQuery = injectQuery(() => ({
+    queryKey: ['monster-details', this.currentMonsterCode()],
+    queryFn: async () => {
+      const monsterCode = this.currentMonsterCode()
+      if (!monsterCode) return null
+
+      const response = await getMonsterMonstersCodeGet({
+        path: { code: monsterCode },
+      })
+
+      if (response && 'data' in response) {
+        const monsterData = (response.data as any)?.data
+        if (monsterData) {
+          return {
+            ...monsterData,
+            drops: monsterData.drops || [],
+          }
+        }
+      }
+      return null
+    },
+    enabled: !!this.currentMonsterCode(),
+    staleTime: 1000 * 60 * 60,
+  }))
+
+  resourceDetailsQuery = injectQuery(() => ({
+    queryKey: ['resource-details', this.currentResourceCode()],
+    queryFn: async () => {
+      const resourceCode = this.currentResourceCode()
+      if (!resourceCode) return null
+
+      const response = await getResourceResourcesCodeGet({
+        path: { code: resourceCode },
+      })
+
+      if (response && 'data' in response) {
+        return (response.data as any)?.data || null
+      }
+      return null
+    },
+    enabled: !!this.currentResourceCode(),
+    staleTime: 1000 * 60 * 60,
+  }))
+
+  npcDetailsQuery = injectQuery(() => ({
+    queryKey: ['npc-details', this.currentNpcCode()],
+    queryFn: async () => {
+      const npcCode = this.currentNpcCode()
+      if (!npcCode) return null
+
+      const response = await getNpcNpcsDetailsCodeGet({
+        path: { code: npcCode },
+      })
+
+      if (response && 'data' in response) {
+        return (response.data as any)?.data || null
+      }
+      return null
+    },
+    enabled: !!this.currentNpcCode(),
+    staleTime: 1000 * 60 * 60,
+  }))
+
+  layers = computed(() => this.mapsQuery.data() ?? [])
+  characters = computed(() => this.charactersQuery.data() ?? [])
+  currentTileDetails = computed(() => this.tileDetailsQuery.data() ?? null)
+  monsterDetails = computed(() => {
+    const monsterCode = this.getMonsterCode()
+    if (!monsterCode || monsterCode !== this.currentMonsterCode()) {
+      return null
     }
+    return this.monsterDetailsQuery.data() ?? null
+  })
+  resourceDetails = computed(() => {
+    const resourceCode = this.getResourceCode()
+    if (!resourceCode || resourceCode !== this.currentResourceCode()) {
+      return null
+    }
+    return this.resourceDetailsQuery.data() ?? null
+  })
+  npcDetails = computed(() => {
+    const npcCode = this.getNpcCode()
+    if (!npcCode || npcCode !== this.currentNpcCode()) {
+      return null
+    }
+    return this.npcDetailsQuery.data() ?? null
+  })
+  loading = computed(
+    () => this.mapsQuery.isPending() || this.charactersQuery.isPending(),
+  )
+  error = computed(() => {
+    const mapsError = this.mapsQuery.error()
+    const charactersError = this.charactersQuery.error()
+    if (mapsError) return (mapsError as Error).message
+    if (charactersError) return (charactersError as Error).message
+    return null
+  })
+
+  constructor() {
+    this.initializeSkinColors()
+  }
+
+  private getMonsterCode(): string | null {
+    const tileData = this.currentTileDetails()
+    if (!tileData) return null
+    const tile = this.createTile(tileData)
+    if (tile instanceof MonsterTile) {
+      return tile.getMonsterCode()
+    }
+    return null
+  }
+
+  private getResourceCode(): string | null {
+    const tileData = this.currentTileDetails()
+    if (!tileData?.interactions?.content) return null
+    if (tileData.interactions.content.type === 'resource') {
+      return tileData.interactions.content.code
+    }
+    return null
+  }
+
+  private getNpcCode(): string | null {
+    const tileData = this.currentTileDetails()
+    if (!tileData?.interactions?.content) return null
+    if (tileData.interactions.content.type === 'npc') {
+      return tileData.interactions.content.code
+    }
+    return null
   }
 
   private initializeSkinColors() {
     Object.entries(mapSkins).forEach(([skin, data]) => {
       this.skinColors[skin] = data.color
     })
-  }
-
-  private async loadAllMaps() {
-    try {
-      this.loading.set(true)
-      this.error.set(null)
-
-      const tiles = await this.fetchAllLayerPages('overworld')
-      const grid = this.createGrid(tiles)
-      this.layers.set([{ name: 'overworld', tiles, grid }])
-    } catch (err: any) {
-      this.error.set(err?.message || 'Failed to load maps')
-      console.error('Error loading maps:', err)
-    } finally {
-      this.loading.set(false)
-    }
   }
 
   private async fetchAllLayerPages(layerName: string): Promise<any[]> {
@@ -131,133 +275,43 @@ export class Map implements OnInit, OnDestroy {
     return grid
   }
 
+  createTile(tileData: any): TileBase | null {
+    if (!tileData) return null
+    return TileFactory.createTile(tileData)
+  }
+
   getSkinColor(skin: string): string {
     if (!skin) return '#e0e0e0'
     return this.skinColors[skin] || '#e0e0e0'
   }
 
-  getTileAscii(tile: any): string {
-    if (!tile) return '   '
-
-    const skin = tile.skin?.toLowerCase() || ''
-
-    // Forest tiles
-    if (skin.includes('forest')) {
-      if (skin.includes('tree')) return ' T '
-      if (skin.includes('road')) return '==='
-      if (skin.includes('village')) return ' H '
-      if (skin.includes('bank')) return ' $ '
-      return ' * '
+  getTileRender(tile: any): { type: string; value: string; cssClass?: string } {
+    if (!tile) {
+      return { type: 'ascii', value: '   ', cssClass: 'tile-ascii' }
     }
-
-    // Water tiles
-    if (
-      skin.includes('water') ||
-      skin.includes('lake') ||
-      skin.includes('coastline') ||
-      skin.includes('sea')
-    ) {
-      return '~~~'
-    }
-
-    // Desert tiles
-    if (skin.includes('desert')) {
-      return '...'
-    }
-
-    // Mountain tiles
-    if (skin.includes('mountain')) {
-      return '/^\\'
-    }
-
-    return ':::'
-  }
-
-  getMonsterEmoji(tile: any): string | null {
-    if (!tile || !tile.interactions.content) return null
-
-    const content = tile.interactions.content
-    if (content.type !== 'monster') return null
-
-    const code = content.code?.toLowerCase() || ''
-
-    // Map monster codes to emojis
-    if (code.includes('slime')) {
-      if (code.includes('blue')) return '🔵'
-      if (code.includes('green')) return '🟢'
-      if (code.includes('red')) return '🔴'
-      if (code.includes('yellow')) return '🟡'
-      if (code.includes('king')) return '👑'
-      return '🟣'
-    }
-    if (code.includes('chicken')) return '🐔'
-    if (code.includes('cow')) return '🐄'
-    if (code.includes('pig')) return '🐷'
-    if (code.includes('sheep')) return '🐑'
-    if (code.includes('wolf')) return '🐺'
-    if (code.includes('spider')) return '🕷️'
-    if (code.includes('skeleton')) return '💀'
-    if (code.includes('goblin')) return '👺'
-    if (code.includes('orc')) return '🧟'
-    if (code.includes('ogre')) return '👹'
-    if (code.includes('cyclops')) return '👁️'
-    if (code.includes('dragon')) return '🐉'
-    if (code.includes('serpent')) return '🐍'
-    if (code.includes('bat')) return '🦇'
-    if (code.includes('rat')) return '🐀'
-    if (code.includes('bear')) return '🐻'
-    if (code.includes('owlbear')) return '🦉'
-    if (code.includes('imp')) return '😈'
-    if (code.includes('demon')) return '👿'
-    if (code.includes('hellhound')) return '🔥'
-    if (code.includes('cultist')) return '🧙'
-    if (code.includes('highwayman')) return '🗡️'
-
-    return '👾'
-  }
-
-  hasNpcInteraction(tile: any): boolean {
-    if (!tile || !tile.interactions || !tile.interactions.content) return false
-    return tile.interactions.content.type === 'npc'
-  }
-
-  hasResourceInteraction(tile: any): boolean {
-    if (!tile || !tile.interactions || !tile.interactions.content) return false
-    return tile.interactions.content.type === 'resource'
+    const tileObj = this.createTile(tile)
+    return (
+      tileObj?.render() || {
+        type: 'ascii',
+        value: '   ',
+        cssClass: 'tile-ascii',
+      }
+    )
   }
 
   selectCharacter(character: any) {
     if (this.selectedCharacter() === character) {
       this.selectedCharacter.set(null)
-      this.currentTileDetails.set(null)
+      this.currentTilePosition.set(null)
+      this.currentMonsterCode.set(null)
+      this.currentResourceCode.set(null)
+      this.currentNpcCode.set(null)
     } else {
       this.selectedCharacter.set(character)
-      this.loadCurrentTileDetails(character)
-    }
-  }
-
-  private async loadCurrentTileDetails(character: any) {
-    if (!character) {
-      this.currentTileDetails.set(null)
-      return
-    }
-
-    try {
-      const response = await getMapByPositionMapsLayerXYGet({
-        // @ts-ignore
-        path: {
-          layer: 'overworld',
-          x: character.x,
-          y: character.y,
-        },
-      })
-
-      if (response && 'data' in response) {
-        this.currentTileDetails.set((response.data as any)?.data || null)
-      }
-    } catch (err) {
-      console.error('Error loading tile details:', err)
-      this.currentTileDetails.set(null)
+      this.currentTilePosition.set({ x: character.x, y: character.y })
+      this.currentMonsterCode.set(null)
+      this.currentResourceCode.set(null)
+      this.currentNpcCode.set(null)
     }
   }
 
@@ -270,13 +324,14 @@ export class Map implements OnInit, OnDestroy {
 
     const selected = this.selectedCharacter()
 
-    // If no character selected, just load tile details
     if (!selected) {
-      this.loadTileDetailsAtPosition(tile.x, tile.y)
+      this.currentTilePosition.set({ x: tile.x, y: tile.y })
+      this.currentMonsterCode.set(null)
+      this.currentResourceCode.set(null)
+      this.currentNpcCode.set(null)
       return
     }
 
-    // Don't allow moving if character is on cooldown
     if (this.isCharacterOnCooldown(selected)) {
       return
     }
@@ -286,23 +341,24 @@ export class Map implements OnInit, OnDestroy {
         path: { name: selected.name },
         body: { x: tile.x, y: tile.y },
       })
-      // Update character and cooldown from response
       if (response && 'data' in response) {
         const data = response.data!.data as any
         const character = data.character
         const cooldown = data.cooldown
 
-        // Update character position in the list using destination coordinates
         if (character) {
-          const chars = this.characters().map((c) =>
-            c.name === selected.name ? { ...character } : c,
-          )
-          this.characters.set(chars)
+          const updatedCharacters = (
+            this.queryClient.getQueryData(['my-characters']) as any[] || []
+          ).map((c: any) => c.name === selected.name ? character : c)
+
+          this.queryClient.setQueryData(['my-characters'], updatedCharacters)
           this.selectedCharacter.set(character)
-          this.loadCurrentTileDetails(character)
+          this.currentTilePosition.set({ x: character.x, y: character.y })
+          this.currentMonsterCode.set(null)
+          this.currentResourceCode.set(null)
+          this.currentNpcCode.set(null)
         }
 
-        // Update cooldown
         if (cooldown) {
           this.updateCharacterCooldown(selected.name, cooldown)
         }
@@ -312,28 +368,59 @@ export class Map implements OnInit, OnDestroy {
     }
   }
 
-  private async loadTileDetailsAtPosition(x: number, y: number) {
-    try {
-      const response = await getMapByPositionMapsLayerXYGet({
-        // @ts-ignore
-        path: {
-          layer: 'overworld',
-          x: x,
-          y: y,
-        },
-      })
-
-      if (response && 'data' in response) {
-        this.currentTileDetails.set((response.data as any)?.data || null)
-      }
-    } catch (err) {
-      console.error('Error loading tile details:', err)
-      this.currentTileDetails.set(null)
+  loadMonsterDetails() {
+    const monsterCode = this.getMonsterCode()
+    if (monsterCode) {
+      this.currentMonsterCode.set(monsterCode)
     }
   }
 
+  loadResourceDetails() {
+    const resourceCode = this.getResourceCode()
+    if (resourceCode) {
+      this.currentResourceCode.set(resourceCode)
+    }
+  }
+
+  loadNpcDetails() {
+    const npcCode = this.getNpcCode()
+    if (npcCode) {
+      this.currentNpcCode.set(npcCode)
+    }
+  }
+
+  isMonsterTile(): boolean {
+    const tileData = this.currentTileDetails()
+    if (!tileData) return false
+    const tile = this.createTile(tileData)
+    return tile instanceof MonsterTile
+  }
+
+  isResourceTile(): boolean {
+    return !!this.getResourceCode()
+  }
+
+  isNpcTile(): boolean {
+    return !!this.getNpcCode()
+  }
+
+  hideMonsterDetails() {
+    this.currentMonsterCode.set(null)
+  }
+
+  hideResourceDetails() {
+    this.currentResourceCode.set(null)
+  }
+
+  hideNpcDetails() {
+    this.currentNpcCode.set(null)
+  }
+
   closeTileDetails() {
-    this.currentTileDetails.set(null)
+    this.currentTilePosition.set(null)
+    this.currentMonsterCode.set(null)
+    this.currentResourceCode.set(null)
+    this.currentNpcCode.set(null)
   }
 
   updateCharacterCooldown(characterName: string, cooldown: any) {
@@ -400,21 +487,20 @@ export class Map implements OnInit, OnDestroy {
         path: { name: selected.name },
       })
 
-      // Update character and cooldown from response
       if (response && 'data' in response) {
-        const data = response.data as any
+        const data = response.data!.data as any
         const character = data.character
         const cooldown = data.cooldown
 
-        // Update character in the list
         if (character) {
-          const chars = this.characters().map((c) =>
-            c.name === selected.name ? { ...character } : c,
-          )
-          this.characters.set(chars)
+          const updatedCharacters = (
+            this.queryClient.getQueryData(['my-characters']) as any[] || []
+          ).map((c: any) => c.name === selected.name ? character : c)
+
+          this.queryClient.setQueryData(['my-characters'], updatedCharacters)
+          this.selectedCharacter.set(character)
         }
 
-        // Update cooldown
         if (cooldown) {
           this.updateCharacterCooldown(selected.name, cooldown)
         }
@@ -428,7 +514,6 @@ export class Map implements OnInit, OnDestroy {
     const selected = this.selectedCharacter()
     if (!selected) return
 
-    // Don't allow fighting if character is on cooldown
     if (this.isCharacterOnCooldown(selected)) {
       return
     }
@@ -438,72 +523,35 @@ export class Map implements OnInit, OnDestroy {
         path: { name: selected.name },
       })
 
-      // Update character and cooldown from response
       if (response && 'data' in response) {
-        const data = response.data as any
+        const data = response.data!.data as any
         const character = data.character
         const cooldown = data.cooldown
-        const fight = data.fight
 
-        // Update character in the list
         if (character) {
-          const chars = this.characters().map((c) =>
-            c.name === selected.name ? { ...character } : c,
-          )
-          this.characters.set(chars)
+          const updatedCharacters = (
+            this.queryClient.getQueryData(['my-characters']) as any[] || []
+          ).map((c: any) => c.name === selected.name ? character : c)
+
+          this.queryClient.setQueryData(['my-characters'], updatedCharacters)
           this.selectedCharacter.set(character)
         }
 
-        // Update cooldown
         if (cooldown) {
           this.updateCharacterCooldown(selected.name, cooldown)
         }
 
-        // Show fight result if it was a win
-        if (fight && fight.result === 'win') {
-          this.showFightResult({
-            result: fight.result,
-            xp: fight.xp,
-            gold: fight.gold,
-            drops: fight.drops || [],
-            character: character,
-          })
-        }
-
-        // Reload tile details to see if monster is defeated
-        this.loadCurrentTileDetails(character)
+        this.currentTilePosition.set({ x: character.x, y: character.y })
       }
     } catch (err) {
       console.error('Error fighting monster:', err)
     }
   }
 
-  showFightResult(result: any) {
-    // Clear existing timeout if any
-    if (this.fightResultTimeout) {
-      clearTimeout(this.fightResultTimeout)
-    }
-
-    this.fightResult.set(result)
-
-    // Auto-hide after 8 seconds
-    this.fightResultTimeout = setTimeout(() => {
-      this.fightResult.set(null)
-    }, 8000)
-  }
-
-  closeFightResult() {
-    if (this.fightResultTimeout) {
-      clearTimeout(this.fightResultTimeout)
-    }
-    this.fightResult.set(null)
-  }
-
   async gatherResource() {
     const selected = this.selectedCharacter()
     if (!selected) return
 
-    // Don't allow gathering if character is on cooldown
     if (this.isCharacterOnCooldown(selected)) {
       return
     }
@@ -513,28 +561,25 @@ export class Map implements OnInit, OnDestroy {
         path: { name: selected.name },
       })
 
-      // Update character and cooldown from response
       if (response && 'data' in response) {
-        const data = response.data as any
+        const data = response.data!.data as any
         const character = data.character
         const cooldown = data.cooldown
 
-        // Update character in the list
         if (character) {
-          const chars = this.characters().map((c) =>
-            c.name === selected.name ? { ...character } : c,
-          )
-          this.characters.set(chars)
+          const updatedCharacters = (
+            this.queryClient.getQueryData(['my-characters']) as any[] || []
+          ).map((c: any) => c.name === selected.name ? character : c)
+
+          this.queryClient.setQueryData(['my-characters'], updatedCharacters)
           this.selectedCharacter.set(character)
         }
 
-        // Update cooldown
         if (cooldown) {
           this.updateCharacterCooldown(selected.name, cooldown)
         }
 
-        // Reload tile details to see if resource is depleted
-        this.loadCurrentTileDetails(character)
+        this.currentTilePosition.set({ x: character.x, y: character.y })
       }
     } catch (err) {
       console.error('Error gathering resource:', err)
@@ -544,28 +589,13 @@ export class Map implements OnInit, OnDestroy {
   hasCharacter(tile: any): boolean {
     if (!tile) return false
     return this.characters().some(
-      (char) => char.x === tile.x && char.y === tile.y,
-    )
-  }
-
-  getCharacterOnTile(tile: any): any | null {
-    if (!tile) return null
-    return (
-      this.characters().find(
-        (char) => char.x === tile.x && char.y === tile.y,
-      ) || null
+      (char: any) => char.x === tile.x && char.y === tile.y,
     )
   }
 
   ngOnDestroy() {
-    // Clean up all intervals
     Object.values(this.cooldownIntervals).forEach((interval) =>
       clearInterval(interval),
     )
-
-    // Clean up fight result timeout
-    if (this.fightResultTimeout) {
-      clearTimeout(this.fightResultTimeout)
-    }
   }
 }

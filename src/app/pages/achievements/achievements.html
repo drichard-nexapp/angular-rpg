@@ -1,0 +1,105 @@
+<main class="main">
+  <div class="content">
+    <h1>Achievements</h1>
+
+    @if (loading()) {
+      <div class="loading">
+        Loading achievements...
+      </div>
+    }
+
+    @if (error()) {
+      <div class="error">
+        {{ error() }}
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      <div class="achievements-header">
+        <div class="stats-summary">
+          <div class="stat-card">
+            <div class="stat-label">Achievement Points</div>
+            <div class="stat-value">{{ achievementPoints() }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value">{{ getCompletedCount() }} / {{ getTotalCount() }}</div>
+          </div>
+        </div>
+
+        <div class="filter-buttons">
+          <button
+            class="filter-btn"
+            [class.active]="filterCompleted() === undefined"
+            (click)="setFilter(undefined)">
+            All
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="filterCompleted() === true"
+            (click)="setFilter(true)">
+            Completed
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="filterCompleted() === false"
+            (click)="setFilter(false)">
+            In Progress
+          </button>
+        </div>
+      </div>
+
+      <div class="achievements-list">
+        @if (achievements().length === 0) {
+          <div class="no-achievements">
+            No achievements found
+          </div>
+        }
+
+        @for (achievement of achievements(); track achievement.code) {
+          <div class="achievement-card" [class.completed]="achievement.completed_at">
+            <div class="achievement-header">
+              <div class="achievement-main">
+                <h3 class="achievement-name">{{ achievement.name }}</h3>
+                <span class="achievement-type">{{ achievement.type }}</span>
+              </div>
+              <div class="achievement-points">
+                {{ achievement.points }} pts
+              </div>
+            </div>
+
+            <p class="achievement-description">{{ achievement.description }}</p>
+
+            <div class="achievement-progress">
+              @if (achievement.completed_at) {
+                <div class="completed-badge">
+                  Completed on {{ achievement.completed_at | date: 'short' }}
+                </div>
+              } @else {
+                <div class="progress-info">
+                  <span>{{ achievement.current }} / {{ achievement.target }}</span>
+                  <span>{{ getProgressPercentage(achievement) | number: '1.0-0' }}%</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    [style.width.%]="getProgressPercentage(achievement)">
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (achievement.rewards) {
+              <div class="achievement-rewards">
+                <strong>Rewards:</strong>
+                @if (achievement.rewards.gold) {
+                  <span class="reward-item">{{ achievement.rewards.gold }} Gold</span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</main>
