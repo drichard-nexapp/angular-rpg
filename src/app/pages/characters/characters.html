@@ -8,7 +8,11 @@
     </div>
 
     @if (showCreateForm()) {
-      <div class="create-character-form">
+      <form
+        [formGroup]="characterForm"
+        (ngSubmit)="createCharacter()"
+        class="create-character-form"
+      >
         <h2>Create New Character</h2>
 
         @if (createError()) {
@@ -22,19 +26,27 @@
           <input
             id="character-name"
             type="text"
-            [(ngModel)]="newCharacterName"
+            formControlName="name"
             placeholder="Enter character name (3-12 characters)"
             maxlength="12"
             [disabled]="creatingCharacter()"
+            [class.invalid]="nameControl?.invalid && nameControl?.touched"
           />
-          <small>Letters, numbers, hyphens, and underscores only</small>
+          @if (getNameError()) {
+            <div class="error-message">
+              {{ getNameError() }}
+            </div>
+          }
+          @if (!getNameError()) {
+            <small>Letters, numbers, hyphens, and underscores only</small>
+          }
         </div>
 
         <div class="form-group">
           <label for="character-skin">Skin</label>
           <select
             id="character-skin"
-            [(ngModel)]="newCharacterSkin"
+            formControlName="skin"
             [disabled]="creatingCharacter()"
           >
             @for (skin of availableSkins; track skin) {
@@ -44,13 +56,13 @@
         </div>
 
         <button
+          type="submit"
           class="submit-btn"
-          (click)="createCharacter()"
-          [disabled]="creatingCharacter() || !newCharacterName()"
+          [disabled]="creatingCharacter() || characterForm.invalid"
         >
           {{ creatingCharacter() ? 'Creating...' : 'Create' }}
         </button>
-      </div>
+      </form>
     }
 
     @if (loading()) {

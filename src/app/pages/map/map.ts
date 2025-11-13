@@ -1,9 +1,10 @@
-import { Component, computed, input, output } from '@angular/core'
+import { Component, computed, input, output, inject } from '@angular/core'
 import { injectQuery } from '@tanstack/angular-query-experimental'
 import { getLayerMapsMapsLayerGet, type CharacterSkin } from '../../../sdk/api'
 import mapSkins from '../../../assets/map-skins.json'
 import { TileBase, TileFactory } from '../../domain/tile'
 import type { Character, MapLayer, Map as MapTile } from '../../domain/types'
+import { SkinService } from '../../services/skin.service'
 
 @Component({
   selector: 'app-map',
@@ -12,23 +13,13 @@ import type { Character, MapLayer, Map as MapTile } from '../../domain/types'
   styleUrl: './map.scss',
 })
 export class Map {
+  skinService = inject(SkinService)
+
   characters = input.required<Character[]>()
   selectedCharacter = input<Character | null>(null)
   tileClick = output<MapTile>()
 
   skinColors: Record<string, string> = {}
-
-  skinSymbols: Record<CharacterSkin, string> = {
-    men1: '🧙‍♂️',
-    men2: '⚔️',
-    men3: '🛡️',
-    women1: '🧙‍♀️',
-    women2: '🏹',
-    women3: '🗡️',
-    corrupted1: '👹',
-    zombie1: '🧟',
-    marauder1: '🏴‍☠️',
-  }
 
   mapsQuery = injectQuery(() => ({
     queryKey: ['maps', 'overworld'],
@@ -150,6 +141,6 @@ export class Map {
   }
 
   getSkinSymbol(skin: string): string {
-    return this.skinSymbols[skin as CharacterSkin] || '👤'
+    return this.skinService.getSymbol(skin)
   }
 }

@@ -59,11 +59,20 @@
       border-radius: 4px;
       font-size: 1rem;
       box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
 
       &:focus {
         outline: none;
         border-color: #673ab7;
         box-shadow: 0 0 0 2px rgba(103, 58, 183, 0.1);
+      }
+
+      &.invalid {
+        border-color: #c62828;
+
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.1);
+        }
       }
 
       &:disabled {
@@ -77,6 +86,14 @@
       margin-top: 0.25rem;
       color: #777;
       font-size: 0.875rem;
+    }
+
+    .error-message {
+      display: block;
+      margin-top: 0.5rem;
+      color: #c62828;
+      font-size: 0.875rem;
+      font-weight: 500;
     }
   }
 

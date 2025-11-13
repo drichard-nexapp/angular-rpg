@@ -1,52 +1,50 @@
-import { Component, computed, signal } from '@angular/core'
+import { Component, computed, signal, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
-import { FormsModule } from '@angular/forms'
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { injectQuery, injectQueryClient } from '@tanstack/angular-query-experimental'
 import { getMyCharactersMyCharactersGet, createCharacterCharactersCreatePost, deleteCharacterCharactersDeletePost, type CharacterSkin } from '../../../sdk/api'
 import type { Character } from '../../domain/types'
+import { unwrapApiResponse } from '../../shared/utils'
+import { SkinService } from '../../services/skin.service'
 
 @Component({
   selector: 'app-characters',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './characters.html',
   styleUrl: './characters.scss',
 })
 export class Characters {
+  private fb = new FormBuilder()
+  skinService = inject(SkinService)
+
   queryClient = injectQueryClient()
   showCreateForm = signal(false)
-  newCharacterName = signal('')
-  newCharacterSkin = signal<CharacterSkin>('men1')
   creatingCharacter = signal(false)
   createError = signal<string | null>(null)
   deletingCharacter = signal<string | null>(null)
   deleteError = signal<string | null>(null)
 
+  characterForm: FormGroup = this.fb.group({
+    name: ['', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(12),
+      Validators.pattern(/^[a-zA-Z0-9_-]+$/)
+    ]],
+    skin: ['men1' as CharacterSkin, [Validators.required]]
+  })
+
   availableSkins: CharacterSkin[] = ['men1', 'men2', 'men3', 'women1', 'women2', 'women3']
 
-  skinSymbols: Record<CharacterSkin, string> = {
-    men1: '🧙‍♂️',
-    men2: '⚔️',
-    men3: '🛡️',
-    women1: '🧙‍♀️',
-    women2: '🏹',
-    women3: '🗡️',
-    corrupted1: '👹',
-    zombie1: '🧟',
-    marauder1: '🏴‍☠️',
-  }
-
   getSkinSymbol(skin: string): string {
-    return this.skinSymbols[skin as CharacterSkin] || '👤'
+    return this.skinService.getSymbol(skin)
   }
 
   charactersQuery = injectQuery(() => ({
     queryKey: ['my-characters'],
     queryFn: async (): Promise<Character[]> => {
       const response = await getMyCharactersMyCharactersGet()
-      if (response && 'data' in response && response.data) {
-        return (response.data as { data?: Character[] })?.data || []
-      }
-      return []
+      return unwrapApiResponse<Character[]>(response, [])
     },
     staleTime: 1000 * 30,
   }))
@@ -60,26 +58,13 @@ export class Characters {
 
   toggleCreateForm(): void {
     this.showCreateForm.update(v => !v)
-    this.newCharacterName.set('')
-    this.newCharacterSkin.set('men1')
+    this.characterForm.reset({ name: '', skin: 'men1' })
     this.createError.set(null)
   }
 
   async createCharacter(): Promise<void> {
-    const name = this.newCharacterName().trim()
-
-    if (!name) {
-      this.createError.set('Character name is required')
-      return
-    }
-
-    if (name.length < 3 || name.length > 12) {
-      this.createError.set('Character name must be between 3 and 12 characters')
-      return
-    }
-
-    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
-      this.createError.set('Character name can only contain letters, numbers, hyphens, and underscores')
+    if (this.characterForm.invalid) {
+      this.characterForm.markAllAsTouched()
       return
     }
 
@@ -87,18 +72,18 @@ export class Characters {
     this.createError.set(null)
 
     try {
+      const formValue = this.characterForm.value
       const response = await createCharacterCharactersCreatePost({
         body: {
-          name,
-          skin: this.newCharacterSkin(),
+          name: formValue.name.trim(),
+          skin: formValue.skin,
         },
       })
 
       if (response && 'data' in response && response.data) {
         await this.charactersQuery.refetch()
         this.showCreateForm.set(false)
-        this.newCharacterName.set('')
-        this.newCharacterSkin.set('men1')
+        this.characterForm.reset({ name: '', skin: 'men1' })
       }
     } catch (err) {
       const error = err as { error?: { message?: string } }
@@ -106,6 +91,33 @@ export class Characters {
     } finally {
       this.creatingCharacter.set(false)
     }
+  }
+
+  get nameControl() {
+    return this.characterForm.get('name')
+  }
+
+  get skinControl() {
+    return this.characterForm.get('skin')
+  }
+
+  getNameError(): string | null {
+    const control = this.nameControl
+    if (!control || !control.touched) return null
+
+    if (control.hasError('required')) {
+      return 'Character name is required'
+    }
+    if (control.hasError('minlength')) {
+      return 'Character name must be at least 3 characters'
+    }
+    if (control.hasError('maxlength')) {
+      return 'Character name must be at most 12 characters'
+    }
+    if (control.hasError('pattern')) {
+      return 'Character name can only contain letters, numbers, hyphens, and underscores'
+    }
+    return null
   }
 
   async deleteCharacter(characterName: string): Promise<void> {
