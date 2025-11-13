@@ -7,6 +7,8 @@ import {
 import {
   getAccountDetailsMyDetailsGet,
   getAccountAchievementsAccountsAccountAchievementsGet,
+  type MyAccountDetails,
+  type AccountAchievementSchema,
 } from '../../../sdk/api'
 
 @Component({
@@ -21,10 +23,11 @@ export class Achievements {
 
   accountQuery = injectQuery(() => ({
     queryKey: ['account-details'],
-    queryFn: async () => {
+    queryFn: async (): Promise<MyAccountDetails> => {
       const response = await getAccountDetailsMyDetailsGet()
-      if (response && 'data' in response) {
-        return (response.data as any)?.data
+      if (response && 'data' in response && response.data) {
+        const data = (response.data as { data?: MyAccountDetails })?.data
+        if (data) return data
       }
       throw new Error('Failed to load account details')
     },
@@ -36,7 +39,7 @@ export class Achievements {
       this.accountQuery.data()?.username,
       this.filterCompleted(),
     ],
-    queryFn: async () => {
+    queryFn: async (): Promise<AccountAchievementSchema[]> => {
       const username = this.accountQuery.data()?.username
       if (!username) throw new Error('Account not loaded')
 
@@ -48,23 +51,23 @@ export class Achievements {
           },
         })
 
-      if (response && 'data' in response) {
-        return (response.data as any)?.data || []
+      if (response && 'data' in response && response.data) {
+        return (response.data as { data?: AccountAchievementSchema[] })?.data || []
       }
       throw new Error('Failed to load achievements')
     },
     enabled: !!this.accountQuery.data()?.username,
   }))
 
-  achievements = computed(() => this.achievementsQuery.data() ?? [])
-  accountName = computed(() => this.accountQuery.data()?.username ?? '')
+  achievements = computed((): AccountAchievementSchema[] => this.achievementsQuery.data() ?? [])
+  accountName = computed((): string => this.accountQuery.data()?.username ?? '')
   achievementPoints = computed(
-    () => this.accountQuery.data()?.achievements_points ?? 0,
+    (): number => this.accountQuery.data()?.achievements_points ?? 0,
   )
   loading = computed(
-    () => this.accountQuery.isPending() || this.achievementsQuery.isPending(),
+    (): boolean => this.accountQuery.isPending() || this.achievementsQuery.isPending(),
   )
-  error = computed(() => {
+  error = computed((): string | null => {
     const accountError = this.accountQuery.error()
     const achievementsError = this.achievementsQuery.error()
     if (accountError) return (accountError as Error).message
@@ -72,20 +75,20 @@ export class Achievements {
     return null
   })
 
-  setFilter(completed: boolean | undefined) {
+  setFilter(completed: boolean | undefined): void {
     this.filterCompleted.set(completed)
   }
 
   getCompletedCount(): number {
-    return this.achievements().filter((a: any) => a.completed_at).length
+    return this.achievements().filter((a) => a.completed_at).length
   }
 
   getTotalCount(): number {
     return this.achievements().length
   }
 
-  getProgressPercentage(achievement: any): number {
-    if (!achievement.target || achievement.target === 0) return 0
-    return Math.min((achievement.current / achievement.target) * 100, 100)
+  getProgressPercentage(achievement: AccountAchievementSchema): number {
+    if (!achievement.total || achievement.total === 0) return 0
+    return Math.min((achievement.current / achievement.total) * 100, 100)
   }
 }

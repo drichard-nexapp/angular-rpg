@@ -63,6 +63,22 @@ export abstract class TileBase {
   abstract render(): TileRenderResult
   abstract getVisualMarker(): { type: string; value: string }
 
+  isWorkshop(): boolean {
+    return false
+  }
+
+  isBank(): boolean {
+    return false
+  }
+
+  isGrandExchange(): boolean {
+    return false
+  }
+
+  isTasksMaster(): boolean {
+    return false
+  }
+
   getAsciiRepresentation(): string {
     const skin = this.skin?.toLowerCase() || ''
 

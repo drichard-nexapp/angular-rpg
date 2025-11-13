@@ -1,263 +1,50 @@
-<main class="main">
-  <div class="content">
-    <h1>Maps</h1>
+@if (loading()) {
+  <div class="loading">
+    Loading maps...
+  </div>
+}
 
-    @if (loading()) {
-      <div class="loading">
-        Loading maps...
-      </div>
-    }
+@if (error()) {
+  <div class="error">
+    {{ error() }}
+  </div>
+}
 
-    @if (error()) {
-      <div class="error">
-        {{ error() }}
-      </div>
-    }
-
-    @if (!loading() && !error()) {
-      @if (currentTileDetails()) {
-        <div class="tile-details-popup">
-          <div class="tile-details-header">
-            <h3>Tile Details</h3>
-            <button
-              class="close-button tile-close"
-              (click)="closeTileDetails()">
-              ×
-            </button>
-          </div>
-          <div class="tile-detail-item">
-            <strong>Position:</strong> ({{ currentTileDetails().x }}, {{
-              currentTileDetails().y
-            }})
-          </div>
-          <div class="tile-detail-item">
-            <strong>Skin:</strong> {{ currentTileDetails().skin }}
-          </div>
-          @if (isMonsterTile() && !monsterDetails()) {
-            <button class="show-details-button" (click)="loadMonsterDetails()">
-              ? Show Monster Details
-            </button>
-          }
-          @if (monsterDetails()) {
-            <div class="monster-details-section">
-              <div class="monster-header">
-                <h4>{{ monsterDetails()!.name }}</h4>
-                <button class="hide-details-button" (click)="hideMonsterDetails()">
-                  Hide
-                </button>
-              </div>
-              <div class="monster-basic-info">
-                <div class="monster-info-item">
-                  <strong>Level:</strong> {{ monsterDetails()!.level }}
-                </div>
-                <div class="monster-info-item">
-                  <strong>Type:</strong> {{ monsterDetails()!.type }}
-                </div>
-                <div class="monster-info-item">
-                  <strong>HP:</strong> {{ monsterDetails()!.hp }}
-                </div>
-              </div>
-
-              <div class="monster-stats">
-                <strong>Attacks:</strong>
-                <div class="stats-grid">
-                  <div class="stat-item">🔥 {{ monsterDetails()!.attack_fire }}</div>
-                  <div class="stat-item">🌍 {{ monsterDetails()!.attack_earth }}</div>
-                  <div class="stat-item">💧 {{ monsterDetails()!.attack_water }}</div>
-                  <div class="stat-item">💨 {{ monsterDetails()!.attack_air }}</div>
-                </div>
-              </div>
-
-              <div class="monster-stats">
-                <strong>Resistances:</strong>
-                <div class="stats-grid">
-                  <div class="stat-item">🔥 {{ monsterDetails()!.res_fire }}%</div>
-                  <div class="stat-item">🌍 {{ monsterDetails()!.res_earth }}%</div>
-                  <div class="stat-item">💧 {{ monsterDetails()!.res_water }}%</div>
-                  <div class="stat-item">💨 {{ monsterDetails()!.res_air }}%</div>
-                </div>
-              </div>
-
-              <div class="monster-stats">
-                <div class="monster-info-item">
-                  <strong>Critical:</strong> {{ monsterDetails()!.critical_strike }}%
-                </div>
-                <div class="monster-info-item">
-                  <strong>Initiative:</strong> {{ monsterDetails()!.initiative }}
-                </div>
-              </div>
-
-              <div class="monster-rewards">
-                <strong>Rewards:</strong>
-                <div class="monster-info-item">
-                  Gold: {{ monsterDetails()!.min_gold }}-{{ monsterDetails()!.max_gold }}
-                </div>
-                @if (monsterDetails()!.drops.length > 0) {
-                  <div class="drops-list">
-                    <strong>Possible Drops:</strong>
-                    @for (drop of monsterDetails()!.drops; track drop.code) {
-                      <div class="drop-item-detail">
-                        {{ drop.code }} ({{ drop.rate }}%)
-                      </div>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-          }
-          @if (isMonsterTile()) {
-            <button
-              class="fight-button"
-              [disabled]="
-                !selectedCharacter() ||
-                isCharacterOnCooldown(selectedCharacter())
-              "
-              (click)="fightMonster()">
-              Fight
-            </button>
-          }
-          @if (isResourceTile() && !resourceDetails()) {
-            <button class="show-details-button" (click)="loadResourceDetails()">
-              ? Show Resource Details
-            </button>
-          }
-          @if (resourceDetails()) {
-            <div class="resource-details-section">
-              <div class="resource-header">
-                <h4>{{ resourceDetails()!.name }}</h4>
-                <button class="hide-details-button" (click)="hideResourceDetails()">
-                  Hide
-                </button>
-              </div>
-              <div class="resource-info">
-                <div class="resource-info-item">
-                  <strong>Skill:</strong> {{ resourceDetails()!.skill }}
-                </div>
-                <div class="resource-info-item">
-                  <strong>Level:</strong> {{ resourceDetails()!.level }}
-                </div>
-                @if (resourceDetails()!.drops && resourceDetails()!.drops.length > 0) {
-                  <div class="drops-list">
-                    <strong>Possible Drops:</strong>
-                    @for (drop of resourceDetails()!.drops; track drop.code) {
-                      <div class="drop-item-detail">
-                        {{ drop.code }} ({{ drop.rate }}%)
-                      </div>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-          }
-          @if (isResourceTile()) {
-            <button
-              class="gather-button"
-              [disabled]="
-                !selectedCharacter() ||
-                isCharacterOnCooldown(selectedCharacter())
-              "
-              (click)="gatherResource()">
-              Gather
-            </button>
-          }
-          @if (isNpcTile() && !npcDetails()) {
-            <button class="show-details-button" (click)="loadNpcDetails()">
-              ? Show NPC Details
-            </button>
-          }
-          @if (npcDetails()) {
-            <div class="npc-details-section">
-              <div class="npc-header">
-                <h4>{{ npcDetails()!.name }}</h4>
-                <button class="hide-details-button" (click)="hideNpcDetails()">
-                  Hide
-                </button>
-              </div>
-              <div class="npc-info">
-                <div class="npc-info-item">
-                  <strong>Type:</strong> {{ npcDetails()!.type }}
-                </div>
-                @if (npcDetails()!.tasks && npcDetails()!.tasks.length > 0) {
-                  <div class="npc-tasks">
-                    <strong>Available Tasks:</strong>
-                    @for (task of npcDetails()!.tasks; track task) {
-                      <div class="task-item">{{ task }}</div>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-          }
-        </div>
-      }
-
-      @for (layer of layers(); track layer.name) {
-        <section class="layer-section">
-          <h2>{{ layer.name }}</h2>
-          <div class="map-container">
-            <div class="map-grid">
-              @for (row of layer.grid; track $index) {
-                <div class="map-row">
-                  @for (tile of row; track $index) {
-                    @if (tile) {
-                      <div
-                        class="map-tile ascii clickable"
-                        [class.has-character]="hasCharacter(tile)"
-                        [style.background-color]="getSkinColor(tile.skin)"
-                        (click)="onTileClick(tile)">
-                        @if (hasCharacter(tile)) {
-                          <div class="character-marker-ascii">@</div>
-                        } @else {
-                          @let rendered = getTileRender(tile);
-                          <div [class]="rendered.cssClass">{{ rendered.value }}</div>
-                        }
-                      </div>
+@if (!loading() && !error()) {
+  @for (layer of layers(); track layer.name) {
+    <section class="layer-section">
+      <h2>{{ layer.name }}</h2>
+      <div class="map-container">
+        <div class="map-grid">
+          @for (row of layer.grid; track $index) {
+            <div class="map-row">
+              @for (tile of row; track $index) {
+                @if (tile) {
+                  <div
+                    class="map-tile ascii clickable"
+                    [class.has-character]="hasCharacter(tile)"
+                    [style.background-color]="getSkinColor(tile.skin)"
+                    (click)="onTileClick(tile)">
+                    @if (hasCharacter(tile)) {
+                      @let character = getCharacterAt(tile);
+                      @if (character) {
+                        <div class="character-marker-emoji">{{ getSkinSymbol(character.skin) }}</div>
+                      } @else {
+                        <div class="character-marker-ascii">@</div>
+                      }
                     } @else {
-                      <div class="map-tile empty"></div>
+                      @let rendered = getTileRender(tile);
+                      <div [class]="rendered.cssClass">{{ rendered.value }}</div>
                     }
-                  }
-                </div>
+                  </div>
+                } @else {
+                  <div class="map-tile empty"></div>
+                }
               }
             </div>
-          </div>
-        </section>
-      }
-    }
-
-    <div class="characters-layer">
-      @for (character of characters(); track character.name) {
-        <div
-          class="character"
-          [class.selected]="isSelected(character)"
-          [class.on-cooldown]="isCharacterOnCooldown(character)"
-          (click)="selectCharacter(character)">
-          <div class="character-name">{{ character.name }}</div>
-          <div class="character-stats-inline">
-            <div class="stat-inline">
-              HP: {{ character.hp }}/{{ character.max_hp }}
-            </div>
-            <div class="stat-inline">
-              XP: {{ character.xp }}/{{ character.max_xp }}
-            </div>
-          </div>
-          @if (isCharacterOnCooldown(character)) {
-            <div class="cooldown-indicator">
-              {{ getCharacterCooldown(character.name)?.remainingSeconds }}s
-            </div>
           }
         </div>
-      }
-      @if (selectedCharacter()) {
-        <button
-          class="rest-button"
-          [disabled]="
-            isCharacterOnCooldown(selectedCharacter()) ||
-            isCharacterHpFull(selectedCharacter())
-          "
-          (click)="restCharacter()">
-          Rest
-        </button>
-      }
-    </div>
-  </div>
-</main>
+      </div>
+    </section>
+  }
+}

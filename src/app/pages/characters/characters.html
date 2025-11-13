@@ -1,6 +1,57 @@
 <main class="main">
   <div class="content">
-    <h1>My Characters</h1>
+    <div class="header">
+      <h1>My Characters</h1>
+      <button class="create-character-btn" (click)="toggleCreateForm()">
+        {{ showCreateForm() ? 'Cancel' : 'Create Character' }}
+      </button>
+    </div>
+
+    @if (showCreateForm()) {
+      <div class="create-character-form">
+        <h2>Create New Character</h2>
+
+        @if (createError()) {
+          <div class="error">
+            {{ createError() }}
+          </div>
+        }
+
+        <div class="form-group">
+          <label for="character-name">Character Name</label>
+          <input
+            id="character-name"
+            type="text"
+            [(ngModel)]="newCharacterName"
+            placeholder="Enter character name (3-12 characters)"
+            maxlength="12"
+            [disabled]="creatingCharacter()"
+          />
+          <small>Letters, numbers, hyphens, and underscores only</small>
+        </div>
+
+        <div class="form-group">
+          <label for="character-skin">Skin</label>
+          <select
+            id="character-skin"
+            [(ngModel)]="newCharacterSkin"
+            [disabled]="creatingCharacter()"
+          >
+            @for (skin of availableSkins; track skin) {
+              <option [value]="skin">{{ getSkinSymbol(skin) }} {{ skin }}</option>
+            }
+          </select>
+        </div>
+
+        <button
+          class="submit-btn"
+          (click)="createCharacter()"
+          [disabled]="creatingCharacter() || !newCharacterName()"
+        >
+          {{ creatingCharacter() ? 'Creating...' : 'Create' }}
+        </button>
+      </div>
+    }
 
     @if (loading()) {
       <div class="loading">
@@ -14,6 +65,12 @@
       </div>
     }
 
+    @if (deleteError()) {
+      <div class="error">
+        {{ deleteError() }}
+      </div>
+    }
+
     @if (!loading() && !error()) {
       <div class="characters-list">
         @if (characters().length === 0) {
@@ -23,16 +80,30 @@
         }
 
         @for (character of characters(); track character.name) {
-          <a [routerLink]="['/characters', character.name]" class="character-card">
-            <h2>{{ character.name }}</h2>
-            <p><strong>Level:</strong> {{ character.level }}</p>
-            <p><strong>HP:</strong> {{ character.hp }} / {{ character.max_hp }}</p>
-            <p><strong>Gold:</strong> {{ character.gold }}</p>
-            <p><strong>Position:</strong> ({{ character.x }}, {{ character.y }})</p>
-            @if (character.task) {
-              <p><strong>Task:</strong> {{ character.task }}</p>
-            }
-          </a>
+          <div class="character-card-wrapper">
+            <a [routerLink]="['/characters', character.name]" class="character-card">
+              <div class="character-header">
+                <span class="character-icon">{{ getSkinSymbol(character.skin) }}</span>
+                <h2>{{ character.name }}</h2>
+              </div>
+              <p><strong>Skin:</strong> {{ character.skin }}</p>
+              <p><strong>Level:</strong> {{ character.level }}</p>
+              <p><strong>HP:</strong> {{ character.hp }} / {{ character.max_hp }}</p>
+              <p><strong>Gold:</strong> {{ character.gold }}</p>
+              <p><strong>Position:</strong> ({{ character.x }}, {{ character.y }})</p>
+              @if (character.task) {
+                <p><strong>Task:</strong> {{ character.task }}</p>
+              }
+            </a>
+            <button
+              class="delete-character-btn"
+              (click)="deleteCharacter(character.name)"
+              [disabled]="isDeleting(character.name)"
+              title="Delete character"
+            >
+              {{ isDeleting(character.name) ? 'Deleting...' : '×' }}
+            </button>
+          </div>
         }
       </div>
     }
