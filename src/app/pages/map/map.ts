@@ -1,10 +1,15 @@
-import { Component, computed, input, output, inject } from '@angular/core'
+import { Component, computed, input, output, inject, effect } from '@angular/core'
 import { injectQuery } from '@tanstack/angular-query-experimental'
-import { getLayerMapsMapsLayerGet, type CharacterSkin } from '../../../sdk/api'
+import type { CharacterSkin } from '../../../sdk/api'
 import mapSkins from '../../../assets/map-skins.json'
 import { TileBase, TileFactory } from '../../domain/tile'
 import type { Character, MapLayer, Map as MapTile } from '../../domain/types'
 import { SkinService } from '../../services/skin.service'
+import { MapService } from '../../services/map.service'
+import { QUERY_KEYS } from '../../shared/constants/query-keys'
+import { APP_CONFIG } from '../../shared/constants/app-config'
+import { CharacterUtils } from '../../shared/utils/character.utils'
+import { LoggerService } from '../../services/logger.service'
 
 @Component({
   selector: 'app-map',
@@ -13,6 +18,8 @@ import { SkinService } from '../../services/skin.service'
   styleUrl: './map.scss',
 })
 export class Map {
+  private mapService = inject(MapService)
+  private logger = inject(LoggerService)
   skinService = inject(SkinService)
 
   characters = input.required<Character[]>()
@@ -22,13 +29,13 @@ export class Map {
   skinColors: Record<string, string> = {}
 
   mapsQuery = injectQuery(() => ({
-    queryKey: ['maps', 'overworld'],
+    queryKey: QUERY_KEYS.maps.layer('overworld'),
     queryFn: async (): Promise<MapLayer[]> => {
-      const tiles = await this.fetchAllLayerPages('overworld')
-      const grid = this.createGrid(tiles)
+      const tiles = await this.mapService.fetchAllLayerTiles('overworld')
+      const grid = this.mapService.createGrid(tiles)
       return [{ name: 'overworld', tiles, grid }]
     },
-    staleTime: 1000 * 60 * 10,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_10_MIN,
   }))
 
   layers = computed((): MapLayer[] => this.mapsQuery.data() ?? [])
@@ -41,61 +48,25 @@ export class Map {
 
   constructor() {
     this.initializeSkinColors()
+
+    effect(() => {
+      const chars = this.characters()
+      this.logger.info(`Map received ${chars.length} characters`, 'Map')
+      chars.forEach((char, index) => {
+        this.logger.info(`Character ${index} raw data:`, 'Map', char)
+        const hasValidPos = CharacterUtils.hasValidPosition(char)
+        this.logger.info(
+          `Character: ${char?.name || 'undefined'}, Skin: ${char?.skin || 'undefined'}, Position: (${char?.x}, ${char?.y}), Valid: ${hasValidPos}`,
+          'Map'
+        )
+      })
+    })
   }
 
   private initializeSkinColors(): void {
     Object.entries(mapSkins).forEach(([skin, data]) => {
       this.skinColors[skin] = data.color
     })
-  }
-
-  private async fetchAllLayerPages(layerName: string): Promise<MapTile[]> {
-    const allTiles: MapTile[] = []
-    let page = 1
-    let hasMore = true
-
-    while (hasMore) {
-      const layerResponse = await getLayerMapsMapsLayerGet({
-        // @ts-ignore
-        path: { layer: layerName },
-        query: { page, size: 100 },
-      })
-
-      if (layerResponse && 'data' in layerResponse && layerResponse.data) {
-        const tiles = (layerResponse.data as { data?: MapTile[] })?.data || []
-        allTiles.push(...tiles)
-
-        if (tiles.length === 0 || tiles.length < 100) {
-          hasMore = false
-        } else {
-          page++
-        }
-      } else {
-        hasMore = false
-      }
-    }
-
-    return allTiles
-  }
-
-  private createGrid(tiles: MapTile[]): (MapTile | null)[][] {
-    if (tiles.length === 0) return []
-
-    const minX = Math.min(...tiles.map((t) => t.x))
-    const maxX = Math.max(...tiles.map((t) => t.x))
-    const minY = Math.min(...tiles.map((t) => t.y))
-    const maxY = Math.max(...tiles.map((t) => t.y))
-
-    const grid: (MapTile | null)[][] = []
-    for (let y = minY; y <= maxY; y++) {
-      const row: (MapTile | null)[] = []
-      for (let x = minX; x <= maxX; x++) {
-        const tile = tiles.find((t) => t.x === x && t.y === y)
-        row.push(tile || null)
-      }
-      grid.push(row)
-    }
-    return grid
   }
 
   createTile(tileData: MapTile): TileBase | null {
@@ -128,19 +99,35 @@ export class Map {
 
   hasCharacter(tile: MapTile | null): boolean {
     if (!tile) return false
-    return this.characters().some(
-      (char) => char.x === tile.x && char.y === tile.y,
-    )
+    return this.characters().some((char) => {
+      if (!CharacterUtils.hasValidPosition(char)) {
+        this.logger.warn(`Character ${char.name} has invalid position`, 'Map', {
+          x: char.x,
+          y: char.y,
+          tileX: tile.x,
+          tileY: tile.y
+        })
+        return false
+      }
+      return char.x === tile.x && char.y === tile.y
+    })
   }
 
   getCharacterAt(tile: MapTile | null): Character | null {
     if (!tile) return null
-    return this.characters().find(
-      (char) => char.x === tile.x && char.y === tile.y,
-    ) || null
+    return this.characters().find((char) => {
+      if (!CharacterUtils.hasValidPosition(char)) {
+        return false
+      }
+      return char.x === tile.x && char.y === tile.y
+    }) || null
   }
 
   getSkinSymbol(skin: string): string {
-    return this.skinService.getSymbol(skin)
+    const symbol = this.skinService.getSymbol(skin)
+    if (symbol === '❓') {
+      this.logger.warn(`Unknown skin type: ${skin}`, 'Map')
+    }
+    return symbol
   }
 }

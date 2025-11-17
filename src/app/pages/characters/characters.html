@@ -102,7 +102,7 @@
               <p><strong>Level:</strong> {{ character.level }}</p>
               <p><strong>HP:</strong> {{ character.hp }} / {{ character.max_hp }}</p>
               <p><strong>Gold:</strong> {{ character.gold }}</p>
-              <p><strong>Position:</strong> ({{ character.x }}, {{ character.y }})</p>
+              <p><strong>Position:</strong> {{ character | safePosition }}</p>
               @if (character.task) {
                 <p><strong>Task:</strong> {{ character.task }}</p>
               }

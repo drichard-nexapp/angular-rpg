@@ -10,6 +10,8 @@ import {
   type MyAccountDetails,
   type AccountAchievementSchema,
 } from '../../../sdk/api'
+import { unwrapApiItem, unwrapApiResponse } from '../../shared/utils'
+import { QUERY_KEYS } from '../../shared/constants/query-keys'
 
 @Component({
   selector: 'app-achievements',
@@ -22,23 +24,20 @@ export class Achievements {
   queryClient = injectQueryClient()
 
   accountQuery = injectQuery(() => ({
-    queryKey: ['account-details'],
+    queryKey: QUERY_KEYS.account.details(),
     queryFn: async (): Promise<MyAccountDetails> => {
       const response = await getAccountDetailsMyDetailsGet()
-      if (response && 'data' in response && response.data) {
-        const data = (response.data as { data?: MyAccountDetails })?.data
-        if (data) return data
-      }
+      const data = unwrapApiItem<MyAccountDetails>(response, null)
+      if (data) return data
       throw new Error('Failed to load account details')
     },
   }))
 
   achievementsQuery = injectQuery(() => ({
-    queryKey: [
-      'achievements',
-      this.accountQuery.data()?.username,
-      this.filterCompleted(),
-    ],
+    queryKey: QUERY_KEYS.account.achievements(
+      this.accountQuery.data()?.username || '',
+      this.filterCompleted()
+    ),
     queryFn: async (): Promise<AccountAchievementSchema[]> => {
       const username = this.accountQuery.data()?.username
       if (!username) throw new Error('Account not loaded')
@@ -51,10 +50,7 @@ export class Achievements {
           },
         })
 
-      if (response && 'data' in response && response.data) {
-        return (response.data as { data?: AccountAchievementSchema[] })?.data || []
-      }
-      throw new Error('Failed to load achievements')
+      return unwrapApiResponse<AccountAchievementSchema[]>(response, [])
     },
     enabled: !!this.accountQuery.data()?.username,
   }))

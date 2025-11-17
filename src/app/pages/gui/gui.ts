@@ -1,4 +1,4 @@
-import { Component, OnDestroy, computed, signal, inject } from '@angular/core'
+import { Component, computed, signal, inject } from '@angular/core'
 import {
   injectQuery,
   injectQueryClient,
@@ -31,15 +31,21 @@ import { CooldownService } from '../../services/cooldown.service'
 import { SkinService } from '../../services/skin.service'
 import { ActionService } from '../../services/action.service'
 import { NpcService } from '../../services/npc.service'
+import { ErrorHandlerService } from '../../services/error-handler.service'
+import { LoggerService } from '../../services/logger.service'
 import { unwrapApiResponse, unwrapApiItem } from '../../shared/utils'
+import { QUERY_KEYS } from '../../shared/constants/query-keys'
+import { APP_CONFIG } from '../../shared/constants/app-config'
+import { TileUtils, CharacterUtils } from '../../shared/utils'
+import { ErrorDisplay } from '../../components/shared/error-display/error-display'
 
 @Component({
   selector: 'app-gui',
-  imports: [Map],
+  imports: [Map, ErrorDisplay],
   templateUrl: './gui.html',
   styleUrl: './gui.scss',
 })
-export class GUI implements OnDestroy {
+export class GUI {
   queryClient = injectQueryClient()
   private characterService = inject(CharacterService)
   private inventoryService = inject(InventoryService)
@@ -47,17 +53,23 @@ export class GUI implements OnDestroy {
   private cooldownService = inject(CooldownService)
   private actionService = inject(ActionService)
   private npcService = inject(NpcService)
+  private logger = inject(LoggerService)
+  errorHandler = inject(ErrorHandlerService)
   skinService = inject(SkinService)
 
   selectedCharacter = this.characterService.getSelectedCharacterSignal()
   characters = this.characterService.getCharactersSignal()
 
   getSkinSymbol(skin: string): string {
-    return this.skinService.getSymbol(skin)
+    const symbol = this.skinService.getSymbol(skin)
+    if (symbol === '❓') {
+      this.logger.warn(`Unknown skin type: ${skin}`, 'GUI')
+    }
+    return symbol
   }
 
   npcItemsQuery = injectQuery(() => ({
-    queryKey: ['npc-items', this.mapService.getNpcCode()],
+    queryKey: QUERY_KEYS.npcs.items(this.mapService.getNpcCode() || ''),
     queryFn: async (): Promise<NpcItem[]> => {
       const npcCode = this.mapService.getNpcCode()
       if (!npcCode) return []
@@ -70,36 +82,36 @@ export class GUI implements OnDestroy {
       return unwrapApiResponse<NpcItem[]>(response, [])
     },
     enabled: !!this.mapService.getNpcCode(),
-    staleTime: 1000 * 60 * 60,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
   }))
 
   activeEventsQuery = injectQuery(() => ({
-    queryKey: ['active-events'],
+    queryKey: QUERY_KEYS.events.active(),
     queryFn: async (): Promise<ActiveEvent[]> => {
       const response = await getAllActiveEventsEventsActiveGet()
       return unwrapApiResponse<ActiveEvent[]>(response, [])
     },
-    staleTime: 1000 * 60,
-    refetchInterval: 1000 * 60,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_1_MIN,
+    refetchInterval: APP_CONFIG.CACHE.REFETCH_INTERVAL_1_MIN,
   }))
 
   itemsQuery = injectQuery(() => ({
-    queryKey: ['all-items'],
+    queryKey: QUERY_KEYS.items.all(),
     queryFn: async (): Promise<Item[]> => {
       const response = await getAllItemsItemsGet({
-        query: { size: 1000 },
+        query: { size: 100 },
       })
 
       return unwrapApiResponse<Item[]>(response, [])
     },
-    staleTime: 1000 * 60 * 60,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
   }))
 
   currentTileDetails = computed(() => this.mapService.getTileData())
   activeEvents = computed(() => this.activeEventsQuery.data() ?? [])
   items = computed(() => this.itemsQuery.data() ?? [])
   craftableItems = computed(() =>
-    this.items().filter(item => item.craft && item.craft.skill)
+    this.items().filter((item) => item.craft && item.craft.skill),
   )
 
   characterInventory = computed(() => {
@@ -107,29 +119,43 @@ export class GUI implements OnDestroy {
   })
 
   getInventoryQuantity(itemCode: string): number {
-    return this.inventoryService.getItemQuantity(this.selectedCharacter(), itemCode)
+    return this.inventoryService.getItemQuantity(
+      this.selectedCharacter(),
+      itemCode,
+    )
   }
 
   canCraftItem(item: Item): boolean {
     return this.inventoryService.canCraftItem(this.selectedCharacter(), item)
   }
+
+  private monsterCode = computed(() =>
+    TileUtils.getMonsterCode(this.currentTileDetails()),
+  )
+  private resourceCode = computed(() =>
+    TileUtils.getResourceCode(this.currentTileDetails()),
+  )
+  private npcCode = computed(() =>
+    TileUtils.getNpcCode(this.currentTileDetails()),
+  )
+
   monsterDetails = computed(() => {
-    const monsterCode = this.getMonsterCode()
-    if (!monsterCode || monsterCode !== this.mapService.getMonsterCode()) {
+    const code = this.monsterCode()
+    if (!code || code !== this.mapService.getMonsterCode()) {
       return null
     }
     return this.mapService.getMonsterData()
   })
   resourceDetails = computed(() => {
-    const resourceCode = this.getResourceCode()
-    if (!resourceCode || resourceCode !== this.mapService.getResourceCode()) {
+    const code = this.resourceCode()
+    if (!code || code !== this.mapService.getResourceCode()) {
       return null
     }
     return this.mapService.getResourceData()
   })
   npcDetails = computed(() => {
-    const npcCode = this.getNpcCode()
-    if (!npcCode || npcCode !== this.mapService.getNpcCode()) {
+    const code = this.npcCode()
+    if (!code || code !== this.mapService.getNpcCode()) {
       return null
     }
     return this.mapService.getNpcData()
@@ -137,41 +163,10 @@ export class GUI implements OnDestroy {
   npcItems = computed(() => this.npcItemsQuery.data() ?? [])
 
   npcActionInProgress = signal(false)
-  npcActionError = signal<string | null>(null)
-
   craftingInProgress = signal(false)
-  craftingError = signal<string | null>(null)
 
   constructor() {
     this.characterService.loadCharactersList()
-  }
-
-  private getMonsterCode(): string | null {
-    const tileData = this.currentTileDetails()
-    if (!tileData) return null
-    const tile = this.createTile(tileData)
-    if (tile instanceof MonsterTile) {
-      return tile.getMonsterCode()
-    }
-    return null
-  }
-
-  private getResourceCode(): string | null {
-    const tileData = this.currentTileDetails()
-    if (!tileData?.interactions?.content) return null
-    if (tileData.interactions.content.type === 'resource') {
-      return tileData.interactions.content.code
-    }
-    return null
-  }
-
-  private getNpcCode(): string | null {
-    const tileData = this.currentTileDetails()
-    if (!tileData?.interactions?.content) return null
-    if (tileData.interactions.content.type === 'npc') {
-      return tileData.interactions.content.code
-    }
-    return null
   }
 
   createTile(tileData: MapTile): TileBase | null {
@@ -185,7 +180,14 @@ export class GUI implements OnDestroy {
       this.mapService.clearAll()
     } else {
       this.characterService.selectCharacter(character)
-      this.mapService.setTilePosition({ x: character.x, y: character.y })
+
+      const position = CharacterUtils.getPosition(character)
+      if (position) {
+        this.mapService.setTilePosition(position)
+      } else {
+        this.logger.error('Character has invalid coordinates', 'GUI', { character })
+      }
+
       this.mapService.setMonsterCode(null)
       this.mapService.setResourceCode(null)
       this.mapService.setNpcCode(null)
@@ -216,50 +218,45 @@ export class GUI implements OnDestroy {
       this.mapService.setResourceCode(null)
       this.mapService.setNpcCode(null)
     } catch (err) {
-      console.error('Error moving character:', err)
+      this.logger.error('Error moving character', 'GUI', err)
     }
   }
 
   loadMonsterDetails() {
-    const monsterCode = this.getMonsterCode()
+    const monsterCode = this.monsterCode()
     if (monsterCode) {
       this.mapService.setMonsterCode(monsterCode)
     }
   }
 
   loadResourceDetails() {
-    const resourceCode = this.getResourceCode()
+    const resourceCode = this.resourceCode()
     if (resourceCode) {
       this.mapService.setResourceCode(resourceCode)
     }
   }
 
   loadNpcDetails() {
-    const npcCode = this.getNpcCode()
+    const npcCode = this.npcCode()
     if (npcCode) {
       this.mapService.setNpcCode(npcCode)
     }
   }
 
   isMonsterTile(): boolean {
-    const tileData = this.currentTileDetails()
-    if (!tileData) return false
-    const tile = this.createTile(tileData)
-    return tile instanceof MonsterTile
+    return TileUtils.hasMonster(this.currentTileDetails())
   }
 
   isResourceTile(): boolean {
-    return !!this.getResourceCode()
+    return TileUtils.hasResource(this.currentTileDetails())
   }
 
   isNpcTile(): boolean {
-    return !!this.getNpcCode()
+    return TileUtils.hasNpc(this.currentTileDetails())
   }
 
   isWorkshopTile(): boolean {
-    const tileData = this.currentTileDetails()
-    if (!tileData?.interactions?.content) return false
-    return tileData.interactions.content.type === 'workshop'
+    return TileUtils.hasWorkshop(this.currentTileDetails())
   }
 
   hideMonsterDetails() {
@@ -294,7 +291,7 @@ export class GUI implements OnDestroy {
   async restCharacter(): Promise<void> {
     const result = await this.actionService.restCharacter()
     if (!result.success && result.error) {
-      console.error('Error resting character:', result.error)
+      this.logger.error('Error resting character', 'GUI', result.error)
     }
   }
 
@@ -302,11 +299,12 @@ export class GUI implements OnDestroy {
     const result = await this.actionService.fightMonster()
     if (result.success) {
       const selected = this.selectedCharacter()
-      if (selected) {
-        this.mapService.setTilePosition({ x: selected.x, y: selected.y })
+      const position = CharacterUtils.getPosition(selected)
+      if (position) {
+        this.mapService.setTilePosition(position)
       }
     } else if (result.error) {
-      console.error('Error fighting monster:', result.error)
+      this.logger.error('Error fighting monster', 'GUI', result.error)
     }
   }
 
@@ -314,59 +312,52 @@ export class GUI implements OnDestroy {
     const result = await this.actionService.gatherResource()
     if (result.success) {
       const selected = this.selectedCharacter()
-      if (selected) {
-        this.mapService.setTilePosition({ x: selected.x, y: selected.y })
+      const position = CharacterUtils.getPosition(selected)
+      if (position) {
+        this.mapService.setTilePosition(position)
       }
     } else if (result.error) {
-      console.error('Error gathering resource:', result.error)
+      this.logger.error('Error gathering resource', 'GUI', result.error)
     }
   }
 
   async buyItemFromNpc(itemCode: string, quantity: number): Promise<void> {
     this.npcActionInProgress.set(true)
-    this.npcActionError.set(null)
 
     const result = await this.npcService.buyItemFromNpc(itemCode, quantity)
     if (!result.success && result.error) {
-      this.npcActionError.set(result.error)
+      this.errorHandler.handleError(result.error, 'NPC Purchase')
     }
     this.npcActionInProgress.set(false)
   }
 
   async sellItemToNpc(itemCode: string, quantity: number): Promise<void> {
     this.npcActionInProgress.set(true)
-    this.npcActionError.set(null)
 
     const result = await this.npcService.sellItemToNpc(itemCode, quantity)
     if (!result.success && result.error) {
-      this.npcActionError.set(result.error)
+      this.errorHandler.handleError(result.error, 'NPC Sale')
     }
     this.npcActionInProgress.set(false)
   }
 
   async acceptTaskFromNpc(): Promise<void> {
     this.npcActionInProgress.set(true)
-    this.npcActionError.set(null)
 
     const result = await this.npcService.acceptTaskFromNpc()
     if (!result.success && result.error) {
-      this.npcActionError.set(result.error)
+      this.errorHandler.handleError(result.error, 'NPC Task')
     }
     this.npcActionInProgress.set(false)
   }
 
   async craftItem(itemCode: string, quantity: number = 1): Promise<void> {
     this.craftingInProgress.set(true)
-    this.craftingError.set(null)
 
     const result = await this.actionService.craftItem(itemCode, quantity)
     if (!result.success && result.error) {
-      this.craftingError.set(result.error)
-      console.error('Error crafting item:', result.error)
+      this.errorHandler.handleError(result.error, 'Crafting')
     }
     this.craftingInProgress.set(false)
-  }
-
-  ngOnDestroy() {
   }
 }

@@ -24,7 +24,7 @@
           <p><strong>HP:</strong> {{ char.hp }} / {{ char.max_hp }}</p>
           <p><strong>Gold:</strong> {{ char.gold }}</p>
           <p><strong>Speed:</strong> {{ char.speed }}</p>
-          <p><strong>Position:</strong> ({{ char.x }}, {{ char.y }})</p>
+          <p><strong>Position:</strong> {{ char | safePosition }}</p>
         </section>
 
         <section class="combat-stats">

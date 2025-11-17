@@ -1,10 +1,11 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable, signal, OnDestroy } from '@angular/core'
 import type { Cooldown, CooldownTracking } from '../domain/types'
+import { APP_CONFIG } from '../shared/constants/app-config'
 
 @Injectable({
   providedIn: 'root',
 })
-export class CooldownService {
+export class CooldownService implements OnDestroy {
   private cooldowns = signal<Record<string, CooldownTracking>>({})
   private intervals: Record<string, ReturnType<typeof setInterval>> = {}
 
@@ -37,7 +38,7 @@ export class CooldownService {
         } else {
           this.clearCooldown(characterName)
         }
-      }, 1000)
+      }, APP_CONFIG.COOLDOWN.POLL_INTERVAL)
     }
   }
 
@@ -72,5 +73,9 @@ export class CooldownService {
     })
     this.intervals = {}
     this.cooldowns.set({})
+  }
+
+  ngOnDestroy(): void {
+    this.clearAllCooldowns()
   }
 }

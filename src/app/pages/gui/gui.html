@@ -2,6 +2,8 @@
   <div class="content">
     <h1>Maps</h1>
 
+    <app-error-display></app-error-display>
+
     @if (activeEvents().length > 0) {
       <div class="active-events-float">
         <div class="events-float-header">
@@ -237,12 +239,6 @@
             } @else {
               <p class="no-crafts">No crafts available at this time.</p>
             }
-
-            @if (craftingError()) {
-              <div class="crafting-error-message">
-                {{ craftingError() }}
-              </div>
-            }
           </div>
         }
         @if (isNpcTile() && !npcDetails()) {
@@ -328,12 +324,6 @@
                   </div>
                 </div>
               }
-            }
-
-            @if (npcActionError()) {
-              <div class="npc-error-message">
-                {{ npcActionError() }}
-              </div>
             }
           </div>
         }

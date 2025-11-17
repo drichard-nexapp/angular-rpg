@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core'
+import { Injectable, signal, computed, inject } from '@angular/core'
+import { LoggerService } from './logger.service'
 
 export interface AppError {
   message: string
@@ -12,6 +13,7 @@ export interface AppError {
   providedIn: 'root',
 })
 export class ErrorHandlerService {
+  private logger = inject(LoggerService)
   private errors = signal<AppError[]>([])
 
   readonly currentError = computed(() => this.errors()[0] || null)
@@ -27,7 +29,7 @@ export class ErrorHandlerService {
       context,
     }
 
-    console.error(`[${context || 'App'}] Error:`, appError)
+    this.logger.error(appError.message, context || 'App', appError.details)
 
     this.errors.update(errors => [...errors, appError])
 

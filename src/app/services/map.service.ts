@@ -5,9 +5,12 @@ import {
   getMonsterMonstersCodeGet,
   getResourceResourcesCodeGet,
   getNpcNpcsDetailsCodeGet,
+  getLayerMapsMapsLayerGet,
 } from '../../sdk/api'
 import type { TilePosition, Map as MapTile, Monster, Resource, Npc } from '../domain/types'
-import { unwrapApiItem } from '../shared/utils'
+import { unwrapApiItem, unwrapApiResponse } from '../shared/utils'
+import { QUERY_KEYS } from '../shared/constants/query-keys'
+import { APP_CONFIG } from '../shared/constants/app-config'
 
 @Injectable({
   providedIn: 'root',
@@ -21,18 +24,17 @@ export class MapService {
   private currentNpcCode = signal<string | null>(null)
 
   tileDetailsQuery = injectQuery(() => ({
-    queryKey: [
-      'tile-details',
-      this.currentTilePosition()?.x,
-      this.currentTilePosition()?.y,
-    ],
+    queryKey: QUERY_KEYS.maps.tileDetails(
+      this.currentTilePosition()?.x || 0,
+      this.currentTilePosition()?.y || 0
+    ),
     queryFn: async (): Promise<MapTile | null> => {
       const pos = this.currentTilePosition()
       if (!pos) return null
 
       const response = await getMapByPositionMapsLayerXYGet({
         path: {
-          layer: 'overworld',
+          layer: APP_CONFIG.MAP.DEFAULT_LAYER,
           x: pos.x,
           y: pos.y,
         },
@@ -41,11 +43,11 @@ export class MapService {
       return unwrapApiItem<MapTile>(response, null)
     },
     enabled: !!this.currentTilePosition(),
-    staleTime: 1000 * 60 * 30,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_30_MIN,
   }))
 
   monsterDetailsQuery = injectQuery(() => ({
-    queryKey: ['monster-details', this.currentMonsterCode()],
+    queryKey: QUERY_KEYS.monsters.detail(this.currentMonsterCode() || ''),
     queryFn: async (): Promise<Monster | null> => {
       const monsterCode = this.currentMonsterCode()
       if (!monsterCode) return null
@@ -64,11 +66,11 @@ export class MapService {
       return null
     },
     enabled: !!this.currentMonsterCode(),
-    staleTime: 1000 * 60 * 60,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
   }))
 
   resourceDetailsQuery = injectQuery(() => ({
-    queryKey: ['resource-details', this.currentResourceCode()],
+    queryKey: QUERY_KEYS.resources.detail(this.currentResourceCode() || ''),
     queryFn: async (): Promise<Resource | null> => {
       const resourceCode = this.currentResourceCode()
       if (!resourceCode) return null
@@ -80,11 +82,11 @@ export class MapService {
       return unwrapApiItem<Resource>(response, null)
     },
     enabled: !!this.currentResourceCode(),
-    staleTime: 1000 * 60 * 60,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
   }))
 
   npcDetailsQuery = injectQuery(() => ({
-    queryKey: ['npc-details', this.currentNpcCode()],
+    queryKey: QUERY_KEYS.npcs.detail(this.currentNpcCode() || ''),
     queryFn: async (): Promise<Npc | null> => {
       const npcCode = this.currentNpcCode()
       if (!npcCode) return null
@@ -96,7 +98,7 @@ export class MapService {
       return unwrapApiItem<Npc>(response, null)
     },
     enabled: !!this.currentNpcCode(),
-    staleTime: 1000 * 60 * 60,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
   }))
 
   setTilePosition(position: TilePosition | null): void {
@@ -152,5 +154,49 @@ export class MapService {
     this.currentMonsterCode.set(null)
     this.currentResourceCode.set(null)
     this.currentNpcCode.set(null)
+  }
+
+  async fetchAllLayerTiles(layerName: string): Promise<MapTile[]> {
+    const allTiles: MapTile[] = []
+    let page = 1
+    let hasMore = true
+
+    while (hasMore) {
+      const layerResponse = await getLayerMapsMapsLayerGet({
+        path: { layer: layerName as 'overworld' },
+        query: { page, size: 100 },
+      })
+
+      const tiles = unwrapApiResponse<MapTile[]>(layerResponse, [])
+      allTiles.push(...tiles)
+
+      if (tiles.length === 0 || tiles.length < 100) {
+        hasMore = false
+      } else {
+        page++
+      }
+    }
+
+    return allTiles
+  }
+
+  createGrid(tiles: MapTile[]): (MapTile | null)[][] {
+    if (tiles.length === 0) return []
+
+    const minX = Math.min(...tiles.map((t) => t.x))
+    const maxX = Math.max(...tiles.map((t) => t.x))
+    const minY = Math.min(...tiles.map((t) => t.y))
+    const maxY = Math.max(...tiles.map((t) => t.y))
+
+    const grid: (MapTile | null)[][] = []
+    for (let y = minY; y <= maxY; y++) {
+      const row: (MapTile | null)[] = []
+      for (let x = minX; x <= maxX; x++) {
+        const tile = tiles.find((t) => t.x === x && t.y === y)
+        row.push(tile || null)
+      }
+      grid.push(row)
+    }
+    return grid
   }
 }

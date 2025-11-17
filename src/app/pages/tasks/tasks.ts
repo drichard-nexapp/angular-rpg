@@ -2,6 +2,9 @@ import { Component, computed, signal } from '@angular/core'
 import { injectQuery } from '@tanstack/angular-query-experimental'
 import { getAllTasksTasksListGet, type Skill } from '../../../sdk/api'
 import type { TaskFull } from '../../domain/types'
+import { unwrapApiResponse } from '../../shared/utils'
+import { QUERY_KEYS } from '../../shared/constants/query-keys'
+import { APP_CONFIG } from '../../shared/constants/app-config'
 
 @Component({
   selector: 'app-tasks',
@@ -15,7 +18,7 @@ export class Tasks {
   filterMaxLevel = signal<number | undefined>(undefined)
 
   tasksQuery = injectQuery(() => ({
-    queryKey: ['tasks', this.filterSkill(), this.filterMinLevel(), this.filterMaxLevel()],
+    queryKey: QUERY_KEYS.tasks.list(this.filterSkill(), this.filterMinLevel(), this.filterMaxLevel()),
     queryFn: async (): Promise<TaskFull[]> => {
       const response = await getAllTasksTasksListGet({
         query: {
@@ -25,12 +28,9 @@ export class Tasks {
         },
       })
 
-      if (response && 'data' in response && response.data) {
-        return (response.data as { data?: TaskFull[] })?.data || []
-      }
-      return []
+      return unwrapApiResponse<TaskFull[]>(response, [])
     },
-    staleTime: 1000 * 60 * 10,
+    staleTime: APP_CONFIG.CACHE.STALE_TIME_10_MIN,
   }))
 
   tasks = computed((): TaskFull[] => this.tasksQuery.data() ?? [])

@@ -28,10 +28,10 @@ describe('API Response Handler', () => {
       expect(result).toEqual([])
     })
 
-    it('should return default value when nested data is missing', () => {
+    it('should return empty object when nested data is missing', () => {
       const response = { data: {} }
-      const result = unwrapApiResponse(response, [])
-      expect(result).toEqual([])
+      const result = unwrapApiResponse<any>(response, [])
+      expect(result).toEqual({})
     })
 
     it('should return default value when nested data is null', () => {
@@ -63,6 +63,39 @@ describe('API Response Handler', () => {
       }
       const result = unwrapApiResponse(response, 0)
       expect(result).toEqual(42)
+    })
+
+    it('should handle direct array structure { data: [...] }', () => {
+      const response = {
+        data: [{ id: 1, name: 'Test' }, { id: 2, name: 'Test2' }]
+      }
+      const result = unwrapApiResponse<Array<{ id: number; name: string }>>(response, [])
+      expect(result).toEqual([{ id: 1, name: 'Test' }, { id: 2, name: 'Test2' }])
+    })
+
+    it('should handle direct object structure { data: T }', () => {
+      const response = {
+        data: { id: 1, name: 'Test', value: 42 }
+      }
+      const result = unwrapApiResponse<{ id: number; name: string; value: number }>(response, null as any)
+      expect(result).toEqual({ id: 1, name: 'Test', value: 42 })
+    })
+
+    it('should handle empty array in direct structure', () => {
+      const response = { data: [] }
+      const result = unwrapApiResponse(response, [])
+      expect(result).toEqual([])
+    })
+
+    it('should prioritize nested structure over direct structure', () => {
+      const response = {
+        data: {
+          data: [{ id: 1, name: 'Nested' }],
+          extra: 'field'
+        }
+      }
+      const result = unwrapApiResponse<Array<{ id: number; name: string }>>(response, [])
+      expect(result).toEqual([{ id: 1, name: 'Nested' }])
     })
   })
 
@@ -97,12 +130,12 @@ describe('API Response Handler', () => {
       expect(result).toBeNull()
     })
 
-    it('should work with array values', () => {
+    it('should return null for array values since this is for single items', () => {
       const response = {
         data: [1, 2, 3]
       }
-      const result = unwrapApiItem<number[]>(response)
-      expect(result).toEqual([1, 2, 3])
+      const result = unwrapApiItem<number>(response)
+      expect(result).toBeNull()
     })
 
     it('should work with complex nested objects', () => {
@@ -117,6 +150,48 @@ describe('API Response Handler', () => {
         character: { name: 'Hero', level: 10 },
         cooldown: { total_seconds: 30 }
       })
+    })
+
+    it('should handle nested response structure { data: { data: T } }', () => {
+      const response = {
+        data: {
+          data: { id: 1, name: 'Test', x: 5, y: 10 }
+        }
+      }
+      const result = unwrapApiItem<{ id: number; name: string; x: number; y: number }>(response)
+      expect(result).toEqual({ id: 1, name: 'Test', x: 5, y: 10 })
+    })
+
+    it('should return default value when data is an array', () => {
+      const response = {
+        data: [{ id: 1 }, { id: 2 }]
+      }
+      const result = unwrapApiItem<{ id: number }>(response)
+      expect(result).toBeNull()
+    })
+
+    it('should prioritize nested structure { data: { data: T } } over direct { data: T }', () => {
+      const response = {
+        data: {
+          data: { id: 1, name: 'Nested' },
+          extra: 'This should be ignored'
+        }
+      }
+      const result = unwrapApiItem<{ id: number; name: string }>(response)
+      expect(result).toEqual({ id: 1, name: 'Nested' })
+    })
+
+    it('should handle custom default value', () => {
+      const defaultValue = { id: 0, name: 'Default' }
+      const result = unwrapApiItem(null, defaultValue)
+      expect(result).toEqual(defaultValue)
+    })
+
+    it('should handle nested null data correctly', () => {
+      const response = { data: { data: null } }
+      const defaultValue = { id: 0, name: 'Default' }
+      const result = unwrapApiItem(response, defaultValue)
+      expect(result).toEqual(defaultValue)
     })
   })
 })
