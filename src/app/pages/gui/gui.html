@@ -117,12 +117,13 @@
         @if (isMonsterTile()) {
           <button
             class="fight-button"
-            [disabled]="
-              !selectedCharacter() ||
-              isCharacterOnCooldown(selectedCharacter()!)
-            "
+            [disabled]="!selectedCharacter()"
             (click)="fightMonster()">
-            Fight
+            @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
+              Queue Fight
+            } @else {
+              Fight
+            }
           </button>
         }
         @if (isResourceTile() && !resourceDetails()) {
@@ -161,12 +162,13 @@
         @if (isResourceTile()) {
           <button
             class="gather-button"
-            [disabled]="
-              !selectedCharacter() ||
-              isCharacterOnCooldown(selectedCharacter()!)
-            "
+            [disabled]="!selectedCharacter()"
             (click)="gatherResource()">
-            Gather
+            @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
+              Queue Gather
+            } @else {
+              Gather
+            }
           </button>
         }
         @if (isWorkshopTile()) {
@@ -217,7 +219,6 @@
                           class="craft-button"
                           [disabled]="
                             !selectedCharacter() ||
-                            isCharacterOnCooldown(selectedCharacter()!) ||
                             craftingInProgress() ||
                             !canCraftItem(item)
                           "
@@ -227,6 +228,8 @@
                             Crafting...
                           } @else if (!canCraftItem(item)) {
                             Missing Materials
+                          } @else if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
+                            Queue Craft
                           } @else {
                             Craft
                           }
@@ -382,13 +385,53 @@
       @if (selectedCharacter()) {
         <button
           class="rest-button"
-          [disabled]="
-            isCharacterOnCooldown(selectedCharacter()!) ||
-            isCharacterHpFull(selectedCharacter()!)
-          "
+          [disabled]="isCharacterHpFull(selectedCharacter()!)"
           (click)="restCharacter()">
-          Rest
+          @if (isCharacterOnCooldown(selectedCharacter()!)) {
+            Queue Rest
+          } @else {
+            Rest
+          }
         </button>
+      }
+
+      @if (selectedCharacter() && getCharacterQueue().length > 0) {
+        <div class="action-queue-panel">
+          <div class="queue-header">
+            <h3>📋 Action Queue</h3>
+            <span class="queue-count">{{ getCharacterQueue().length }}/{{ queueService.getMaxQueueSize() }}</span>
+            <button
+              class="clear-queue-button"
+              (click)="clearQueue()">
+              Clear All
+            </button>
+          </div>
+
+          @if (isQueueExecuting()) {
+            <div class="queue-status executing">
+              ⚡ Executing...
+            </div>
+          }
+
+          @if (getQueueError()) {
+            <div class="queue-status error">
+              ❌ {{ getQueueError() }}
+            </div>
+          }
+
+          <div class="queue-list">
+            @for (action of getCharacterQueue(); track action.id) {
+              <div class="queue-item">
+                <span class="queue-item-label">{{ action.label }}</span>
+                <button
+                  class="remove-action-button"
+                  (click)="removeQueuedAction(action.id)">
+                  ×
+                </button>
+              </div>
+            }
+          </div>
+        </div>
       }
     </div>
   </div>

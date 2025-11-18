@@ -6,7 +6,11 @@ import {
   inject,
 } from '@angular/core'
 import { provideRouter } from '@angular/router'
-import { provideHttpClient, withInterceptors } from '@angular/common/http'
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http'
 import {
   provideAngularQuery,
   QueryClient,
@@ -24,7 +28,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor])
+      withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor]),
+      withFetch(),
     ),
     provideZonelessChangeDetection(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },

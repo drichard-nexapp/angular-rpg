@@ -1,6 +1,7 @@
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router'
 import { ConfirmDialog } from './components/shared/confirm-dialog/confirm-dialog'
+import { ActionExecutorService } from './services/action-executor.service'
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,9 @@ import { ConfirmDialog } from './components/shared/confirm-dialog/confirm-dialog
 })
 export class AppComponent {
   title = 'angular-app'
+  private actionExecutor = inject(ActionExecutorService)
+
+  constructor() {
+    this.actionExecutor.initialize()
+  }
 }

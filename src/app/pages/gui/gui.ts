@@ -33,6 +33,7 @@ import { ActionService } from '../../services/action.service'
 import { NpcService } from '../../services/npc.service'
 import { ErrorHandlerService } from '../../services/error-handler.service'
 import { LoggerService } from '../../services/logger.service'
+import { ActionQueueService } from '../../services/action-queue.service'
 import { unwrapApiResponse, unwrapApiItem } from '../../shared/utils'
 import { QUERY_KEYS } from '../../shared/constants/query-keys'
 import { APP_CONFIG } from '../../shared/constants/app-config'
@@ -52,6 +53,7 @@ export class GUI {
   private mapService = inject(MapService)
   private cooldownService = inject(CooldownService)
   private actionService = inject(ActionService)
+  queueService = inject(ActionQueueService)
   private npcService = inject(NpcService)
   private logger = inject(LoggerService)
   errorHandler = inject(ErrorHandlerService)
@@ -289,6 +291,25 @@ export class GUI {
   }
 
   async restCharacter(): Promise<void> {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      const queued = this.queueService.enqueue(selected.name, {
+        type: 'rest',
+        label: 'Rest',
+      })
+      if (queued) {
+        this.errorHandler.handleSuccess(
+          `Rest queued (${this.queueService.getQueueLength(selected.name)}/${this.queueService.getMaxQueueSize()})`,
+          'Action Queue'
+        )
+      } else {
+        this.errorHandler.handleError('Queue is full', 'Action Queue')
+      }
+      return
+    }
+
     const result = await this.actionService.restCharacter()
     if (!result.success && result.error) {
       this.logger.error('Error resting character', 'GUI', result.error)
@@ -296,9 +317,27 @@ export class GUI {
   }
 
   async fightMonster(): Promise<void> {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      const queued = this.queueService.enqueue(selected.name, {
+        type: 'fight',
+        label: 'Fight Monster',
+      })
+      if (queued) {
+        this.errorHandler.handleSuccess(
+          `Fight queued (${this.queueService.getQueueLength(selected.name)}/${this.queueService.getMaxQueueSize()})`,
+          'Action Queue'
+        )
+      } else {
+        this.errorHandler.handleError('Queue is full', 'Action Queue')
+      }
+      return
+    }
+
     const result = await this.actionService.fightMonster()
     if (result.success) {
-      const selected = this.selectedCharacter()
       const position = CharacterUtils.getPosition(selected)
       if (position) {
         this.mapService.setTilePosition(position)
@@ -309,9 +348,27 @@ export class GUI {
   }
 
   async gatherResource(): Promise<void> {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      const queued = this.queueService.enqueue(selected.name, {
+        type: 'gather',
+        label: 'Gather Resource',
+      })
+      if (queued) {
+        this.errorHandler.handleSuccess(
+          `Gather queued (${this.queueService.getQueueLength(selected.name)}/${this.queueService.getMaxQueueSize()})`,
+          'Action Queue'
+        )
+      } else {
+        this.errorHandler.handleError('Queue is full', 'Action Queue')
+      }
+      return
+    }
+
     const result = await this.actionService.gatherResource()
     if (result.success) {
-      const selected = this.selectedCharacter()
       const position = CharacterUtils.getPosition(selected)
       if (position) {
         this.mapService.setTilePosition(position)
@@ -352,6 +409,26 @@ export class GUI {
   }
 
   async craftItem(itemCode: string, quantity: number = 1): Promise<void> {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      const queued = this.queueService.enqueue(selected.name, {
+        type: 'craft',
+        label: 'Craft Item',
+        params: { itemCode, quantity },
+      })
+      if (queued) {
+        this.errorHandler.handleSuccess(
+          `Craft queued (${this.queueService.getQueueLength(selected.name)}/${this.queueService.getMaxQueueSize()})`,
+          'Action Queue'
+        )
+      } else {
+        this.errorHandler.handleError('Queue is full', 'Action Queue')
+      }
+      return
+    }
+
     this.craftingInProgress.set(true)
 
     const result = await this.actionService.craftItem(itemCode, quantity)
@@ -359,5 +436,36 @@ export class GUI {
       this.errorHandler.handleError(result.error, 'Crafting')
     }
     this.craftingInProgress.set(false)
+  }
+
+  getCharacterQueue() {
+    const selected = this.selectedCharacter()
+    if (!selected) return []
+    return this.queueService.getQueue(selected.name)
+  }
+
+  isQueueExecuting() {
+    const selected = this.selectedCharacter()
+    if (!selected) return false
+    return this.queueService.isExecuting(selected.name)
+  }
+
+  getQueueError() {
+    const selected = this.selectedCharacter()
+    if (!selected) return null
+    return this.queueService.getError(selected.name)
+  }
+
+  clearQueue(): void {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+    this.queueService.clear(selected.name)
+    this.errorHandler.handleSuccess('Queue cleared', 'Action Queue')
+  }
+
+  removeQueuedAction(actionId: string): void {
+    const selected = this.selectedCharacter()
+    if (!selected) return
+    this.queueService.remove(selected.name, actionId)
   }
 }

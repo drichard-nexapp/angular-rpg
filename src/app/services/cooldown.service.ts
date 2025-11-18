@@ -1,4 +1,5 @@
 import { Injectable, signal, OnDestroy } from '@angular/core'
+import { Subject } from 'rxjs'
 import type { Cooldown, CooldownTracking } from '../domain/types'
 import { APP_CONFIG } from '../shared/constants/app-config'
 
@@ -9,8 +10,14 @@ export class CooldownService implements OnDestroy {
   private cooldowns = signal<Record<string, CooldownTracking>>({})
   private intervals: Record<string, ReturnType<typeof setInterval>> = {}
 
+  private cooldownCompleted$ = new Subject<string>()
+
   getCooldowns() {
     return this.cooldowns
+  }
+
+  get cooldownCompleted() {
+    return this.cooldownCompleted$.asObservable()
   }
 
   setCooldown(characterName: string, cooldown: Cooldown): void {
@@ -30,11 +37,17 @@ export class CooldownService implements OnDestroy {
         const current = this.cooldowns()[characterName]
         if (current && current.remainingSeconds > 0) {
           const updated = { ...this.cooldowns() }
+          const newRemainingSeconds = current.remainingSeconds - 1
           updated[characterName] = {
             ...current,
-            remainingSeconds: current.remainingSeconds - 1,
+            remainingSeconds: newRemainingSeconds,
           }
           this.cooldowns.set(updated)
+
+          if (newRemainingSeconds === 0) {
+            this.cooldownCompleted$.next(characterName)
+            this.clearCooldown(characterName)
+          }
         } else {
           this.clearCooldown(characterName)
         }
@@ -77,5 +90,6 @@ export class CooldownService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.clearAllCooldowns()
+    this.cooldownCompleted$.complete()
   }
 }

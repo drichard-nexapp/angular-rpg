@@ -9,16 +9,27 @@ export interface AppError {
   context?: string
 }
 
+export interface AppSuccess {
+  message: string
+  timestamp: Date
+  context?: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ErrorHandlerService {
   private logger = inject(LoggerService)
   private errors = signal<AppError[]>([])
+  private successes = signal<AppSuccess[]>([])
 
   readonly currentError = computed(() => this.errors()[0] || null)
   readonly hasError = computed(() => this.errors().length > 0)
   readonly allErrors = computed(() => this.errors())
+
+  readonly currentSuccess = computed(() => this.successes()[0] || null)
+  readonly hasSuccess = computed(() => this.successes().length > 0)
+  readonly allSuccesses = computed(() => this.successes())
 
   handleError(error: unknown, context?: string): void {
     const appError: AppError = {
@@ -44,6 +55,30 @@ export class ErrorHandlerService {
 
   clearAllErrors(): void {
     this.errors.set([])
+  }
+
+  handleSuccess(message: string, context?: string): void {
+    const appSuccess: AppSuccess = {
+      message,
+      timestamp: new Date(),
+      context,
+    }
+
+    this.logger.info(message, context || 'App')
+
+    this.successes.update(successes => [...successes, appSuccess])
+
+    setTimeout(() => this.clearSuccess(appSuccess), 3000)
+  }
+
+  clearSuccess(success: AppSuccess): void {
+    this.successes.update(successes =>
+      successes.filter(s => s !== success)
+    )
+  }
+
+  clearAllSuccesses(): void {
+    this.successes.set([])
   }
 
   private extractMessage(error: unknown): string {
