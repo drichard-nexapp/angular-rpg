@@ -1,8 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http'
 import { inject } from '@angular/core'
 import { catchError, throwError } from 'rxjs'
-import { ErrorHandlerService } from '../services/error-handler.service'
-import { LoggerService } from '../services/logger.service'
+import { ErrorHandlerService, LoggerService } from '../services'
 
 export const SKIP_ERROR_HANDLER_HEADER = 'X-Skip-Error-Handler'
 
@@ -25,7 +24,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         )
         return throwError(() => error)
       }
-      let errorMessage = 'An error occurred'
+      let errorMessage: string
       let context = 'HTTP Request'
 
       if (error.error instanceof ErrorEvent) {

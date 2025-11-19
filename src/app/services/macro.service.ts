@@ -31,10 +31,6 @@ export class MacroService {
     )
   }
 
-  getAllSharedMacros(): Macro[] {
-    return this.getMacros().filter((m) => m.isShared)
-  }
-
   getMacro(macroId: string): Macro | null {
     return this.macros().get(macroId) ?? null
   }
@@ -205,11 +201,7 @@ export class MacroService {
     )
   }
 
-  startPlayback(
-    macroId: string,
-    characterName: string,
-    loop = false,
-  ): boolean {
+  startPlayback(macroId: string, characterName: string, loop = false): boolean {
     const macro = this.getMacro(macroId)
     if (!macro) {
       this.logger.error(`Macro not found: ${macroId}`, 'MacroService')

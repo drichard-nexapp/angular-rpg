@@ -13,12 +13,13 @@ import {
 } from '../../../sdk/api'
 import type { Character } from '../../domain/types'
 import { unwrapApiResponse } from '../../shared/utils'
-import { QUERY_KEYS } from '../../shared/constants/query-keys'
-import { APP_CONFIG } from '../../shared/constants/app-config'
-import { SkinService } from '../../services/skin.service'
-import { CharacterManagementService } from '../../services/character-management.service'
-import { ConfirmDialogService } from '../../services/confirm-dialog.service'
+import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
+import {
+  CharacterManagementService,
+  ConfirmDialogService,
+} from '../../services'
 import { SafePositionPipe } from '../../shared/pipes/safe-coordinate.pipe'
+import { getCharacterImageUrl } from '../../shared/asset-urls'
 
 @Component({
   selector: 'app-characters',
@@ -29,7 +30,6 @@ import { SafePositionPipe } from '../../shared/pipes/safe-coordinate.pipe'
 export class Characters {
   private characterMgmt = inject(CharacterManagementService)
   private confirmDialog = inject(ConfirmDialogService)
-  skinService = inject(SkinService)
 
   showCreateForm = signal(false)
   creatingCharacter = signal(false)
@@ -56,10 +56,6 @@ export class Characters {
     'women2',
     'women3',
   ]
-
-  getSkinSymbol(skin: string): string {
-    return this.skinService.getSymbol(skin)
-  }
 
   charactersQuery = injectQuery(() => ({
     queryKey: QUERY_KEYS.characters.all(),
@@ -113,10 +109,6 @@ export class Characters {
     return this.characterForm.get('name')
   }
 
-  get skinControl() {
-    return this.characterForm.get('skin')
-  }
-
   getNameError(): string | null {
     const control = this.nameControl
     if (!control || !control.touched) return null
@@ -165,5 +157,9 @@ export class Characters {
 
   isDeleting(characterName: string): boolean {
     return this.deletingCharacter() === characterName
+  }
+
+  getCharacterImage(skin: string) {
+    return getCharacterImageUrl(skin)
   }
 }

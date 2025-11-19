@@ -8,34 +8,6 @@ export interface RecordedAction {
   recordedAt: number
 }
 
-export interface FightAction extends RecordedAction {
-  type: 'fight'
-}
-
-export interface GatherAction extends RecordedAction {
-  type: 'gather'
-}
-
-export interface MoveAction extends RecordedAction {
-  type: 'move'
-  params: {
-    x: number
-    y: number
-  }
-}
-
-export interface CraftAction extends RecordedAction {
-  type: 'craft'
-  params: {
-    itemCode: string
-    quantity: number
-  }
-}
-
-export interface RestAction extends RecordedAction {
-  type: 'rest'
-}
-
 export interface Macro {
   id: string
   name: string

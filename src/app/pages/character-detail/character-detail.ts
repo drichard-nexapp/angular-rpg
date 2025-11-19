@@ -4,10 +4,9 @@ import { injectQuery } from '@tanstack/angular-query-experimental'
 import { getCharacterCharactersNameGet } from '../../../sdk/api'
 import type { Character } from '../../domain/types'
 import { unwrapApiItem } from '../../shared/utils'
-import { QUERY_KEYS } from '../../shared/constants/query-keys'
-import { APP_CONFIG } from '../../shared/constants/app-config'
+import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
 import { SafePositionPipe } from '../../shared/pipes/safe-coordinate.pipe'
-import { LoggerService } from '../../services/logger.service'
+import { LoggerService } from '../../services'
 
 @Component({
   selector: 'app-character-detail',

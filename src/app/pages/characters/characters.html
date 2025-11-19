@@ -45,7 +45,9 @@
           [disabled]="creatingCharacter()"
         >
           @for (skin of availableSkins; track skin) {
-          <option [value]="skin">{{ getSkinSymbol(skin) }} {{ skin }}</option>
+          <option [value]="skin">
+            {{ getCharacterImage(skin) }} {{ skin }}
+          </option>
           }
         </select>
       </div>
@@ -76,7 +78,7 @@
         >
           <div class="character-header">
             <span class="character-icon"
-              >{{ getSkinSymbol(character.skin) }}</span
+              >{{ getCharacterImage(character.skin) }}</span
             >
             <h2>{{ character.name }}</h2>
           </div>

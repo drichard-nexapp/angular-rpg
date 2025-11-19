@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core'
+import { Injectable, signal } from '@angular/core'
 import type {
   QueuedAction,
   ActionQueueState,
@@ -18,24 +18,12 @@ export class ActionQueueService {
     return this.queues().get(characterName)?.queue ?? []
   }
 
-  getQueueSignal(characterName: string) {
-    return computed(() => this.getQueue(characterName))
-  }
-
-  getQueueState(characterName: string): ActionQueueState | null {
-    return this.queues().get(characterName) ?? null
-  }
-
   isExecuting(characterName: string): boolean {
     return this.queues().get(characterName)?.isExecuting ?? false
   }
 
   getQueueLength(characterName: string): number {
     return this.getQueue(characterName).length
-  }
-
-  hasQueuedActions(characterName: string): boolean {
-    return this.getQueueLength(characterName) > 0
   }
 
   enqueue(
@@ -159,11 +147,6 @@ export class ActionQueueService {
     })
 
     this.logger.info(`Cleared queue for ${characterName}`, 'ActionQueueService')
-  }
-
-  clearAll(): void {
-    this.queues.set(new Map())
-    this.logger.info('Cleared all queues', 'ActionQueueService')
   }
 
   setExecuting(characterName: string, isExecuting: boolean): void {

@@ -3,8 +3,7 @@ import { injectQuery } from '@tanstack/angular-query-experimental'
 import { getAllTasksTasksListGet, type Skill } from '../../../sdk/api'
 import type { TaskFull } from '../../domain/types'
 import { unwrapApiResponse } from '../../shared/utils'
-import { QUERY_KEYS } from '../../shared/constants/query-keys'
-import { APP_CONFIG } from '../../shared/constants/app-config'
+import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
 
 @Component({
   selector: 'app-tasks',
@@ -44,33 +43,9 @@ export class Tasks {
     return err ? (err as Error).message : null
   })
 
-  availableSkills = computed((): string[] => {
-    const skills = new Set<string>()
-    this.tasks().forEach((task) => {
-      if (task.skill) skills.add(task.skill)
-    })
-    return Array.from(skills).sort()
-  })
-
-  setSkillFilter(skill: Skill | undefined): void {
-    this.filterSkill.set(skill)
-  }
-
   clearFilters(): void {
     this.filterSkill.set(undefined)
     this.filterMinLevel.set(undefined)
     this.filterMaxLevel.set(undefined)
-  }
-
-  getTasksByType(type: string): TaskFull[] {
-    return this.tasks().filter((task) => task.type === type)
-  }
-
-  getTaskTypes(): string[] {
-    const types = new Set<string>()
-    this.tasks().forEach((task) => {
-      types.add(task.type)
-    })
-    return Array.from(types).sort()
   }
 }

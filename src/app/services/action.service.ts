@@ -156,10 +156,7 @@ export class ActionService {
     }
   }
 
-  async craftItem(
-    itemCode: string,
-    quantity = 1,
-  ): Promise<ActionResult> {
+  async craftItem(itemCode: string, quantity = 1): Promise<ActionResult> {
     const selected = this.characterService.getSelectedCharacter()
     if (!selected) {
       return { success: false, error: 'No character selected' }

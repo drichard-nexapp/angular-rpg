@@ -6,9 +6,6 @@ import type {
   ResourceSchema,
   NpcSchema,
   NpcItem as NpcItemSchema,
-  CharacterMovementDataSchema,
-  CharacterRestDataSchema,
-  CharacterFightDataSchema,
   ActiveEventSchema,
   TaskFullSchema,
   ItemSchema,
@@ -38,12 +35,6 @@ export type Craft = CraftSchema
 export type Crafting = CraftingSchema
 
 export type Inventory = InventorySlot
-
-export type CharacterMovementData = CharacterMovementDataSchema
-
-export type CharacterRestData = CharacterRestDataSchema
-
-export type CharacterFightData = CharacterFightDataSchema
 
 export type ActiveEvent = ActiveEventSchema
 

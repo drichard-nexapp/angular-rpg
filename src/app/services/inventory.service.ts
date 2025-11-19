@@ -73,10 +73,7 @@ export class InventoryService {
     return usage.used >= usage.max
   }
 
-  hasInventorySpace(
-    character: Character | null,
-    requiredSlots = 1,
-  ): boolean {
+  hasInventorySpace(character: Character | null, requiredSlots = 1): boolean {
     const usage = this.getInventoryUsage(character)
     const availableSlots = usage.max - usage.used
     return availableSlots >= requiredSlots

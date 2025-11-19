@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core'
-import { injectQueryClient } from '@tanstack/angular-query-experimental'
+import { QueryClient } from '@tanstack/angular-query-experimental'
 import {
   getMyCharactersMyCharactersGet,
   getCharacterCharactersNameGet,
@@ -9,13 +9,13 @@ import type { Character, Cooldown } from '../domain/types'
 import { CooldownService } from './cooldown.service'
 import { LoggerService } from './logger.service'
 import { unwrapApiResponse, unwrapApiItem } from '../shared/utils'
-import { QUERY_KEYS } from '../shared/constants/query-keys'
+import { QUERY_KEYS } from '../shared/constants'
 
 @Injectable({
   providedIn: 'root',
 })
 export class CharacterService {
-  private queryClient = injectQueryClient()
+  private queryClient = inject(QueryClient)
   private cooldownService = inject(CooldownService)
   private logger = inject(LoggerService)
 

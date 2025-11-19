@@ -27,10 +27,6 @@ export class ErrorHandlerService {
   readonly hasError = computed(() => this.errors().length > 0)
   readonly allErrors = computed(() => this.errors())
 
-  readonly currentSuccess = computed(() => this.successes()[0] || null)
-  readonly hasSuccess = computed(() => this.successes().length > 0)
-  readonly allSuccesses = computed(() => this.successes())
-
   handleError(error: unknown, context?: string): void {
     const appError: AppError = {
       message: this.extractMessage(error),
@@ -71,10 +67,6 @@ export class ErrorHandlerService {
 
   clearSuccess(success: AppSuccess): void {
     this.successes.update((successes) => successes.filter((s) => s !== success))
-  }
-
-  clearAllSuccesses(): void {
-    this.successes.set([])
   }
 
   private extractMessage(error: unknown): string {

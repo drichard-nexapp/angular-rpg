@@ -8,5 +8,3 @@ export * from './grand-exchange-tile'
 export * from './tasks-master-tile'
 export * from './terrain-tile'
 export * from './tile-factory'
-
-export { TileBase as Tile } from './tile-base'

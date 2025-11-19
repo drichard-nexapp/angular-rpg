@@ -1,7 +1,7 @@
 import { Injectable, signal, OnDestroy } from '@angular/core'
 import { Subject } from 'rxjs'
 import type { Cooldown, CooldownTracking } from '../domain/types'
-import { APP_CONFIG } from '../shared/constants/app-config'
+import { APP_CONFIG } from '../shared/constants'
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +11,6 @@ export class CooldownService implements OnDestroy {
   private intervals: Record<string, ReturnType<typeof setInterval>> = {}
 
   private cooldownCompleted$ = new Subject<string>()
-
-  getCooldowns() {
-    return this.cooldowns
-  }
 
   get cooldownCompleted() {
     return this.cooldownCompleted$.asObservable()

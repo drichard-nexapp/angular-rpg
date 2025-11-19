@@ -12,11 +12,9 @@ import {
 import { injectQuery } from '@tanstack/angular-query-experimental'
 import { TileBase, TileFactory } from '../../domain/tile'
 import type { Character, MapLayer, Map as MapTile } from '../../domain/types'
-import { MapService } from '../../services/map.service'
-import { QUERY_KEYS } from '../../shared/constants/query-keys'
-import { APP_CONFIG } from '../../shared/constants/app-config'
-import { CharacterUtils } from '../../shared/utils/character.utils'
-import { LoggerService } from '../../services/logger.service'
+import { MapService, LoggerService } from '../../services'
+import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
+import { CharacterUtils } from '../../shared/utils'
 import {
   getMapImageUrl,
   getCharacterSkinImageUrl,

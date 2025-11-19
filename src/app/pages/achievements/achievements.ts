@@ -1,9 +1,6 @@
 import { Component, computed, signal } from '@angular/core'
 import { DatePipe, DecimalPipe } from '@angular/common'
-import {
-  injectQuery,
-  injectQueryClient,
-} from '@tanstack/angular-query-experimental'
+import { injectQuery } from '@tanstack/angular-query-experimental'
 import {
   getAccountDetailsMyDetailsGet,
   getAccountAchievementsAccountsAccountAchievementsGet,
@@ -11,7 +8,7 @@ import {
   type AccountAchievementSchema,
 } from '../../../sdk/api'
 import { unwrapApiItem, unwrapApiResponse } from '../../shared/utils'
-import { QUERY_KEYS } from '../../shared/constants/query-keys'
+import { QUERY_KEYS } from '../../shared/constants'
 
 @Component({
   selector: 'app-achievements',
@@ -21,7 +18,6 @@ import { QUERY_KEYS } from '../../shared/constants/query-keys'
 })
 export class Achievements {
   filterCompleted = signal<boolean | undefined>(undefined)
-  queryClient = injectQueryClient()
 
   accountQuery = injectQuery(() => ({
     queryKey: QUERY_KEYS.account.details(),
@@ -58,7 +54,6 @@ export class Achievements {
   achievements = computed(
     (): AccountAchievementSchema[] => this.achievementsQuery.data() ?? [],
   )
-  accountName = computed((): string => this.accountQuery.data()?.username ?? '')
   achievementPoints = computed(
     (): number => this.accountQuery.data()?.achievements_points ?? 0,
   )
