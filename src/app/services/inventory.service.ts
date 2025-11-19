@@ -25,7 +25,7 @@ export class InventoryService {
 
   hasItems(
     character: Character | null,
-    requirements: MaterialRequirement[]
+    requirements: MaterialRequirement[],
   ): boolean {
     if (!character) {
       return false
@@ -42,10 +42,12 @@ export class InventoryService {
       return false
     }
 
-    const requirements: MaterialRequirement[] = item.craft.items.map((material) => ({
-      code: material.code,
-      quantity: material.quantity,
-    }))
+    const requirements: MaterialRequirement[] = item.craft.items.map(
+      (material) => ({
+        code: material.code,
+        quantity: material.quantity,
+      }),
+    )
 
     return this.hasItems(character, requirements)
   }
@@ -71,7 +73,10 @@ export class InventoryService {
     return usage.used >= usage.max
   }
 
-  hasInventorySpace(character: Character | null, requiredSlots: number = 1): boolean {
+  hasInventorySpace(
+    character: Character | null,
+    requiredSlots = 1,
+  ): boolean {
     const usage = this.getInventoryUsage(character)
     const availableSlots = usage.max - usage.used
     return availableSlots >= requiredSlots
@@ -79,7 +84,7 @@ export class InventoryService {
 
   getMissingMaterials(
     character: Character | null,
-    requirements: MaterialRequirement[]
+    requirements: MaterialRequirement[],
   ): MaterialRequirement[] {
     return requirements
       .map((requirement) => {
@@ -95,7 +100,7 @@ export class InventoryService {
 
   getAvailableMaterials(
     character: Character | null,
-    requirements: MaterialRequirement[]
+    requirements: MaterialRequirement[],
   ): Record<string, { required: number; available: number; missing: number }> {
     const result: Record<
       string,

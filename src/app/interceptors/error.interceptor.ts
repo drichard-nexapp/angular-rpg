@@ -21,7 +21,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         logger.error(
           `Error (silently handled): ${error.message}`,
           `HTTP ${error.status}`,
-          { url: req.url, method: req.method }
+          { url: req.url, method: req.method },
         )
         return throwError(() => error)
       }
@@ -34,9 +34,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.status === 0) {
           errorMessage = 'Network error - please check your connection'
         } else if (error.status >= 400 && error.status < 500) {
-          errorMessage = error.error?.message || `Client Error: ${error.statusText}`
+          errorMessage =
+            error.error?.message || `Client Error: ${error.statusText}`
         } else if (error.status >= 500) {
-          errorMessage = error.error?.message || `Server Error: ${error.statusText}`
+          errorMessage =
+            error.error?.message || `Server Error: ${error.statusText}`
         } else {
           errorMessage = error.error?.message || error.message
         }
@@ -53,6 +55,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       errorHandler.handleError(errorMessage, context)
 
       return throwError(() => error)
-    })
+    }),
   )
 }

@@ -3,29 +3,19 @@ import { ActionService } from './action.service'
 import { CharacterService } from './character.service'
 import { CooldownService } from './cooldown.service'
 import { ErrorHandlerService } from './error-handler.service'
-import * as api from '../../sdk/api'
-import type { Character, Cooldown } from '../domain/types'
+import type { Character } from '../domain/types'
 
 describe('ActionService', () => {
   let service: ActionService
   let characterService: jasmine.SpyObj<CharacterService>
   let cooldownService: jasmine.SpyObj<CooldownService>
-  let errorHandler: jasmine.SpyObj<ErrorHandlerService>
 
   const mockCharacter = {
     name: 'TestHero',
     level: 10,
     hp: 100,
     max_hp: 100,
-  } as any as Character
-
-  const mockCooldown: Cooldown = {
-    total_seconds: 5,
-    remaining_seconds: 5,
-    started_at: '2025-11-12T00:00:00Z',
-    expiration: '2025-11-12T00:00:05Z',
-    reason: 'rest',
-  }
+  } as Character
 
   beforeEach(() => {
     const characterServiceSpy = jasmine.createSpyObj('CharacterService', [
@@ -50,9 +40,12 @@ describe('ActionService', () => {
     })
 
     service = TestBed.inject(ActionService)
-    characterService = TestBed.inject(CharacterService) as jasmine.SpyObj<CharacterService>
-    cooldownService = TestBed.inject(CooldownService) as jasmine.SpyObj<CooldownService>
-    errorHandler = TestBed.inject(ErrorHandlerService) as jasmine.SpyObj<ErrorHandlerService>
+    characterService = TestBed.inject(
+      CharacterService,
+    ) as jasmine.SpyObj<CharacterService>
+    cooldownService = TestBed.inject(
+      CooldownService,
+    ) as jasmine.SpyObj<CooldownService>
   })
 
   it('should be created', () => {
@@ -78,7 +71,6 @@ describe('ActionService', () => {
       expect(result.success).toBe(false)
       expect(result.error).toBe('Character is on cooldown')
     })
-
   })
 
   describe('fightMonster', () => {
@@ -100,7 +92,6 @@ describe('ActionService', () => {
       expect(result.success).toBe(false)
       expect(result.error).toBe('Character is on cooldown')
     })
-
   })
 
   describe('gatherResource', () => {
@@ -122,7 +113,6 @@ describe('ActionService', () => {
       expect(result.success).toBe(false)
       expect(result.error).toBe('Character is on cooldown')
     })
-
   })
 
   describe('craftItem', () => {
@@ -144,6 +134,5 @@ describe('ActionService', () => {
       expect(result.success).toBe(false)
       expect(result.error).toBe('Character is on cooldown')
     })
-
   })
 })

@@ -3,7 +3,6 @@ import {
   ErrorHandler,
   provideZonelessChangeDetection,
   provideAppInitializer,
-  inject,
 } from '@angular/core'
 import { provideRouter } from '@angular/router'
 import {
@@ -12,17 +11,19 @@ import {
   withInterceptors,
 } from '@angular/common/http'
 import {
-  provideAngularQuery,
+  provideTanStackQuery,
   QueryClient,
 } from '@tanstack/angular-query-experimental'
 
 import { routes } from './app.routes'
 import { initializeApiClient } from './api-client.initializer'
-import { authInterceptor } from './interceptors/auth.interceptor'
-import { errorInterceptor } from './interceptors/error.interceptor'
-import { loadingInterceptor } from './interceptors/loading.interceptor'
-import { APP_CONFIG } from './shared/constants/app-config'
-import { GlobalErrorHandler } from './services/global-error-handler'
+import {
+  authInterceptor,
+  errorInterceptor,
+  loadingInterceptor,
+} from './interceptors'
+import { APP_CONFIG } from './shared/constants'
+import { GlobalErrorHandler } from './services'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideZonelessChangeDetection(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
-    provideAngularQuery(
+    provideTanStackQuery(
       new QueryClient({
         defaultOptions: {
           queries: {

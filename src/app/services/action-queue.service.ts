@@ -1,5 +1,8 @@
 import { Injectable, computed, signal } from '@angular/core'
-import type { QueuedAction, ActionQueueState } from '../domain/action-queue.types'
+import type {
+  QueuedAction,
+  ActionQueueState,
+} from '../domain/action-queue.types'
 import { LoggerService } from './logger.service'
 
 @Injectable({
@@ -35,7 +38,10 @@ export class ActionQueueService {
     return this.getQueueLength(characterName) > 0
   }
 
-  enqueue(characterName: string, action: Omit<QueuedAction, 'id' | 'queuedAt'>): boolean {
+  enqueue(
+    characterName: string,
+    action: Omit<QueuedAction, 'id' | 'queuedAt'>,
+  ): boolean {
     const currentQueue = this.getQueue(characterName)
 
     if (currentQueue.length >= this.MAX_QUEUE_SIZE) {
@@ -49,7 +55,7 @@ export class ActionQueueService {
       queuedAt: Date.now(),
     }
 
-    this.queues.update(queues => {
+    this.queues.update((queues) => {
       const newQueues = new Map(queues)
       const existingState = newQueues.get(characterName)
 
@@ -71,7 +77,7 @@ export class ActionQueueService {
 
     this.logger.info(
       `Action queued for ${characterName}: ${action.type} (${currentQueue.length + 1}/${this.MAX_QUEUE_SIZE})`,
-      'ActionQueueService'
+      'ActionQueueService',
     )
 
     return true
@@ -86,7 +92,7 @@ export class ActionQueueService {
 
     const action = currentQueue[0]
 
-    this.queues.update(queues => {
+    this.queues.update((queues) => {
       const newQueues = new Map(queues)
       const existingState = newQueues.get(characterName)
 
@@ -110,32 +116,35 @@ export class ActionQueueService {
 
   remove(characterName: string, actionId: string): boolean {
     const currentQueue = this.getQueue(characterName)
-    const actionIndex = currentQueue.findIndex(a => a.id === actionId)
+    const actionIndex = currentQueue.findIndex((a) => a.id === actionId)
 
     if (actionIndex === -1) {
       return false
     }
 
-    this.queues.update(queues => {
+    this.queues.update((queues) => {
       const newQueues = new Map(queues)
       const existingState = newQueues.get(characterName)
 
       if (existingState) {
         newQueues.set(characterName, {
           ...existingState,
-          queue: existingState.queue.filter(a => a.id !== actionId),
+          queue: existingState.queue.filter((a) => a.id !== actionId),
         })
       }
 
       return newQueues
     })
 
-    this.logger.info(`Removed action ${actionId} from ${characterName} queue`, 'ActionQueueService')
+    this.logger.info(
+      `Removed action ${actionId} from ${characterName} queue`,
+      'ActionQueueService',
+    )
     return true
   }
 
   clear(characterName: string): void {
-    this.queues.update(queues => {
+    this.queues.update((queues) => {
       const newQueues = new Map(queues)
       const existingState = newQueues.get(characterName)
 
@@ -158,7 +167,7 @@ export class ActionQueueService {
   }
 
   setExecuting(characterName: string, isExecuting: boolean): void {
-    this.queues.update(queues => {
+    this.queues.update((queues) => {
       const newQueues = new Map(queues)
       const existingState = newQueues.get(characterName)
 
@@ -166,7 +175,9 @@ export class ActionQueueService {
         newQueues.set(characterName, {
           ...existingState,
           isExecuting,
-          lastExecutedAt: isExecuting ? Date.now() : existingState.lastExecutedAt,
+          lastExecutedAt: isExecuting
+            ? Date.now()
+            : existingState.lastExecutedAt,
         })
       }
 
@@ -175,7 +186,7 @@ export class ActionQueueService {
   }
 
   setError(characterName: string, error: string): void {
-    this.queues.update(queues => {
+    this.queues.update((queues) => {
       const newQueues = new Map(queues)
       const existingState = newQueues.get(characterName)
 
@@ -190,7 +201,10 @@ export class ActionQueueService {
       return newQueues
     })
 
-    this.logger.error(`Queue execution error for ${characterName}: ${error}`, 'ActionQueueService')
+    this.logger.error(
+      `Queue execution error for ${characterName}: ${error}`,
+      'ActionQueueService',
+    )
   }
 
   getError(characterName: string): string | null {

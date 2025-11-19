@@ -8,7 +8,7 @@ export const SKIP_LOADING_HEADER = 'X-Skip-Loading'
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.headers.has(SKIP_LOADING_HEADER)) {
     const cleanedReq = req.clone({
-      headers: req.headers.delete(SKIP_LOADING_HEADER)
+      headers: req.headers.delete(SKIP_LOADING_HEADER),
     })
     return next(cleanedReq)
   }
@@ -19,6 +19,6 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     finalize(() => {
       loadingService.hide()
-    })
+    }),
   )
 }

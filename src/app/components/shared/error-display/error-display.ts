@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core'
-import { ErrorHandlerService } from '../../../services/error-handler.service'
+import { ErrorHandlerService } from '../../../services'
 
 @Component({
   selector: 'app-error-display',

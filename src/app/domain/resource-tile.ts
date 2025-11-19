@@ -1,10 +1,6 @@
-import { TileBase, TileData, TileRenderResult } from './tile-base'
+import { TileBase, TileRenderResult } from './tile-base'
 
 export class ResourceTile extends TileBase {
-  constructor(data: TileData) {
-    super(data)
-  }
-
   isMonster(): boolean {
     return false
   }

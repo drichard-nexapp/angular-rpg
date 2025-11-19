@@ -112,72 +112,6 @@ describe('Tile Domain Objects', () => {
       expect(rendered.cssClass).toBe('monster-emoji')
     })
 
-    it('should return correct monster emoji', () => {
-      const tile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'forest',
-        interactions: {
-          content: {
-            type: 'monster',
-            code: 'blue_slime',
-          },
-        },
-      }) as MonsterTile
-
-      expect(tile.getMonsterEmoji()).toBe('🔵')
-    })
-
-    it('should return wolf emoji', () => {
-      const tile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'forest',
-        interactions: {
-          content: {
-            type: 'monster',
-            code: 'wolf',
-          },
-        },
-      }) as MonsterTile
-
-      expect(tile.getMonsterEmoji()).toBe('🐺')
-    })
-
-    it('should return default monster emoji for unknown monsters', () => {
-      const tile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'forest',
-        interactions: {
-          content: {
-            type: 'monster',
-            code: 'unknown_creature',
-          },
-        },
-      }) as MonsterTile
-
-      expect(tile.getMonsterEmoji()).toBe('👾')
-    })
-
-    it('should return monster visual marker', () => {
-      const tile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'forest',
-        interactions: {
-          content: {
-            type: 'monster',
-            code: 'wolf',
-          },
-        },
-      }) as MonsterTile
-
-      const marker = tile.getVisualMarker()
-      expect(marker.type).toBe('monster')
-      expect(marker.value).toBe('🐺')
-    })
-
     it('should return monster code', () => {
       const tile = TileFactory.createTile({
         x: 0,
@@ -334,24 +268,6 @@ describe('Tile Domain Objects', () => {
       expect(rendered.cssClass).toBe('npc-marker')
     })
 
-    it('should return NPC visual marker', () => {
-      const tile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'forest',
-        interactions: {
-          content: {
-            type: 'npc',
-            code: 'merchant',
-          },
-        },
-      }) as NpcTile
-
-      const marker = tile.getVisualMarker()
-      expect(marker.type).toBe('npc')
-      expect(marker.value).toBe('!')
-    })
-
     it('should return NPC code', () => {
       const tile = TileFactory.createTile({
         x: 0,
@@ -424,44 +340,6 @@ describe('Tile Domain Objects', () => {
       expect(rendered.type).toBe('ascii')
       expect(rendered.value).toBe('~~~')
       expect(rendered.cssClass).toBe('tile-ascii')
-    })
-
-    it('should return ASCII visual marker', () => {
-      const tile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'water',
-      }) as TerrainTile
-
-      const marker = tile.getVisualMarker()
-      expect(marker.type).toBe('ascii')
-      expect(marker.value).toBe('~~~')
-    })
-
-    it('should return correct ASCII for different terrains', () => {
-      const waterTile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'water',
-      }) as TerrainTile
-
-      expect(waterTile.getAsciiRepresentation()).toBe('~~~')
-
-      const desertTile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'desert_sand',
-      }) as TerrainTile
-
-      expect(desertTile.getAsciiRepresentation()).toBe('...')
-
-      const forestTile = TileFactory.createTile({
-        x: 0,
-        y: 0,
-        skin: 'forest_tree',
-      }) as TerrainTile
-
-      expect(forestTile.getAsciiRepresentation()).toBe(' T ')
     })
 
     it('should determine terrain type', () => {

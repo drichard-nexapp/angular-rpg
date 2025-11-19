@@ -5,10 +5,13 @@ describe('API Response Handler', () => {
     it('should unwrap nested data structure', () => {
       const response = {
         data: {
-          data: [{ id: 1, name: 'Test' }]
-        }
+          data: [{ id: 1, name: 'Test' }],
+        },
       }
-      const result = unwrapApiResponse<Array<{ id: number; name: string }>>(response, [])
+      const result = unwrapApiResponse<{ id: number; name: string }[]>(
+        response,
+        [],
+      )
       expect(result).toEqual([{ id: 1, name: 'Test' }])
     })
 
@@ -30,7 +33,7 @@ describe('API Response Handler', () => {
 
     it('should return empty object when nested data is missing', () => {
       const response = { data: {} }
-      const result = unwrapApiResponse<any>(response, [])
+      const result = unwrapApiResponse<unknown>(response, [])
       expect(result).toEqual({})
     })
 
@@ -48,8 +51,8 @@ describe('API Response Handler', () => {
     it('should work with string default values', () => {
       const response = {
         data: {
-          data: 'test string'
-        }
+          data: 'test string',
+        },
       }
       const result = unwrapApiResponse(response, '')
       expect(result).toEqual('test string')
@@ -58,8 +61,8 @@ describe('API Response Handler', () => {
     it('should work with number default values', () => {
       const response = {
         data: {
-          data: 42
-        }
+          data: 42,
+        },
       }
       const result = unwrapApiResponse(response, 0)
       expect(result).toEqual(42)
@@ -67,17 +70,30 @@ describe('API Response Handler', () => {
 
     it('should handle direct array structure { data: [...] }', () => {
       const response = {
-        data: [{ id: 1, name: 'Test' }, { id: 2, name: 'Test2' }]
+        data: [
+          { id: 1, name: 'Test' },
+          { id: 2, name: 'Test2' },
+        ],
       }
-      const result = unwrapApiResponse<Array<{ id: number; name: string }>>(response, [])
-      expect(result).toEqual([{ id: 1, name: 'Test' }, { id: 2, name: 'Test2' }])
+      const result = unwrapApiResponse<{ id: number; name: string }[]>(
+        response,
+        [],
+      )
+      expect(result).toEqual([
+        { id: 1, name: 'Test' },
+        { id: 2, name: 'Test2' },
+      ])
     })
 
     it('should handle direct object structure { data: T }', () => {
       const response = {
-        data: { id: 1, name: 'Test', value: 42 }
+        data: { id: 1, name: 'Test', value: 42 },
       }
-      const result = unwrapApiResponse<{ id: number; name: string; value: number }>(response, null as any)
+      const result = unwrapApiResponse<{
+        id: number
+        name: string
+        value: number
+      } | null>(response, null)
       expect(result).toEqual({ id: 1, name: 'Test', value: 42 })
     })
 
@@ -91,10 +107,13 @@ describe('API Response Handler', () => {
       const response = {
         data: {
           data: [{ id: 1, name: 'Nested' }],
-          extra: 'field'
-        }
+          extra: 'field',
+        },
       }
-      const result = unwrapApiResponse<Array<{ id: number; name: string }>>(response, [])
+      const result = unwrapApiResponse<{ id: number; name: string }[]>(
+        response,
+        [],
+      )
       expect(result).toEqual([{ id: 1, name: 'Nested' }])
     })
   })
@@ -102,7 +121,7 @@ describe('API Response Handler', () => {
   describe('unwrapApiItem', () => {
     it('should unwrap single-level data structure', () => {
       const response = {
-        data: { id: 1, name: 'Test' }
+        data: { id: 1, name: 'Test' },
       }
       const result = unwrapApiItem<{ id: number; name: string }>(response)
       expect(result).toEqual({ id: 1, name: 'Test' })
@@ -132,7 +151,7 @@ describe('API Response Handler', () => {
 
     it('should return null for array values since this is for single items', () => {
       const response = {
-        data: [1, 2, 3]
+        data: [1, 2, 3],
       }
       const result = unwrapApiItem<number>(response)
       expect(result).toBeNull()
@@ -142,29 +161,37 @@ describe('API Response Handler', () => {
       const response = {
         data: {
           character: { name: 'Hero', level: 10 },
-          cooldown: { total_seconds: 30 }
-        }
+          cooldown: { total_seconds: 30 },
+        },
       }
-      const result = unwrapApiItem<{ character: { name: string; level: number }; cooldown: { total_seconds: number } }>(response)
+      const result = unwrapApiItem<{
+        character: { name: string; level: number }
+        cooldown: { total_seconds: number }
+      }>(response)
       expect(result).toEqual({
         character: { name: 'Hero', level: 10 },
-        cooldown: { total_seconds: 30 }
+        cooldown: { total_seconds: 30 },
       })
     })
 
     it('should handle nested response structure { data: { data: T } }', () => {
       const response = {
         data: {
-          data: { id: 1, name: 'Test', x: 5, y: 10 }
-        }
+          data: { id: 1, name: 'Test', x: 5, y: 10 },
+        },
       }
-      const result = unwrapApiItem<{ id: number; name: string; x: number; y: number }>(response)
+      const result = unwrapApiItem<{
+        id: number
+        name: string
+        x: number
+        y: number
+      }>(response)
       expect(result).toEqual({ id: 1, name: 'Test', x: 5, y: 10 })
     })
 
     it('should return default value when data is an array', () => {
       const response = {
-        data: [{ id: 1 }, { id: 2 }]
+        data: [{ id: 1 }, { id: 2 }],
       }
       const result = unwrapApiItem<{ id: number }>(response)
       expect(result).toBeNull()
@@ -174,8 +201,8 @@ describe('API Response Handler', () => {
       const response = {
         data: {
           data: { id: 1, name: 'Nested' },
-          extra: 'This should be ignored'
-        }
+          extra: 'This should be ignored',
+        },
       }
       const result = unwrapApiItem<{ id: number; name: string }>(response)
       expect(result).toEqual({ id: 1, name: 'Nested' })

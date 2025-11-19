@@ -1,7 +1,4 @@
-export function unwrapApiResponse<T>(
-  response: unknown,
-  defaultValue: T
-): T {
+export function unwrapApiResponse<T>(response: unknown, defaultValue: T): T {
   if (response && typeof response === 'object' && 'data' in response) {
     const outerData = (response as { data?: unknown }).data
 
@@ -13,14 +10,14 @@ export function unwrapApiResponse<T>(
       return outerData as T
     }
 
-    return outerData as T ?? defaultValue
+    return (outerData as T) ?? defaultValue
   }
   return defaultValue
 }
 
 export function unwrapApiItem<T>(
   response: unknown,
-  defaultValue: T | null = null
+  defaultValue: T | null = null,
 ): T | null {
   if (response && typeof response === 'object' && 'data' in response) {
     const outerData = (response as { data?: unknown }).data
@@ -33,7 +30,7 @@ export function unwrapApiItem<T>(
       return defaultValue
     }
 
-    return outerData as T ?? defaultValue
+    return (outerData as T) ?? defaultValue
   }
   return defaultValue
 }

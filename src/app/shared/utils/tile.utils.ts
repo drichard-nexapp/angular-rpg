@@ -1,24 +1,36 @@
 import type { Map as MapTile } from '../../domain/types'
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TileUtils {
   static hasMonster(tile: MapTile | null): boolean {
     if (!tile) return false
-    return !!tile.interactions?.content && tile.interactions.content.type === 'monster'
+    return (
+      !!tile.interactions?.content &&
+      tile.interactions.content.type === 'monster'
+    )
   }
 
   static hasResource(tile: MapTile | null): boolean {
     if (!tile) return false
-    return !!tile.interactions?.content && tile.interactions.content.type === 'resource'
+    return (
+      !!tile.interactions?.content &&
+      tile.interactions.content.type === 'resource'
+    )
   }
 
   static hasNpc(tile: MapTile | null): boolean {
     if (!tile) return false
-    return !!tile.interactions?.content && tile.interactions.content.type === 'npc'
+    return (
+      !!tile.interactions?.content && tile.interactions.content.type === 'npc'
+    )
   }
 
   static hasWorkshop(tile: MapTile | null): boolean {
     if (!tile) return false
-    return !!tile.interactions?.content && tile.interactions.content.type === 'workshop'
+    return (
+      !!tile.interactions?.content &&
+      tile.interactions.content.type === 'workshop'
+    )
   }
 
   static getMonsterCode(tile: MapTile | null): string | null {

@@ -124,7 +124,9 @@ main {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .character-card:hover {
@@ -142,7 +144,9 @@ main {
   margin: 0.5rem 0;
 }
 
-.loading, .error, .no-characters {
+.loading,
+.error,
+.no-characters {
   text-align: center;
   padding: 2rem;
   font-size: 1.2rem;

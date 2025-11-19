@@ -3,49 +3,41 @@
     <h1>Character Details</h1>
 
     @if (loading()) {
-      <div class="loading">
-        Loading character...
-      </div>
-    }
+    <div class="loading">Loading character...</div>
+    } @if (error()) {
+    <div class="error">{{ error() }}</div>
+    } @if (!loading() && !error() && character(); as char) {
+    <div class="character-details">
+      <h2>{{ char.name }}</h2>
 
-    @if (error()) {
-      <div class="error">
-        {{ error() }}
-      </div>
-    }
+      <section class="stats">
+        <h3>Stats</h3>
+        <p><strong>Level:</strong> {{ char.level }}</p>
+        <p><strong>HP:</strong> {{ char.hp }} / {{ char.max_hp }}</p>
+        <p><strong>Gold:</strong> {{ char.gold }}</p>
+        <p><strong>Speed:</strong> {{ char.speed }}</p>
+        <p><strong>Position:</strong> {{ char | safePosition }}</p>
+      </section>
 
-    @if (!loading() && !error() && character(); as char) {
-      <div class="character-details">
-        <h2>{{ char.name }}</h2>
+      <section class="combat-stats">
+        <h3>Combat Stats</h3>
+        <p><strong>Attack Fire:</strong> {{ char.attack_fire }}</p>
+        <p><strong>Attack Earth:</strong> {{ char.attack_earth }}</p>
+        <p><strong>Attack Water:</strong> {{ char.attack_water }}</p>
+        <p><strong>Attack Air:</strong> {{ char.attack_air }}</p>
+        <p><strong>Defense Fire:</strong> {{ char.dmg_fire }}</p>
+        <p><strong>Defense Earth:</strong> {{ char.dmg_earth }}</p>
+        <p><strong>Defense Water:</strong> {{ char.dmg_water }}</p>
+        <p><strong>Defense Air:</strong> {{ char.dmg_air }}</p>
+      </section>
 
-        <section class="stats">
-          <h3>Stats</h3>
-          <p><strong>Level:</strong> {{ char.level }}</p>
-          <p><strong>HP:</strong> {{ char.hp }} / {{ char.max_hp }}</p>
-          <p><strong>Gold:</strong> {{ char.gold }}</p>
-          <p><strong>Speed:</strong> {{ char.speed }}</p>
-          <p><strong>Position:</strong> {{ char | safePosition }}</p>
-        </section>
-
-        <section class="combat-stats">
-          <h3>Combat Stats</h3>
-          <p><strong>Attack Fire:</strong> {{ char.attack_fire }}</p>
-          <p><strong>Attack Earth:</strong> {{ char.attack_earth }}</p>
-          <p><strong>Attack Water:</strong> {{ char.attack_water }}</p>
-          <p><strong>Attack Air:</strong> {{ char.attack_air }}</p>
-          <p><strong>Defense Fire:</strong> {{ char.dmg_fire }}</p>
-          <p><strong>Defense Earth:</strong> {{ char.dmg_earth }}</p>
-          <p><strong>Defense Water:</strong> {{ char.dmg_water }}</p>
-          <p><strong>Defense Air:</strong> {{ char.dmg_air }}</p>
-        </section>
-
-        @if (char.task) {
-          <section class="current-task">
-            <h3>Current Task</h3>
-            <p>{{ char.task }}</p>
-          </section>
-        }
-      </div>
+      @if (char.task) {
+      <section class="current-task">
+        <h3>Current Task</h3>
+        <p>{{ char.task }}</p>
+      </section>
+      }
+    </div>
     }
   </div>
 </main>

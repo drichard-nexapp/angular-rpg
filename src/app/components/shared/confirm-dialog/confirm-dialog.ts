@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core'
-import { ConfirmDialogService } from '../../../services/confirm-dialog.service'
+import { ConfirmDialogService } from '../../../services'
 
 @Component({
   selector: 'app-confirm-dialog',

@@ -6,21 +6,21 @@ import type {
   HttpHeaders,
   HttpRequest,
   HttpResponse,
-} from '@angular/common/http';
-import type { Injector } from '@angular/core';
+} from '@angular/common/http'
+import type { Injector } from '@angular/core'
 
-import type { Auth } from '../core/auth.gen';
+import type { Auth } from '../core/auth.gen'
 import type {
   ServerSentEventsOptions,
   ServerSentEventsResult,
-} from '../core/serverSentEvents.gen';
+} from '../core/serverSentEvents.gen'
 import type {
   Client as CoreClient,
   Config as CoreConfig,
-} from '../core/types.gen';
-import type { Middleware } from './utils.gen';
+} from '../core/types.gen'
+import type { Middleware } from './utils.gen'
 
-export type ResponseStyle = 'data' | 'fields';
+export type ResponseStyle = 'data' | 'fields'
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
@@ -28,7 +28,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
   /**
    * Base URL for all requests made by this client.
    */
-  baseUrl?: T['baseUrl'];
+  baseUrl?: T['baseUrl']
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `HttpHeaders` object with.
@@ -46,24 +46,24 @@ export interface Config<T extends ClientOptions = ClientOptions>
         | null
         | undefined
         | unknown
-      >;
+      >
   /**
    * The HTTP client to use for making requests.
    */
-  httpClient?: HttpClient;
+  httpClient?: HttpClient
   /**
    * Should we return only data or multiple fields (data, error, response, etc.)?
    *
    * @default 'fields'
    */
-  responseStyle?: ResponseStyle;
+  responseStyle?: ResponseStyle
 
   /**
    * Throw an error instead of returning it in the response?
    *
    * @default false
    */
-  throwOnError?: T['throwOnError'];
+  throwOnError?: T['throwOnError']
 }
 
 export interface RequestOptions<
@@ -72,8 +72,8 @@ export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends Config<{
-      responseStyle: TResponseStyle;
-      throwOnError: ThrowOnError;
+      responseStyle: TResponseStyle
+      throwOnError: ThrowOnError
     }>,
     Pick<
       ServerSentEventsOptions<TData>,
@@ -88,18 +88,18 @@ export interface RequestOptions<
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
-  body?: unknown;
+  body?: unknown
   /**
    * Optional custom injector for dependency resolution if you don't implicitly or explicitly provide one.
    */
-  injector?: Injector;
-  path?: Record<string, unknown>;
-  query?: Record<string, unknown>;
+  injector?: Injector
+  path?: Record<string, unknown>
+  query?: Record<string, unknown>
   /**
    * Security mechanism(s) to use for the request.
    */
-  security?: ReadonlyArray<Auth>;
-  url: Url;
+  security?: ReadonlyArray<Auth>
+  url: Url
 }
 
 export interface ResolvedRequestOptions<
@@ -107,7 +107,7 @@ export interface ResolvedRequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url> {
-  serializedBody?: string;
+  serializedBody?: string
 }
 
 export type RequestResult<
@@ -124,9 +124,9 @@ export type RequestResult<
       : {
           data: TData extends Record<string, unknown>
             ? TData[keyof TData]
-            : TData;
-          request: HttpRequest<unknown>;
-          response: HttpResponse<TData>;
+            : TData
+          request: HttpRequest<unknown>
+          response: HttpResponse<TData>
         }
     : TResponseStyle extends 'data'
       ?
@@ -136,25 +136,25 @@ export type RequestResult<
           | {
               data: TData extends Record<string, unknown>
                 ? TData[keyof TData]
-                : TData;
-              error: undefined;
-              request: HttpRequest<unknown>;
-              response: HttpResponse<TData>;
+                : TData
+              error: undefined
+              request: HttpRequest<unknown>
+              response: HttpResponse<TData>
             }
           | {
-              data: undefined;
-              error: TError[keyof TError];
-              request: HttpRequest<unknown>;
+              data: undefined
+              error: TError[keyof TError]
+              request: HttpRequest<unknown>
               response: HttpErrorResponse & {
-                error: TError[keyof TError] | null;
-              };
+                error: TError[keyof TError] | null
+              }
             }
->;
+>
 
 export interface ClientOptions {
-  baseUrl?: string;
-  responseStyle?: ResponseStyle;
-  throwOnError?: boolean;
+  baseUrl?: string
+  responseStyle?: ResponseStyle
+  throwOnError?: boolean
 }
 
 type MethodFn = <
@@ -164,7 +164,7 @@ type MethodFn = <
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'>,
-) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>
 
 type SseFn = <
   TData = unknown,
@@ -173,7 +173,7 @@ type SseFn = <
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'>,
-) => Promise<ServerSentEventsResult<TData, TError>>;
+) => Promise<ServerSentEventsResult<TData, TError>>
 
 type RequestFn = <
   TData = unknown,
@@ -186,25 +186,25 @@ type RequestFn = <
       Required<RequestOptions<TData, TResponseStyle, ThrowOnError>>,
       'method'
     >,
-) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>
 
 type RequestOptionsFn = <
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: RequestOptions<unknown, TResponseStyle, ThrowOnError>,
-) => HttpRequest<unknown>;
+) => HttpRequest<unknown>
 
 type BuildUrlFn = <
   TData extends {
-    body?: unknown;
-    path?: Record<string, unknown>;
-    query?: Record<string, unknown>;
-    url: string;
+    body?: unknown
+    path?: Record<string, unknown>
+    query?: Record<string, unknown>
+    url: string
   },
 >(
   options: TData & Options<TData>,
-) => string;
+) => string
 
 export type Client = CoreClient<
   RequestFn,
@@ -218,9 +218,9 @@ export type Client = CoreClient<
     HttpResponse<unknown>,
     unknown,
     ResolvedRequestOptions
-  >;
-  requestOptions: RequestOptionsFn;
-};
+  >
+  requestOptions: RequestOptionsFn
+}
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -232,17 +232,17 @@ export type Client = CoreClient<
  */
 export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
   override?: Config<ClientOptions & T>,
-) => Config<Required<ClientOptions> & T>;
+) => Config<Required<ClientOptions> & T>
 
 export interface TDataShape {
-  body?: unknown;
-  headers?: unknown;
-  path?: unknown;
-  query?: unknown;
-  url: string;
+  body?: unknown
+  headers?: unknown
+  path?: unknown
+  query?: unknown
+  url: string
 }
 
-type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
+type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>
 
 export type Options<
   TData extends TDataShape = TDataShape,
@@ -253,4 +253,4 @@ export type Options<
   RequestOptions<TResponse, TResponseStyle, ThrowOnError>,
   'body' | 'path' | 'query' | 'url'
 > &
-  ([TData] extends [never] ? unknown : Omit<TData, 'url'>);
+  ([TData] extends [never] ? unknown : Omit<TData, 'url'>)

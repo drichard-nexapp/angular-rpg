@@ -1,17 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core'
 import type { Character } from '../../domain/types'
-import { CharacterUtils } from '../utils/character.utils'
+import { CharacterUtils } from '../utils'
 
 @Pipe({
   name: 'safeCoordinate',
   standalone: true,
 })
 export class SafeCoordinatePipe implements PipeTransform {
-  transform(character: Character | null, coord: 'x' | 'y'): string {
+  transform(character: Character | null, coord: 'x' | 'y'): string | unknown {
     if (!CharacterUtils.hasValidPosition(character)) {
       return '?'
     }
-    return character![coord].toString()
+    return character?.[coord].toString()
   }
 }
 

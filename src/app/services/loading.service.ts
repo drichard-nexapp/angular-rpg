@@ -9,11 +9,11 @@ export class LoadingService {
   readonly isLoading = computed(() => this.loadingCount() > 0)
 
   show(): void {
-    this.loadingCount.update(count => count + 1)
+    this.loadingCount.update((count) => count + 1)
   }
 
   hide(): void {
-    this.loadingCount.update(count => Math.max(0, count - 1))
+    this.loadingCount.update((count) => Math.max(0, count - 1))
   }
 
   reset(): void {

@@ -1,5 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core'
-import { injectQuery, injectQueryClient } from '@tanstack/angular-query-experimental'
+import { Injectable, signal } from '@angular/core'
+import { injectQuery } from '@tanstack/angular-query-experimental'
 import {
   getMapByPositionMapsLayerXYGet,
   getMonsterMonstersCodeGet,
@@ -7,17 +7,20 @@ import {
   getNpcNpcsDetailsCodeGet,
   getLayerMapsMapsLayerGet,
 } from '../../sdk/api'
-import type { TilePosition, Map as MapTile, Monster, Resource, Npc } from '../domain/types'
+import type {
+  TilePosition,
+  Map as MapTile,
+  Monster,
+  Resource,
+  Npc,
+} from '../domain/types'
 import { unwrapApiItem, unwrapApiResponse } from '../shared/utils'
-import { QUERY_KEYS } from '../shared/constants/query-keys'
-import { APP_CONFIG } from '../shared/constants/app-config'
+import { QUERY_KEYS, APP_CONFIG } from '../shared/constants'
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapService {
-  private queryClient = injectQueryClient()
-
   private currentTilePosition = signal<TilePosition | null>(null)
   private currentMonsterCode = signal<string | null>(null)
   private currentResourceCode = signal<string | null>(null)
@@ -26,7 +29,7 @@ export class MapService {
   tileDetailsQuery = injectQuery(() => ({
     queryKey: QUERY_KEYS.maps.tileDetails(
       this.currentTilePosition()?.x || 0,
-      this.currentTilePosition()?.y || 0
+      this.currentTilePosition()?.y || 0,
     ),
     queryFn: async (): Promise<MapTile | null> => {
       const pos = this.currentTilePosition()

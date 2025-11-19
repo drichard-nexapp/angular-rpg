@@ -9,14 +9,13 @@ describe('NpcService', () => {
   let service: NpcService
   let characterService: jasmine.SpyObj<CharacterService>
   let cooldownService: jasmine.SpyObj<CooldownService>
-  let errorHandler: jasmine.SpyObj<ErrorHandlerService>
 
   const mockCharacter = {
     name: 'TestHero',
     level: 10,
     hp: 100,
     max_hp: 100,
-  } as any as Character
+  } as Character
 
   beforeEach(() => {
     const characterServiceSpy = jasmine.createSpyObj('CharacterService', [
@@ -41,9 +40,12 @@ describe('NpcService', () => {
     })
 
     service = TestBed.inject(NpcService)
-    characterService = TestBed.inject(CharacterService) as jasmine.SpyObj<CharacterService>
-    cooldownService = TestBed.inject(CooldownService) as jasmine.SpyObj<CooldownService>
-    errorHandler = TestBed.inject(ErrorHandlerService) as jasmine.SpyObj<ErrorHandlerService>
+    characterService = TestBed.inject(
+      CharacterService,
+    ) as jasmine.SpyObj<CharacterService>
+    cooldownService = TestBed.inject(
+      CooldownService,
+    ) as jasmine.SpyObj<CooldownService>
   })
 
   it('should be created', () => {

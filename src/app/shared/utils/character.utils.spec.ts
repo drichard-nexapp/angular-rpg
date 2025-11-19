@@ -2,79 +2,80 @@ import { CharacterUtils } from './character.utils'
 import type { Character } from '../../domain/types'
 
 describe('CharacterUtils', () => {
-  const createMockCharacter = (overrides: Partial<Character> = {}): Character => ({
-    account: 'testaccount',
-    name: 'TestCharacter',
-    skin: 'men1',
-    level: 10,
-    xp: 500,
-    max_xp: 1000,
-    gold: 100,
-    speed: 5,
-    mining_level: 5,
-    mining_xp: 100,
-    mining_max_xp: 200,
-    woodcutting_level: 3,
-    woodcutting_xp: 50,
-    woodcutting_max_xp: 100,
-    fishing_level: 2,
-    fishing_xp: 25,
-    fishing_max_xp: 50,
-    weaponcrafting_level: 1,
-    weaponcrafting_xp: 10,
-    weaponcrafting_max_xp: 20,
-    gearcrafting_level: 1,
-    gearcrafting_xp: 10,
-    gearcrafting_max_xp: 20,
-    jewelrycrafting_level: 1,
-    jewelrycrafting_xp: 10,
-    jewelrycrafting_max_xp: 20,
-    cooking_level: 1,
-    cooking_xp: 10,
-    cooking_max_xp: 20,
-    hp: 80,
-    max_hp: 100,
-    haste: 0,
-    critical_strike: 5,
-    attack_fire: 5,
-    attack_earth: 3,
-    attack_water: 2,
-    attack_air: 1,
-    dmg_fire: 4,
-    dmg_earth: 3,
-    dmg_water: 2,
-    dmg_air: 1,
-    res_fire: 10,
-    res_earth: 10,
-    res_water: 10,
-    res_air: 10,
-    x: 5,
-    y: 10,
-    cooldown: 0,
-    cooldown_expiration: undefined,
-    weapon_slot: 'sword',
-    shield_slot: 'shield',
-    helmet_slot: 'helmet',
-    body_armor_slot: 'armor',
-    leg_armor_slot: 'pants',
-    boots_slot: 'boots',
-    ring1_slot: 'ring1',
-    ring2_slot: 'ring2',
-    amulet_slot: 'amulet',
-    artifact1_slot: 'artifact1',
-    artifact2_slot: 'artifact2',
-    artifact3_slot: 'artifact3',
-    consumable1_slot: '',
-    consumable1_slot_quantity: 0,
-    consumable2_slot: '',
-    consumable2_slot_quantity: 0,
-    task: '',
-    task_type: '',
-    task_progress: 0,
-    task_total: 0,
-    inventory_max_items: 20,
-    ...overrides,
-  } as unknown as Character)
+  const createMockCharacter = (overrides: Partial<Character> = {}): Character =>
+    ({
+      account: 'testaccount',
+      name: 'TestCharacter',
+      skin: 'men1',
+      level: 10,
+      xp: 500,
+      max_xp: 1000,
+      gold: 100,
+      speed: 5,
+      mining_level: 5,
+      mining_xp: 100,
+      mining_max_xp: 200,
+      woodcutting_level: 3,
+      woodcutting_xp: 50,
+      woodcutting_max_xp: 100,
+      fishing_level: 2,
+      fishing_xp: 25,
+      fishing_max_xp: 50,
+      weaponcrafting_level: 1,
+      weaponcrafting_xp: 10,
+      weaponcrafting_max_xp: 20,
+      gearcrafting_level: 1,
+      gearcrafting_xp: 10,
+      gearcrafting_max_xp: 20,
+      jewelrycrafting_level: 1,
+      jewelrycrafting_xp: 10,
+      jewelrycrafting_max_xp: 20,
+      cooking_level: 1,
+      cooking_xp: 10,
+      cooking_max_xp: 20,
+      hp: 80,
+      max_hp: 100,
+      haste: 0,
+      critical_strike: 5,
+      attack_fire: 5,
+      attack_earth: 3,
+      attack_water: 2,
+      attack_air: 1,
+      dmg_fire: 4,
+      dmg_earth: 3,
+      dmg_water: 2,
+      dmg_air: 1,
+      res_fire: 10,
+      res_earth: 10,
+      res_water: 10,
+      res_air: 10,
+      x: 5,
+      y: 10,
+      cooldown: 0,
+      cooldown_expiration: undefined,
+      weapon_slot: 'sword',
+      shield_slot: 'shield',
+      helmet_slot: 'helmet',
+      body_armor_slot: 'armor',
+      leg_armor_slot: 'pants',
+      boots_slot: 'boots',
+      ring1_slot: 'ring1',
+      ring2_slot: 'ring2',
+      amulet_slot: 'amulet',
+      artifact1_slot: 'artifact1',
+      artifact2_slot: 'artifact2',
+      artifact3_slot: 'artifact3',
+      consumable1_slot: '',
+      consumable1_slot_quantity: 0,
+      consumable2_slot: '',
+      consumable2_slot_quantity: 0,
+      task: '',
+      task_type: '',
+      task_progress: 0,
+      task_total: 0,
+      inventory_max_items: 20,
+      ...overrides,
+    }) as unknown as Character
 
   describe('getPosition', () => {
     it('should return position for character with valid coordinates', () => {
@@ -89,13 +90,19 @@ describe('CharacterUtils', () => {
     })
 
     it('should return null when x is undefined', () => {
-      const character = createMockCharacter({ x: undefined as any, y: 10 })
+      const character = createMockCharacter({
+        x: undefined as unknown as number,
+        y: 10,
+      })
       const position = CharacterUtils.getPosition(character)
       expect(position).toBeNull()
     })
 
     it('should return null when y is undefined', () => {
-      const character = createMockCharacter({ x: 5, y: undefined as any })
+      const character = createMockCharacter({
+        x: 5,
+        y: undefined as unknown as number,
+      })
       const position = CharacterUtils.getPosition(character)
       expect(position).toBeNull()
     })
@@ -113,13 +120,19 @@ describe('CharacterUtils', () => {
     })
 
     it('should return null when x is not a number', () => {
-      const character = createMockCharacter({ x: '5' as any, y: 10 })
+      const character = createMockCharacter({
+        x: '5' as unknown as number,
+        y: 10,
+      })
       const position = CharacterUtils.getPosition(character)
       expect(position).toBeNull()
     })
 
     it('should return null when y is not a number', () => {
-      const character = createMockCharacter({ x: 5, y: '10' as any })
+      const character = createMockCharacter({
+        x: 5,
+        y: '10' as unknown as number,
+      })
       const position = CharacterUtils.getPosition(character)
       expect(position).toBeNull()
     })
@@ -148,12 +161,18 @@ describe('CharacterUtils', () => {
     })
 
     it('should return false when x is undefined', () => {
-      const character = createMockCharacter({ x: undefined as any, y: 10 })
+      const character = createMockCharacter({
+        x: undefined as unknown as number,
+        y: 10,
+      })
       expect(CharacterUtils.hasValidPosition(character)).toBe(false)
     })
 
     it('should return false when y is undefined', () => {
-      const character = createMockCharacter({ x: 5, y: undefined as any })
+      const character = createMockCharacter({
+        x: 5,
+        y: undefined as unknown as number,
+      })
       expect(CharacterUtils.hasValidPosition(character)).toBe(false)
     })
 
@@ -168,12 +187,18 @@ describe('CharacterUtils', () => {
     })
 
     it('should return false when x is not a number', () => {
-      const character = createMockCharacter({ x: '5' as any, y: 10 })
+      const character = createMockCharacter({
+        x: '5' as unknown as number,
+        y: 10,
+      })
       expect(CharacterUtils.hasValidPosition(character)).toBe(false)
     })
 
     it('should return false when y is not a number', () => {
-      const character = createMockCharacter({ x: 5, y: '10' as any })
+      const character = createMockCharacter({
+        x: 5,
+        y: '10' as unknown as number,
+      })
       expect(CharacterUtils.hasValidPosition(character)).toBe(false)
     })
 
@@ -204,7 +229,9 @@ describe('CharacterUtils', () => {
     })
 
     it('should return false when cooldown is null', () => {
-      const character = createMockCharacter({ cooldown: null as any })
+      const character = createMockCharacter({
+        cooldown: null as unknown as number,
+      })
       expect(CharacterUtils.isOnCooldown(character)).toBe(false)
     })
   })

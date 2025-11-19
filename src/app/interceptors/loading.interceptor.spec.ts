@@ -1,6 +1,13 @@
 import { TestBed } from '@angular/core/testing'
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http'
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http'
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing'
 import { loadingInterceptor } from './loading.interceptor'
 import { LoadingService } from '../services/loading.service'
 
@@ -35,7 +42,9 @@ describe('loadingInterceptor', () => {
 
     expect(loadingService.isLoading()).toBe(true)
 
-    const req = httpTestingController.expectOne('https://api.artifactsmmo.com/test')
+    const req = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test',
+    )
     req.flush({})
 
     expect(loadingService.isLoading()).toBe(false)
@@ -49,7 +58,9 @@ describe('loadingInterceptor', () => {
       })
     })
 
-    const req = httpTestingController.expectOne('https://api.artifactsmmo.com/test')
+    const req = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test',
+    )
     req.flush({})
   })
 
@@ -63,7 +74,9 @@ describe('loadingInterceptor', () => {
       },
     })
 
-    const req = httpTestingController.expectOne('https://api.artifactsmmo.com/test')
+    const req = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test',
+    )
     req.error(new ProgressEvent('error'))
   })
 
@@ -73,12 +86,16 @@ describe('loadingInterceptor', () => {
 
     expect(loadingService.isLoading()).toBe(true)
 
-    const req1 = httpTestingController.expectOne('https://api.artifactsmmo.com/test1')
+    const req1 = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test1',
+    )
     req1.flush({})
 
     expect(loadingService.isLoading()).toBe(true)
 
-    const req2 = httpTestingController.expectOne('https://api.artifactsmmo.com/test2')
+    const req2 = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test2',
+    )
     req2.flush({})
 
     expect(loadingService.isLoading()).toBe(false)

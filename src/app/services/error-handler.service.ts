@@ -42,15 +42,13 @@ export class ErrorHandlerService {
 
     this.logger.error(appError.message, context || 'App', appError.details)
 
-    this.errors.update(errors => [...errors, appError])
+    this.errors.update((errors) => [...errors, appError])
 
     setTimeout(() => this.clearError(appError), 5000)
   }
 
   clearError(error: AppError): void {
-    this.errors.update(errors =>
-      errors.filter(e => e !== error)
-    )
+    this.errors.update((errors) => errors.filter((e) => e !== error))
   }
 
   clearAllErrors(): void {
@@ -66,15 +64,13 @@ export class ErrorHandlerService {
 
     this.logger.info(message, context || 'App')
 
-    this.successes.update(successes => [...successes, appSuccess])
+    this.successes.update((successes) => [...successes, appSuccess])
 
     setTimeout(() => this.clearSuccess(appSuccess), 3000)
   }
 
   clearSuccess(success: AppSuccess): void {
-    this.successes.update(successes =>
-      successes.filter(s => s !== success)
-    )
+    this.successes.update((successes) => successes.filter((s) => s !== success))
   }
 
   clearAllSuccesses(): void {

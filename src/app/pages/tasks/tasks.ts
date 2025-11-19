@@ -18,7 +18,11 @@ export class Tasks {
   filterMaxLevel = signal<number | undefined>(undefined)
 
   tasksQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.tasks.list(this.filterSkill(), this.filterMinLevel(), this.filterMaxLevel()),
+    queryKey: QUERY_KEYS.tasks.list(
+      this.filterSkill(),
+      this.filterMinLevel(),
+      this.filterMaxLevel(),
+    ),
     queryFn: async (): Promise<TaskFull[]> => {
       const response = await getAllTasksTasksListGet({
         query: {

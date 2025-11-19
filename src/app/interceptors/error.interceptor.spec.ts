@@ -1,6 +1,13 @@
 import { TestBed } from '@angular/core/testing'
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http'
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing'
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http'
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing'
 import { errorInterceptor } from './error.interceptor'
 import { ErrorHandlerService } from '../services/error-handler.service'
 
@@ -37,7 +44,9 @@ describe('errorInterceptor', () => {
       },
     })
 
-    const req = httpTestingController.expectOne('https://api.artifactsmmo.com/test')
+    const req = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test',
+    )
     req.flush('Not Found', { status: 404, statusText: 'Not Found' })
   })
 
@@ -51,8 +60,13 @@ describe('errorInterceptor', () => {
       },
     })
 
-    const req = httpTestingController.expectOne('https://api.artifactsmmo.com/test')
-    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' })
+    const req = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test',
+    )
+    req.flush('Server Error', {
+      status: 500,
+      statusText: 'Internal Server Error',
+    })
   })
 
   it('should handle network errors', (done) => {
@@ -65,7 +79,9 @@ describe('errorInterceptor', () => {
       },
     })
 
-    const req = httpTestingController.expectOne('https://api.artifactsmmo.com/test')
+    const req = httpTestingController.expectOne(
+      'https://api.artifactsmmo.com/test',
+    )
     req.error(new ProgressEvent('error'), { status: 0 })
   })
 })

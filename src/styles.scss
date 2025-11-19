@@ -1,10 +1,137 @@
-/* You can add global styles to this file, and also import other style files */
+/* Design System Imports */
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
 
+/* Global Styles */
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: $font-family-primary;
+  background: $color-bg-secondary;
+  color: $color-text-primary;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+}
+
+main {
+  background: $color-bg-secondary;
+  color: $color-text-primary;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-text-primary;
+  margin: 0;
+}
+
+h1 {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-medium;
+  line-height: 1;
+}
+
+h2 {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-medium;
+}
+
+h3 {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+h4 {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.text-truncate {
+  @include text-truncate;
+}
+
+.flex-center {
+  @include flex-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+/* Button Utility Classes */
+.btn-primary {
+  @include button-primary;
+}
+
+.btn-success {
+  @include button-success;
+}
+
+.btn-danger {
+  @include button-danger;
+}
+
+.btn-warning {
+  @include button-warning;
+}
+
+/* Spacing Utilities */
+.mt-xs {
+  margin-top: $spacing-xs;
+}
+.mt-sm {
+  margin-top: $spacing-sm;
+}
+.mt-md {
+  margin-top: $spacing-md;
+}
+.mt-lg {
+  margin-top: $spacing-lg;
+}
+.mt-xl {
+  margin-top: $spacing-xl;
+}
+
+.mb-xs {
+  margin-bottom: $spacing-xs;
+}
+.mb-sm {
+  margin-bottom: $spacing-sm;
+}
+.mb-md {
+  margin-bottom: $spacing-md;
+}
+.mb-lg {
+  margin-bottom: $spacing-lg;
+}
+.mb-xl {
+  margin-bottom: $spacing-xl;
+}
+
+.p-xs {
+  padding: $spacing-xs;
+}
+.p-sm {
+  padding: $spacing-sm;
+}
+.p-md {
+  padding: $spacing-md;
+}
+.p-lg {
+  padding: $spacing-lg;
+}
+.p-xl {
+  padding: $spacing-xl;
 }

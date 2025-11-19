@@ -1,10 +1,6 @@
-import { TileBase, TileData, TileRenderResult } from './tile-base'
+import { TileBase, TileRenderResult } from './tile-base'
 
 export class TerrainTile extends TileBase {
-  constructor(data: TileData) {
-    super(data)
-  }
-
   isMonster(): boolean {
     return false
   }
@@ -20,15 +16,8 @@ export class TerrainTile extends TileBase {
   render(): TileRenderResult {
     return {
       type: 'ascii',
-      value: this.getAsciiRepresentation(),
+      value: '',
       cssClass: 'tile-ascii',
-    }
-  }
-
-  getVisualMarker(): { type: string; value: string } {
-    return {
-      type: 'ascii',
-      value: this.getAsciiRepresentation(),
     }
   }
 

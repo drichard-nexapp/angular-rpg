@@ -215,8 +215,7 @@ describe('CharacterService', () => {
 
   it('should throw error when trying to move without selected character', async () => {
     await expectAsync(service.moveCharacter(1, 1)).toBeRejectedWithError(
-      'No character selected'
+      'No character selected',
     )
   })
-
 })

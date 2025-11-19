@@ -33,25 +33,14 @@ export class LoggerService {
     this.log('debug', message, context, data)
   }
 
-  setEnabled(enabled: boolean): void {
-    this.enabled = enabled
-  }
-
-  setMinLevel(level: LogLevel): void {
-    this.minLevel = level
-  }
-
-  private log(level: LogLevel, message: string, context?: string, data?: unknown): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    context?: string,
+    data?: unknown,
+  ): void {
     if (!this.enabled) return
     if (!this.shouldLog(level)) return
-
-    const entry: LogEntry = {
-      level,
-      message,
-      context,
-      data,
-      timestamp: new Date(),
-    }
 
     const prefix = context ? `[${context}]` : '[App]'
     const formattedMessage = `${prefix} ${message}`

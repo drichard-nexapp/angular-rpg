@@ -23,7 +23,10 @@ export class NpcService {
   private cooldownService = inject(CooldownService)
   private errorHandler = inject(ErrorHandlerService)
 
-  async buyItemFromNpc(itemCode: string, quantity: number): Promise<NpcActionResult> {
+  async buyItemFromNpc(
+    itemCode: string,
+    quantity: number,
+  ): Promise<NpcActionResult> {
     const selected = this.characterService.getSelectedCharacter()
     if (!selected) {
       return { success: false, error: 'No character selected' }
@@ -39,7 +42,10 @@ export class NpcService {
         body: { code: itemCode, quantity },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -57,12 +63,16 @@ export class NpcService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Buy Item from NPC')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to buy item'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to buy item'
       return { success: false, error: errorMessage }
     }
   }
 
-  async sellItemToNpc(itemCode: string, quantity: number): Promise<NpcActionResult> {
+  async sellItemToNpc(
+    itemCode: string,
+    quantity: number,
+  ): Promise<NpcActionResult> {
     const selected = this.characterService.getSelectedCharacter()
     if (!selected) {
       return { success: false, error: 'No character selected' }
@@ -78,7 +88,10 @@ export class NpcService {
         body: { code: itemCode, quantity },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -96,7 +109,8 @@ export class NpcService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Sell Item to NPC')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to sell item'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to sell item'
       return { success: false, error: errorMessage }
     }
   }
@@ -116,7 +130,10 @@ export class NpcService {
         path: { name: selected.name },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -134,7 +151,8 @@ export class NpcService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Accept Task from NPC')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to accept task'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to accept task'
       return { success: false, error: errorMessage }
     }
   }

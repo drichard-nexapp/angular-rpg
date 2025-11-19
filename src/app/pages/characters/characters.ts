@@ -1,8 +1,16 @@
 import { Component, computed, signal, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms'
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms'
 import { injectQuery } from '@tanstack/angular-query-experimental'
-import { getMyCharactersMyCharactersGet, type CharacterSkin } from '../../../sdk/api'
+import {
+  getMyCharactersMyCharactersGet,
+  type CharacterSkin,
+} from '../../../sdk/api'
 import type { Character } from '../../domain/types'
 import { unwrapApiResponse } from '../../shared/utils'
 import { QUERY_KEYS } from '../../shared/constants/query-keys'
@@ -32,15 +40,22 @@ export class Characters {
   characterForm = new FormGroup({
     name: new FormControl<string>('', {
       validators: CharacterManagementService.createNameValidators(),
-      nonNullable: true
+      nonNullable: true,
     }),
     skin: new FormControl<CharacterSkin>('men1', {
       validators: [Validators.required],
-      nonNullable: true
-    })
+      nonNullable: true,
+    }),
   })
 
-  availableSkins: CharacterSkin[] = ['men1', 'men2', 'men3', 'women1', 'women2', 'women3']
+  availableSkins: CharacterSkin[] = [
+    'men1',
+    'men2',
+    'men3',
+    'women1',
+    'women2',
+    'women3',
+  ]
 
   getSkinSymbol(skin: string): string {
     return this.skinService.getSymbol(skin)
@@ -63,7 +78,7 @@ export class Characters {
   })
 
   toggleCreateForm(): void {
-    this.showCreateForm.update(v => !v)
+    this.showCreateForm.update((v) => !v)
     this.characterForm.reset({ name: '', skin: 'men1' })
     this.createError.set(null)
   }
@@ -78,7 +93,10 @@ export class Characters {
     this.createError.set(null)
 
     const formValue = this.characterForm.getRawValue()
-    const result = await this.characterMgmt.createCharacter(formValue.name, formValue.skin)
+    const result = await this.characterMgmt.createCharacter(
+      formValue.name,
+      formValue.skin,
+    )
 
     if (result.success) {
       await this.charactersQuery.refetch()

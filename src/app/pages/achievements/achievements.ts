@@ -36,7 +36,7 @@ export class Achievements {
   achievementsQuery = injectQuery(() => ({
     queryKey: QUERY_KEYS.account.achievements(
       this.accountQuery.data()?.username || '',
-      this.filterCompleted()
+      this.filterCompleted(),
     ),
     queryFn: async (): Promise<AccountAchievementSchema[]> => {
       const username = this.accountQuery.data()?.username
@@ -55,13 +55,16 @@ export class Achievements {
     enabled: !!this.accountQuery.data()?.username,
   }))
 
-  achievements = computed((): AccountAchievementSchema[] => this.achievementsQuery.data() ?? [])
+  achievements = computed(
+    (): AccountAchievementSchema[] => this.achievementsQuery.data() ?? [],
+  )
   accountName = computed((): string => this.accountQuery.data()?.username ?? '')
   achievementPoints = computed(
     (): number => this.accountQuery.data()?.achievements_points ?? 0,
   )
   loading = computed(
-    (): boolean => this.accountQuery.isPending() || this.achievementsQuery.isPending(),
+    (): boolean =>
+      this.accountQuery.isPending() || this.achievementsQuery.isPending(),
   )
   error = computed((): string | null => {
     const accountError = this.accountQuery.error()

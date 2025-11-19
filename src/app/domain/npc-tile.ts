@@ -1,10 +1,6 @@
-import { TileBase, TileData, TileRenderResult } from './tile-base'
+import { TileBase, TileRenderResult } from './tile-base'
 
 export class NpcTile extends TileBase {
-  constructor(data: TileData) {
-    super(data)
-  }
-
   isMonster(): boolean {
     return false
   }
@@ -22,13 +18,6 @@ export class NpcTile extends TileBase {
       type: 'marker',
       value: '!',
       cssClass: 'npc-marker',
-    }
-  }
-
-  getVisualMarker(): { type: string; value: string } {
-    return {
-      type: 'npc',
-      value: '!',
     }
   }
 

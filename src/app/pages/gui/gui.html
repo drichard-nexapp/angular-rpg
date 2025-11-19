@@ -5,434 +5,967 @@
     <app-error-display></app-error-display>
 
     @if (activeEvents().length > 0) {
-      <div class="active-events-float">
-        <div class="events-float-header">
-          <span class="events-icon">🎉</span>
-          <span class="events-count">{{ activeEvents().length }}</span>
+    <div class="active-events-float">
+      <div class="events-float-header">
+        <span class="events-icon">🎉</span>
+        <span class="events-count">{{ activeEvents().length }}</span>
+      </div>
+      <div class="events-float-list">
+        @for (event of activeEvents(); track event.code) {
+        <div class="event-float-item" (click)="onEventClick(event)">
+          <div class="event-float-name">{{ event.name }}</div>
+          <div class="event-float-details">
+            <span class="event-float-duration">{{ event.duration }}m</span>
+            <span class="event-float-location"
+              >({{ event.map.x }}, {{ event.map.y }})</span
+            >
+          </div>
         </div>
-        <div class="events-float-list">
-          @for (event of activeEvents(); track event.code) {
-            <div class="event-float-item">
-              <div class="event-float-name">{{ event.name }}</div>
-              <div class="event-float-details">
-                <span class="event-float-duration">{{ event.duration }}m</span>
-                <span class="event-float-location">({{ event.map.x }}, {{ event.map.y }})</span>
-              </div>
+        }
+      </div>
+    </div>
+    } @if (currentTileDetails()) {
+    <div class="tile-details-popup">
+      <div class="tile-details-header">
+        <h3>Tile Details</h3>
+        <button class="close-button tile-close" (click)="closeTileDetails()">
+          ×
+        </button>
+      </div>
+      <div class="tile-detail-item">
+        <strong>Position:</strong> ({{ currentTileDetails()!.x }}, {{
+        currentTileDetails()!.y }})
+      </div>
+      <div class="tile-detail-item">
+        <strong>Skin:</strong> {{ currentTileDetails()!.skin }}
+      </div>
+      @if (selectedCharacter()) {
+      <button
+        class="move-to-tile-button"
+        [disabled]="isCharacterOnCooldown(selectedCharacter()!)"
+        (click)="moveToSelectedTile()"
+      >
+        Move to This Tile
+      </button>
+      } @if (isMonsterTile() && !monsterDetails()) {
+      <button class="show-details-button" (click)="loadMonsterDetails()">
+        ? Show Monster Details
+      </button>
+      } @if (monsterDetails()) {
+      <div class="monster-details-section">
+        <img
+          [src]="getMonsterImageUrl(monsterDetails()!.code)"
+          [alt]="monsterDetails()!.name"
+          class="monster-image"
+        />
+        <div class="monster-header">
+          <h4>{{ monsterDetails()!.name }}</h4>
+          <button class="hide-details-button" (click)="hideMonsterDetails()">
+            Hide
+          </button>
+        </div>
+        <div class="monster-basic-info">
+          <div class="monster-info-item">
+            <strong>Level:</strong> {{ monsterDetails()!.level }}
+          </div>
+          <div class="monster-info-item">
+            <strong>Type:</strong> {{ monsterDetails()!.type }}
+          </div>
+          <div class="monster-info-item">
+            <strong>HP:</strong> {{ monsterDetails()!.hp }}
+          </div>
+        </div>
+
+        <div class="monster-stats">
+          <strong>Attacks:</strong>
+          <div class="stats-grid">
+            <div class="stat-item">🔥 {{ monsterDetails()!.attack_fire }}</div>
+            <div class="stat-item">🌍 {{ monsterDetails()!.attack_earth }}</div>
+            <div class="stat-item">💧 {{ monsterDetails()!.attack_water }}</div>
+            <div class="stat-item">💨 {{ monsterDetails()!.attack_air }}</div>
+          </div>
+        </div>
+
+        <div class="monster-stats">
+          <strong>Resistances:</strong>
+          <div class="stats-grid">
+            <div class="stat-item">🔥 {{ monsterDetails()!.res_fire }}%</div>
+            <div class="stat-item">🌍 {{ monsterDetails()!.res_earth }}%</div>
+            <div class="stat-item">💧 {{ monsterDetails()!.res_water }}%</div>
+            <div class="stat-item">💨 {{ monsterDetails()!.res_air }}%</div>
+          </div>
+        </div>
+
+        <div class="monster-stats">
+          <div class="monster-info-item">
+            <strong>Critical:</strong> {{ monsterDetails()!.critical_strike }}%
+          </div>
+          <div class="monster-info-item">
+            <strong>Initiative:</strong> {{ monsterDetails()!.initiative }}
+          </div>
+        </div>
+
+        <div class="monster-rewards">
+          <strong>Rewards:</strong>
+          <div class="monster-info-item">
+            Gold: {{ monsterDetails()!.min_gold }}-{{ monsterDetails()!.max_gold
+            }}
+          </div>
+          @if (monsterDetails()!.drops.length > 0) {
+          <div class="drops-list">
+            <strong>Possible Drops:</strong>
+            @for (drop of monsterDetails()!.drops; track drop.code) {
+            <div class="drop-item-detail">
+              {{ drop.code }} ({{ drop.rate }})
             </div>
+            }
+          </div>
           }
         </div>
       </div>
-    }
-
-    @if (currentTileDetails()) {
-      <div class="tile-details-popup">
-        <div class="tile-details-header">
-          <h3>Tile Details</h3>
-          <button
-            class="close-button tile-close"
-            (click)="closeTileDetails()">
-            ×
+      } @if (isMonsterTile()) {
+      <button
+        class="fight-button"
+        [disabled]="!selectedCharacter()"
+        (click)="fightMonster()"
+      >
+        @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!))
+        { Queue Fight } @else { Fight }
+      </button>
+      } @if (isResourceTile() && !resourceDetails()) {
+      <button class="show-details-button" (click)="loadResourceDetails()">
+        ? Show Resource Details
+      </button>
+      } @if (resourceDetails()) {
+      <div class="resource-details-section">
+        <img
+          [src]="getResourceImageUrl(resourceDetails()!.code)"
+          [alt]="resourceDetails()!.name"
+          class="resource-image"
+        />
+        <div class="resource-header">
+          <h4>{{ resourceDetails()!.name }}</h4>
+          <button class="hide-details-button" (click)="hideResourceDetails()">
+            Hide
           </button>
         </div>
-        <div class="tile-detail-item">
-          <strong>Position:</strong> ({{ currentTileDetails()!.x }}, {{
-            currentTileDetails()!.y
-          }})
+        <div class="resource-info">
+          <div class="resource-info-item">
+            <strong>Skill:</strong> {{ resourceDetails()!.skill }}
+          </div>
+          <div class="resource-info-item">
+            <strong>Level:</strong> {{ resourceDetails()!.level }}
+          </div>
+          @if (resourceDetails()!.drops && resourceDetails()!.drops.length > 0)
+          {
+          <div class="drops-list">
+            <strong>Possible Drops:</strong>
+            @for (drop of resourceDetails()!.drops; track drop.code) {
+            <div class="drop-item-detail">
+              {{ drop.code }} ({{ drop.rate }})
+            </div>
+            }
+          </div>
+          }
         </div>
-        <div class="tile-detail-item">
-          <strong>Skin:</strong> {{ currentTileDetails()!.skin }}
+      </div>
+      } @if (isResourceTile()) {
+      <button
+        class="gather-button"
+        [disabled]="!selectedCharacter()"
+        (click)="gatherResource()"
+      >
+        @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!))
+        { Queue Gather } @else { Gather }
+      </button>
+      } @if (isWorkshopTile()) {
+      <div class="workshop-section">
+        <div class="workshop-header">
+          <h4>🔨 Workshop - {{ getWorkshopType() }}</h4>
         </div>
-        @if (isMonsterTile() && !monsterDetails()) {
-          <button class="show-details-button" (click)="loadMonsterDetails()">
-            ? Show Monster Details
-          </button>
-        }
-        @if (monsterDetails()) {
-          <div class="monster-details-section">
-            <div class="monster-header">
-              <h4>{{ monsterDetails()!.name }}</h4>
-              <button class="hide-details-button" (click)="hideMonsterDetails()">
-                Hide
-              </button>
-            </div>
-            <div class="monster-basic-info">
-              <div class="monster-info-item">
-                <strong>Level:</strong> {{ monsterDetails()!.level }}
-              </div>
-              <div class="monster-info-item">
-                <strong>Type:</strong> {{ monsterDetails()!.type }}
-              </div>
-              <div class="monster-info-item">
-                <strong>HP:</strong> {{ monsterDetails()!.hp }}
-              </div>
-            </div>
+        <p class="workshop-description">
+          Craft {{ getWorkshopType() }} items here using materials from your
+          inventory.
+        </p>
 
-            <div class="monster-stats">
-              <strong>Attacks:</strong>
-              <div class="stats-grid">
-                <div class="stat-item">🔥 {{ monsterDetails()!.attack_fire }}</div>
-                <div class="stat-item">🌍 {{ monsterDetails()!.attack_earth }}</div>
-                <div class="stat-item">💧 {{ monsterDetails()!.attack_water }}</div>
-                <div class="stat-item">💨 {{ monsterDetails()!.attack_air }}</div>
+        @if (craftableItems().length > 0) {
+        <div class="craftable-items-section">
+          <strong>Available Crafts:</strong>
+          <div class="craftable-items-list">
+            @for (item of craftableItems(); track item.code) {
+            <div class="craftable-item-card">
+              <div class="craft-item-header">
+                <span class="craft-item-name">{{ item.name }}</span>
+                <span class="craft-item-level">Lv {{ item.level }}</span>
               </div>
-            </div>
+              <div class="craft-item-type">{{ item.type }}</div>
 
-            <div class="monster-stats">
-              <strong>Resistances:</strong>
-              <div class="stats-grid">
-                <div class="stat-item">🔥 {{ monsterDetails()!.res_fire }}%</div>
-                <div class="stat-item">🌍 {{ monsterDetails()!.res_earth }}%</div>
-                <div class="stat-item">💧 {{ monsterDetails()!.res_water }}%</div>
-                <div class="stat-item">💨 {{ monsterDetails()!.res_air }}%</div>
-              </div>
-            </div>
-
-            <div class="monster-stats">
-              <div class="monster-info-item">
-                <strong>Critical:</strong> {{ monsterDetails()!.critical_strike }}%
-              </div>
-              <div class="monster-info-item">
-                <strong>Initiative:</strong> {{ monsterDetails()!.initiative }}
-              </div>
-            </div>
-
-            <div class="monster-rewards">
-              <strong>Rewards:</strong>
-              <div class="monster-info-item">
-                Gold: {{ monsterDetails()!.min_gold }}-{{ monsterDetails()!.max_gold }}
-              </div>
-              @if (monsterDetails()!.drops.length > 0) {
-                <div class="drops-list">
-                  <strong>Possible Drops:</strong>
-                  @for (drop of monsterDetails()!.drops; track drop.code) {
-                    <div class="drop-item-detail">
-                      {{ drop.code }} ({{ drop.rate }}%)
-                    </div>
+              @if (item.craft) {
+              <div class="craft-requirements">
+                <div class="craft-skill">
+                  <strong>Skill:</strong> {{ item.craft.skill }} (Lv {{
+                  item.craft.level }})
+                </div>
+                @if (item.craft.items && item.craft.items.length > 0) {
+                <div class="craft-materials">
+                  <strong>Materials:</strong>
+                  @for (material of item.craft.items; track material.code) {
+                  <div
+                    class="craft-material"
+                    [class.material-available]="getInventoryQuantity(material.code) >= material.quantity"
+                    [class.material-missing]="getInventoryQuantity(material.code) < material.quantity"
+                  >
+                    {{ material.code }} × {{ material.quantity }}
+                    <span class="material-count">
+                      ({{ getInventoryQuantity(material.code) }}/{{
+                      material.quantity }})
+                    </span>
+                  </div>
                   }
                 </div>
-              }
-            </div>
-          </div>
-        }
-        @if (isMonsterTile()) {
-          <button
-            class="fight-button"
-            [disabled]="!selectedCharacter()"
-            (click)="fightMonster()">
-            @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
-              Queue Fight
-            } @else {
-              Fight
-            }
-          </button>
-        }
-        @if (isResourceTile() && !resourceDetails()) {
-          <button class="show-details-button" (click)="loadResourceDetails()">
-            ? Show Resource Details
-          </button>
-        }
-        @if (resourceDetails()) {
-          <div class="resource-details-section">
-            <div class="resource-header">
-              <h4>{{ resourceDetails()!.name }}</h4>
-              <button class="hide-details-button" (click)="hideResourceDetails()">
-                Hide
-              </button>
-            </div>
-            <div class="resource-info">
-              <div class="resource-info-item">
-                <strong>Skill:</strong> {{ resourceDetails()!.skill }}
-              </div>
-              <div class="resource-info-item">
-                <strong>Level:</strong> {{ resourceDetails()!.level }}
-              </div>
-              @if (resourceDetails()!.drops && resourceDetails()!.drops.length > 0) {
-                <div class="drops-list">
-                  <strong>Possible Drops:</strong>
-                  @for (drop of resourceDetails()!.drops; track drop.code) {
-                    <div class="drop-item-detail">
-                      {{ drop.code }} ({{ drop.rate }}%)
-                    </div>
-                  }
+                } @if (item.craft.quantity) {
+                <div class="craft-quantity">
+                  Crafts: {{ item.craft.quantity }}×
                 </div>
-              }
-            </div>
-          </div>
-        }
-        @if (isResourceTile()) {
-          <button
-            class="gather-button"
-            [disabled]="!selectedCharacter()"
-            (click)="gatherResource()">
-            @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
-              Queue Gather
-            } @else {
-              Gather
-            }
-          </button>
-        }
-        @if (isWorkshopTile()) {
-          <div class="workshop-section">
-            <div class="workshop-header">
-              <h4>🔨 Workshop</h4>
-            </div>
-            <p class="workshop-description">Craft items here using materials from your inventory.</p>
+                }
+              </div>
 
-            @if (craftableItems().length > 0) {
-              <div class="craftable-items-section">
-                <strong>Available Crafts:</strong>
-                <div class="craftable-items-list">
-                  @for (item of craftableItems(); track item.code) {
-                    <div class="craftable-item-card">
-                      <div class="craft-item-header">
-                        <span class="craft-item-name">{{ item.name }}</span>
-                        <span class="craft-item-level">Lv {{ item.level }}</span>
-                      </div>
-                      <div class="craft-item-type">{{ item.type }}</div>
-
-                      @if (item.craft) {
-                        <div class="craft-requirements">
-                          <div class="craft-skill">
-                            <strong>Skill:</strong> {{ item.craft.skill }} (Lv {{ item.craft.level }})
-                          </div>
-                          @if (item.craft.items && item.craft.items.length > 0) {
-                            <div class="craft-materials">
-                              <strong>Materials:</strong>
-                              @for (material of item.craft.items; track material.code) {
-                                <div class="craft-material"
-                                  [class.material-available]="getInventoryQuantity(material.code) >= material.quantity"
-                                  [class.material-missing]="getInventoryQuantity(material.code) < material.quantity">
-                                  {{ material.code }} × {{ material.quantity }}
-                                  <span class="material-count">
-                                    ({{ getInventoryQuantity(material.code) }}/{{ material.quantity }})
-                                  </span>
-                                </div>
-                              }
-                            </div>
-                          }
-                          @if (item.craft.quantity) {
-                            <div class="craft-quantity">Crafts: {{ item.craft.quantity }}×</div>
-                          }
-                        </div>
-
-                        <button
-                          class="craft-button"
-                          [disabled]="
+              <button
+                class="craft-button"
+                [disabled]="
                             !selectedCharacter() ||
                             craftingInProgress() ||
                             !canCraftItem(item)
                           "
-                          [class.craft-button-disabled]="!canCraftItem(item)"
-                          (click)="craftItem(item.code, 1)">
-                          @if (craftingInProgress()) {
-                            Crafting...
-                          } @else if (!canCraftItem(item)) {
-                            Missing Materials
-                          } @else if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
-                            Queue Craft
-                          } @else {
-                            Craft
-                          }
-                        </button>
-                      }
-                    </div>
-                  }
-                </div>
-              </div>
-            } @else {
-              <p class="no-crafts">No crafts available at this time.</p>
-            }
-          </div>
-        }
-        @if (isNpcTile() && !npcDetails()) {
-          <button class="show-details-button" (click)="loadNpcDetails()">
-            ? Show NPC Details
-          </button>
-        }
-        @if (npcDetails()) {
-          <div class="npc-details-section">
-            <div class="npc-header">
-              <h4>{{ npcDetails()!.name }}</h4>
-              <button class="hide-details-button" (click)="hideNpcDetails()">
-                Hide
+                [class.craft-button-disabled]="!canCraftItem(item)"
+                (click)="craftItem(item.code, 1)"
+              >
+                @if (craftingInProgress()) { Crafting... } @else if
+                (!canCraftItem(item)) { Missing Materials } @else if
+                (selectedCharacter() &&
+                isCharacterOnCooldown(selectedCharacter()!)) { Queue Craft }
+                @else { Craft }
               </button>
-            </div>
-            <div class="npc-info">
-              <div class="npc-info-item">
-                <strong>Type:</strong> {{ npcDetails()!.type }}
-              </div>
-              <div class="npc-info-item">
-                <strong>Description:</strong> {{ npcDetails()!.description }}
-              </div>
-            </div>
-
-            @if (npcDetails()!.type === 'merchant' || npcDetails()!.type === 'trader') {
-              @if (npcItems().length > 0) {
-                <div class="npc-items-section">
-                  <strong>Available Items:</strong>
-                  <div class="npc-items-list">
-                    @for (item of npcItems(); track item.code) {
-                      <div class="npc-item-card">
-                        <div class="item-code">{{ item.code }}</div>
-                        <div class="item-prices">
-                          @if (item.buy_price !== undefined) {
-                            <div class="buy-price">
-                              Buy: {{ item.buy_price }}
-                              @if (item.currency === 'gold') {
-                                💰
-                              } @else {
-                                {{ item.currency }}
-                              }
-                            </div>
-                          }
-                          @if (item.sell_price !== undefined) {
-                            <div class="sell-price">
-                              Sell: {{ item.sell_price }}
-                              @if (item.currency === 'gold') {
-                                💰
-                              } @else {
-                                {{ item.currency }}
-                              }
-                            </div>
-                          }
-                        </div>
-                        <div class="item-actions">
-                          @if (item.buy_price !== undefined) {
-                            <button
-                              class="buy-item-button"
-                              [disabled]="
-                                !selectedCharacter() ||
-                                isCharacterOnCooldown(selectedCharacter()!) ||
-                                npcActionInProgress()
-                              "
-                              (click)="buyItemFromNpc(item.code, 1)">
-                              Buy
-                            </button>
-                          }
-                          @if (item.sell_price !== undefined) {
-                            <button
-                              class="sell-item-button"
-                              [disabled]="
-                                !selectedCharacter() ||
-                                isCharacterOnCooldown(selectedCharacter()!) ||
-                                npcActionInProgress()
-                              "
-                              (click)="sellItemToNpc(item.code, 1)">
-                              Sell
-                            </button>
-                          }
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </div>
               }
+            </div>
             }
           </div>
+        </div>
+        } @else {
+        <p class="no-crafts">No crafts available at this time.</p>
         }
       </div>
+      } @if (isNpcTile() && !npcDetails()) {
+      <button class="show-details-button" (click)="loadNpcDetails()">
+        ? Show NPC Details
+      </button>
+      } @if (npcDetails()) {
+      <div class="npc-details-section">
+        <div class="npc-header">
+          <h4>{{ npcDetails()!.name }}</h4>
+          <button class="hide-details-button" (click)="hideNpcDetails()">
+            Hide
+          </button>
+        </div>
+        <div class="npc-info">
+          <div class="npc-info-item">
+            <strong>Type:</strong> {{ npcDetails()!.type }}
+          </div>
+          <div class="npc-info-item">
+            <strong>Description:</strong> {{ npcDetails()!.description }}
+          </div>
+        </div>
+
+        @if (npcDetails()!.type === 'merchant' || npcDetails()!.type ===
+        'trader') { @if (npcItems().length > 0) {
+        <div class="npc-items-section">
+          <strong>Available Items:</strong>
+          <div class="npc-items-list">
+            @for (item of npcItems(); track item.code) {
+            <div class="npc-item-card">
+              <div class="item-code">{{ item.code }}</div>
+              <div class="item-prices">
+                @if (item.buy_price !== undefined) {
+                <div class="buy-price">
+                  Buy: {{ item.buy_price }} @if (item.currency === 'gold') { 💰
+                  } @else { {{ item.currency }} }
+                </div>
+                } @if (item.sell_price !== undefined) {
+                <div class="sell-price">
+                  Sell: {{ item.sell_price }} @if (item.currency === 'gold') {
+                  💰 } @else { {{ item.currency }} }
+                </div>
+                }
+              </div>
+              <div class="item-actions">
+                @if (item.buy_price !== undefined) {
+                <button
+                  class="buy-item-button"
+                  [disabled]="
+                                !selectedCharacter() ||
+                                isCharacterOnCooldown(selectedCharacter()!) ||
+                                npcActionInProgress()
+                              "
+                  (click)="buyItemFromNpc(item.code, 1)"
+                >
+                  Buy
+                </button>
+                } @if (item.sell_price !== undefined) {
+                <button
+                  class="sell-item-button"
+                  [disabled]="
+                                !selectedCharacter() ||
+                                isCharacterOnCooldown(selectedCharacter()!) ||
+                                npcActionInProgress()
+                              "
+                  (click)="sellItemToNpc(item.code, 1)"
+                >
+                  Sell
+                </button>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        } }
+      </div>
+      }
+    </div>
+    } @if (selectedCharacter() && getCharacterQueue().length > 0) {
+    <div class="action-queue-float">
+      <div class="queue-float-header">
+        <span class="queue-icon">📋</span>
+        <span class="queue-title"
+          >Action Queue ({{ getCharacterQueue().length }})</span
+        >
+        <button class="clear-queue-button" (click)="clearQueue()">Clear</button>
+      </div>
+      <div class="queue-float-list">
+        @for (action of getCharacterQueue(); track action.id) {
+        <div class="queue-float-item">
+          <div class="queue-action-label">{{ action.label }}</div>
+          <button
+            class="remove-action-button"
+            (click)="removeQueuedAction(action.id)"
+          >
+            ×
+          </button>
+        </div>
+        }
+      </div>
+      @if (getQueueError()) {
+      <div class="queue-error">{{ getQueueError() }}</div>
+      }
+    </div>
     }
 
     <app-map
       [characters]="characters()"
       [selectedCharacter]="selectedCharacter()"
-      (tileClick)="onTileClick($event)">
+      [scrollToPosition]="scrollToPosition()"
+      [selectedTile]="selectedTile()"
+      (tileClick)="onTileClick($event)"
+    >
     </app-map>
 
-    @if (selectedCharacter() && characterInventory().length > 0) {
-      <div class="inventory-panel">
-        <div class="inventory-header">
-          <h3>📦 Inventory - {{ selectedCharacter()!.name }}</h3>
-          <div class="inventory-capacity">
-            {{ characterInventory().length }}/{{ selectedCharacter()!.inventory_max_items }} slots
+    @if (selectedCharacter() && showInventory()) {
+    <div class="inventory-panel">
+      <div class="inventory-header">
+        <h3>📦 Inventory - {{ selectedCharacter()!.name }}</h3>
+        <button class="close-panel-button" (click)="toggleInventory()">
+          ×
+        </button>
+      </div>
+      <div class="inventory-capacity-bar">
+        {{ characterInventory().length }}/{{
+        selectedCharacter()!.inventory_max_items }} slots
+      </div>
+      <div class="inventory-grid">
+        @for (slot of characterInventory(); track slot.slot) {
+        <div class="inventory-item">
+          <img
+            [src]="getItemImageUrl(slot.code)"
+            [alt]="slot.code"
+            class="item-image"
+          />
+          <div class="item-info">
+            <div class="item-code">{{ slot.code }}</div>
+            <div class="item-quantity">× {{ slot.quantity }}</div>
+          </div>
+          <div class="item-actions">
+            @if (canEquipItem(slot.code)) {
+            <button class="equip-item-button" (click)="startEquipItem(slot)">
+              Equip
+            </button>
+            }
+            <button class="give-item-button" (click)="startGiveItem(slot)">
+              Give
+            </button>
           </div>
         </div>
-        <div class="inventory-grid">
-          @for (slot of characterInventory(); track slot.slot) {
-            <div class="inventory-item">
-              <div class="item-code">{{ slot.code }}</div>
-              <div class="item-quantity">× {{ slot.quantity }}</div>
-            </div>
-          }
+        } @if (characterInventory().length === 0) {
+        <div class="empty-message">Inventory is empty</div>
+        }
+      </div>
+      @if (givingItem()) {
+      <div class="give-item-dialog">
+        <h4>Give {{ givingItem()!.code }}</h4>
+        <label>
+          Target Character:
+          <select [(ngModel)]="giveTargetCharacter">
+            @for (char of getOtherCharacters(); track char.name) {
+            <option [value]="char.name">{{ char.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Quantity:
+          <input
+            type="number"
+            [(ngModel)]="giveQuantity"
+            min="1"
+            [max]="givingItem()!.quantity"
+          />
+        </label>
+        <div class="dialog-buttons">
+          <button class="confirm-button" (click)="confirmGiveItem()">
+            Confirm
+          </button>
+          <button class="cancel-button" (click)="cancelGiveItem()">
+            Cancel
+          </button>
         </div>
       </div>
+      }
+    </div>
+    } @if (selectedCharacter() && showSkills()) {
+    <div class="skills-panel">
+      <div class="skills-header">
+        <h3>📊 Skills - {{ selectedCharacter()!.name }}</h3>
+        <button class="close-panel-button" (click)="toggleSkills()">×</button>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-name">⚔️ Combat</div>
+          <div class="skill-level">Level {{ selectedCharacter()!.level }}</div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.xp / selectedCharacter()!.max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.xp }} / {{ selectedCharacter()!.max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">⛏️ Mining</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.mining_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.mining_xp / selectedCharacter()!.mining_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.mining_xp }} / {{
+            selectedCharacter()!.mining_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">🪓 Woodcutting</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.woodcutting_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.woodcutting_xp / selectedCharacter()!.woodcutting_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.woodcutting_xp }} / {{
+            selectedCharacter()!.woodcutting_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">🎣 Fishing</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.fishing_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.fishing_xp / selectedCharacter()!.fishing_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.fishing_xp }} / {{
+            selectedCharacter()!.fishing_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">🔨 Weaponcrafting</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.weaponcrafting_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.weaponcrafting_xp / selectedCharacter()!.weaponcrafting_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.weaponcrafting_xp }} / {{
+            selectedCharacter()!.weaponcrafting_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">🛡️ Gearcrafting</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.gearcrafting_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.gearcrafting_xp / selectedCharacter()!.gearcrafting_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.gearcrafting_xp }} / {{
+            selectedCharacter()!.gearcrafting_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">💎 Jewelrycrafting</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.jewelrycrafting_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.jewelrycrafting_xp / selectedCharacter()!.jewelrycrafting_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.jewelrycrafting_xp }} / {{
+            selectedCharacter()!.jewelrycrafting_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">🍳 Cooking</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.cooking_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.cooking_xp / selectedCharacter()!.cooking_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.cooking_xp }} / {{
+            selectedCharacter()!.cooking_max_xp }} XP
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">⚗️ Alchemy</div>
+          <div class="skill-level">
+            Level {{ selectedCharacter()!.alchemy_level }}
+          </div>
+          <div class="skill-progress-bar">
+            <div
+              class="skill-progress-fill"
+              [style.width.%]="(selectedCharacter()!.alchemy_xp / selectedCharacter()!.alchemy_max_xp) * 100"
+            ></div>
+          </div>
+          <div class="skill-xp">
+            {{ selectedCharacter()!.alchemy_xp }} / {{
+            selectedCharacter()!.alchemy_max_xp }} XP
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (selectedCharacter() && showEquipment()) {
+    <div class="equipment-panel">
+      <div class="equipment-header">
+        <h3>⚔️ Equipment - {{ selectedCharacter()!.name }}</h3>
+        <button class="close-panel-button" (click)="toggleEquipment()">
+          ×
+        </button>
+      </div>
+      <div class="equipment-grid">
+        <div class="equipment-slot">
+          <div class="slot-label">Weapon</div>
+          @if (selectedCharacter()!.weapon_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.weapon_slot)"
+            [alt]="selectedCharacter()!.weapon_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.weapon_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Shield</div>
+          @if (selectedCharacter()!.shield_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.shield_slot)"
+            [alt]="selectedCharacter()!.shield_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.shield_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Helmet</div>
+          @if (selectedCharacter()!.helmet_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.helmet_slot)"
+            [alt]="selectedCharacter()!.helmet_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.helmet_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Body Armor</div>
+          @if (selectedCharacter()!.body_armor_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.body_armor_slot)"
+            [alt]="selectedCharacter()!.body_armor_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.body_armor_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Leg Armor</div>
+          @if (selectedCharacter()!.leg_armor_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.leg_armor_slot)"
+            [alt]="selectedCharacter()!.leg_armor_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.leg_armor_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Boots</div>
+          @if (selectedCharacter()!.boots_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.boots_slot)"
+            [alt]="selectedCharacter()!.boots_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.boots_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Ring 1</div>
+          @if (selectedCharacter()!.ring1_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.ring1_slot)"
+            [alt]="selectedCharacter()!.ring1_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.ring1_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Ring 2</div>
+          @if (selectedCharacter()!.ring2_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.ring2_slot)"
+            [alt]="selectedCharacter()!.ring2_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.ring2_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Amulet</div>
+          @if (selectedCharacter()!.amulet_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.amulet_slot)"
+            [alt]="selectedCharacter()!.amulet_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.amulet_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Artifact 1</div>
+          @if (selectedCharacter()!.artifact1_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.artifact1_slot)"
+            [alt]="selectedCharacter()!.artifact1_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.artifact1_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Artifact 2</div>
+          @if (selectedCharacter()!.artifact2_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.artifact2_slot)"
+            [alt]="selectedCharacter()!.artifact2_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.artifact2_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Artifact 3</div>
+          @if (selectedCharacter()!.artifact3_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.artifact3_slot)"
+            [alt]="selectedCharacter()!.artifact3_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.artifact3_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Utility 1</div>
+          @if (selectedCharacter()!.utility1_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.utility1_slot)"
+            [alt]="selectedCharacter()!.utility1_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.utility1_slot || 'Empty' }} @if
+            (selectedCharacter()!.utility1_slot) {
+            <span class="utility-quantity"
+              >× {{ selectedCharacter()!.utility1_slot_quantity }}</span
+            >
+            }
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Utility 2</div>
+          @if (selectedCharacter()!.utility2_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.utility2_slot)"
+            [alt]="selectedCharacter()!.utility2_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.utility2_slot || 'Empty' }} @if
+            (selectedCharacter()!.utility2_slot) {
+            <span class="utility-quantity"
+              >× {{ selectedCharacter()!.utility2_slot_quantity }}</span
+            >
+            }
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Bag</div>
+          @if (selectedCharacter()!.bag_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.bag_slot)"
+            [alt]="selectedCharacter()!.bag_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.bag_slot || 'Empty' }}
+          </div>
+        </div>
+        <div class="equipment-slot">
+          <div class="slot-label">Rune</div>
+          @if (selectedCharacter()!.rune_slot) {
+          <img
+            [src]="getItemImageUrl(selectedCharacter()!.rune_slot)"
+            [alt]="selectedCharacter()!.rune_slot"
+            class="equipment-image"
+          />
+          }
+          <div class="slot-item">
+            {{ selectedCharacter()!.rune_slot || 'Empty' }}
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (selectedCharacter() && getMacrosForCharacter().length > 0) {
+    <div class="macro-panel-float">
+      <div class="macro-header">
+        <h3>🎬 Macros</h3>
+        <span class="macro-count">{{ getMacrosForCharacter().length }}</span>
+      </div>
+
+      @if (isMacroPlaying()) { @let playback = getMacroPlaybackState(); @if
+      (playback) { @let macro = macroService.getMacro(playback.macroId); @if
+      (macro) {
+      <div class="playback-status">
+        <div class="playback-info">
+          ▶️ Playing: {{ macro.name }} @if (playback.isLooping) {
+          <span class="loop-badge">🔁 Loop {{ playback.loopCount + 1 }}</span>
+          }
+        </div>
+        <div class="playback-progress">
+          Action {{ playback.currentActionIndex + 1 }} / {{ macro.actions.length
+          }}
+        </div>
+        <button class="stop-playback-button" (click)="stopMacroPlayback()">
+          ⏹️ Stop
+        </button>
+      </div>
+      } } } @if (getMacroError()) {
+      <div class="macro-status error">❌ {{ getMacroError() }}</div>
+      }
+
+      <div class="macro-list">
+        @for (macro of getMacrosForCharacter(); track macro.id) {
+        <div class="macro-item" [class.shared-macro]="macro.isShared">
+          <div class="macro-item-header">
+            <div class="macro-title-section">
+              <span class="macro-name">{{ macro.name }}</span>
+              @if (macro.isShared) {
+              <span class="shared-badge">🌐 Shared</span>
+              } @else if (macro.characterName) {
+              <span class="character-badge">👤 {{ macro.characterName }}</span>
+              }
+            </div>
+            <span class="macro-action-count"
+              >{{ macro.actions.length }} actions</span
+            >
+          </div>
+          <div class="macro-actions">
+            @if (!isMacroPlaying()) {
+            <button class="play-button" (click)="playMacro(macro.id, false)">
+              ▶️ Play
+            </button>
+            <button class="loop-button" (click)="playMacro(macro.id, true)">
+              🔁 Loop
+            </button>
+            <button class="delete-macro-button" (click)="deleteMacro(macro.id)">
+              🗑️
+            </button>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
     }
 
     <div class="characters-layer">
       @for (character of characters(); track character.name) {
-        <div
-          class="character"
-          [class.selected]="isSelected(character)"
-          [class.on-cooldown]="isCharacterOnCooldown(character)"
-          (click)="selectCharacter(character)">
-          <div class="character-skin-icon">{{ getSkinSymbol(character.skin) }}</div>
-          <div class="character-name">{{ character.name }}</div>
-          <div class="character-stats-inline">
-            <div class="stat-inline">
-              HP: {{ character.hp }}/{{ character.max_hp }}
-            </div>
-            <div class="stat-inline">
-              XP: {{ character.xp }}/{{ character.max_xp }}
-            </div>
-          </div>
-          @if (isCharacterOnCooldown(character)) {
-            <div class="cooldown-indicator">
-              {{ getCharacterCooldown(character.name)?.remainingSeconds }}s
-            </div>
-          }
+      <div
+        class="character"
+        [class.selected]="isSelected(character)"
+        [class.on-cooldown]="isCharacterOnCooldown(character)"
+        (click)="selectCharacter(character)"
+      >
+        <div class="character-skin-icon">
+          {{ getSkinSymbol(character.skin) }}
         </div>
-      }
-      @if (selectedCharacter()) {
-        <button
-          class="rest-button"
-          [disabled]="isCharacterHpFull(selectedCharacter()!)"
-          (click)="restCharacter()">
-          @if (isCharacterOnCooldown(selectedCharacter()!)) {
-            Queue Rest
-          } @else {
-            Rest
-          }
-        </button>
-      }
-
-      @if (selectedCharacter() && getCharacterQueue().length > 0) {
-        <div class="action-queue-panel">
-          <div class="queue-header">
-            <h3>📋 Action Queue</h3>
-            <span class="queue-count">{{ getCharacterQueue().length }}/{{ queueService.getMaxQueueSize() }}</span>
-            <button
-              class="clear-queue-button"
-              (click)="clearQueue()">
-              Clear All
-            </button>
+        <div class="character-name">{{ character.name }}</div>
+        <div class="character-stats-inline">
+          <div class="stat-inline">
+            HP: {{ character.hp }}/{{ character.max_hp }}
           </div>
-
-          @if (isQueueExecuting()) {
-            <div class="queue-status executing">
-              ⚡ Executing...
-            </div>
-          }
-
-          @if (getQueueError()) {
-            <div class="queue-status error">
-              ❌ {{ getQueueError() }}
-            </div>
-          }
-
-          <div class="queue-list">
-            @for (action of getCharacterQueue(); track action.id) {
-              <div class="queue-item">
-                <span class="queue-item-label">{{ action.label }}</span>
-                <button
-                  class="remove-action-button"
-                  (click)="removeQueuedAction(action.id)">
-                  ×
-                </button>
-              </div>
-            }
+          <div class="stat-inline">
+            XP: {{ character.xp }}/{{ character.max_xp }}
           </div>
         </div>
-      }
+        @if (isCharacterOnCooldown(character)) {
+        <div class="cooldown-indicator">
+          {{ getCharacterCooldown(character.name)?.remainingSeconds }}s
+        </div>
+        }
+      </div>
+      } @if (selectedCharacter()) {
+      <button
+        class="rest-button"
+        [disabled]="isCharacterHpFull(selectedCharacter()!)"
+        (click)="restCharacter()"
+      >
+        @if (isCharacterOnCooldown(selectedCharacter()!)) { Queue Rest } @else {
+        Rest }
+      </button>
+
+      <button
+        class="panel-toggle-button"
+        [class.active]="showInventory()"
+        (click)="toggleInventory()"
+      >
+        📦 Inventory
+      </button>
+
+      <button
+        class="panel-toggle-button"
+        [class.active]="showSkills()"
+        (click)="toggleSkills()"
+      >
+        📊 Skills
+      </button>
+
+      <button
+        class="panel-toggle-button"
+        [class.active]="showEquipment()"
+        (click)="toggleEquipment()"
+      >
+        ⚔️ Equipment
+      </button>
+
+      @if (!isRecording(selectedCharacter()!)) {
+      <button class="record-button" (click)="startRecording()">
+        ⏺️ Start Recording
+      </button>
+      } @else {
+      <button class="stop-record-button" (click)="stopRecording()">
+        ⏹️ Stop & Save
+      </button>
+      <button class="cancel-record-button" (click)="cancelRecording()">
+        ❌ Cancel
+      </button>
+      <div class="recording-indicator">
+        🔴 Recording ({{
+        macroService.getRecordedActions(selectedCharacter()!.name).length }}
+        actions)
+      </div>
+      } }
     </div>
   </div>
 </main>

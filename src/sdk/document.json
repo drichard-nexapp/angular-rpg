@@ -8,9 +8,7 @@
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "Server details"
-        ],
+        "tags": ["Server details"],
         "summary": "Get Server Details",
         "description": "Return the status of the game server.",
         "operationId": "get_server_details__get",
@@ -30,9 +28,7 @@
     },
     "/my/bank": {
       "get": {
-        "tags": [
-          "My account"
-        ],
+        "tags": ["My account"],
         "summary": "Get Bank Details",
         "description": "Fetch bank details.",
         "operationId": "get_bank_details_my_bank_get",
@@ -57,9 +53,7 @@
     },
     "/my/bank/items": {
       "get": {
-        "tags": [
-          "My account"
-        ],
+        "tags": ["My account"],
         "summary": "Get Bank Items",
         "description": "Fetch all items in your bank.",
         "operationId": "get_bank_items_my_bank_items_get",
@@ -125,9 +119,7 @@
     },
     "/my/grandexchange/orders": {
       "get": {
-        "tags": [
-          "My account"
-        ],
+        "tags": ["My account"],
         "summary": "Get Ge Sell Orders",
         "description": "Fetch your sell orders details.",
         "operationId": "get_ge_sell_orders_my_grandexchange_orders_get",
@@ -193,9 +185,7 @@
     },
     "/my/grandexchange/history": {
       "get": {
-        "tags": [
-          "My account"
-        ],
+        "tags": ["My account"],
         "summary": "Get Ge Sell History",
         "description": "Fetch your sales history of the last 7 days.",
         "operationId": "get_ge_sell_history_my_grandexchange_history_get",
@@ -273,9 +263,7 @@
     },
     "/my/details": {
       "get": {
-        "tags": [
-          "My account"
-        ],
+        "tags": ["My account"],
         "summary": "Get Account Details",
         "description": "Fetch account details.",
         "operationId": "get_account_details_my_details_get",
@@ -300,9 +288,7 @@
     },
     "/my/change_password": {
       "post": {
-        "tags": [
-          "My account"
-        ],
+        "tags": ["My account"],
         "summary": "Change Password",
         "description": "Change your account password. Changing the password reset the account token.",
         "operationId": "change_password_my_change_password_post",
@@ -339,9 +325,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -390,9 +374,7 @@
     },
     "/my/{name}/action/move": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Move",
         "description": "Moves a character on the map using either the map's ID or X and Y position.\nProvide either 'map_id' or both 'x' and 'y' coordinates in the request body.",
         "operationId": "action_move_my__name__action_move_post",
@@ -464,9 +446,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -590,9 +570,7 @@
     },
     "/my/{name}/action/transition": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Transition",
         "description": "Execute a transition from the current map to another layer.\nThe character must be on a map that has a transition available.",
         "operationId": "action_transition_my__name__action_transition_post",
@@ -654,9 +632,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -764,9 +740,7 @@
     },
     "/my/{name}/action/rest": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Rest",
         "description": "Recovers hit points by resting. (1 second per 5 HP, minimum 3 seconds)",
         "operationId": "action_rest_my__name__action_rest_post",
@@ -812,9 +786,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -874,9 +846,7 @@
     },
     "/my/{name}/action/equip": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Equip Item",
         "description": "Equip an item on your character.",
         "operationId": "action_equip_item_my__name__action_equip_post",
@@ -948,9 +918,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -1122,9 +1090,7 @@
     },
     "/my/{name}/action/unequip": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Unequip Item",
         "description": "Unequip an item on your character.",
         "operationId": "action_unequip_item_my__name__action_unequip_post",
@@ -1196,9 +1162,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -1322,9 +1286,7 @@
     },
     "/my/{name}/action/use": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Use Item",
         "description": "Use an item as a consumable.",
         "operationId": "action_use_item_my__name__action_use_post",
@@ -1396,9 +1358,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -1506,9 +1466,7 @@
     },
     "/my/{name}/action/fight": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Fight",
         "description": "Start a fight against a monster on the character's map.\nAdd participants for multi-character fights (up to 3 characters, only for boss).",
         "operationId": "action_fight_my__name__action_fight_post",
@@ -1571,9 +1529,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -1665,9 +1621,7 @@
     },
     "/my/{name}/action/gathering": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Gathering",
         "description": "Harvest a resource on the character's map.",
         "operationId": "action_gathering_my__name__action_gathering_post",
@@ -1713,9 +1667,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -1823,9 +1775,7 @@
     },
     "/my/{name}/action/crafting": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Crafting",
         "description": "Craft an item. The character must be on a map with a workshop.",
         "operationId": "action_crafting_my__name__action_crafting_post",
@@ -1897,9 +1847,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -2023,9 +1971,7 @@
     },
     "/my/{name}/action/bank/deposit/gold": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Deposit Bank Gold",
         "description": "Deposit gold in a bank on the character's map.",
         "operationId": "action_deposit_bank_gold_my__name__action_bank_deposit_gold_post",
@@ -2081,9 +2027,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -2191,9 +2135,7 @@
     },
     "/my/{name}/action/bank/deposit/item": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Deposit Bank Item",
         "description": "Deposit multiple items in a bank on the character's map.\nThe cooldown will be 3 seconds multiplied by the number of different items deposited.",
         "operationId": "action_deposit_bank_item_my__name__action_bank_deposit_item_post",
@@ -2272,9 +2214,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -2398,9 +2338,7 @@
     },
     "/my/{name}/action/bank/withdraw/item": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Withdraw Bank Item",
         "description": "Take items from your bank and put them in the character's inventory.\nThe cooldown will be 3 seconds multiplied by the number of different items withdrawn.",
         "operationId": "action_withdraw_bank_item_my__name__action_bank_withdraw_item_post",
@@ -2478,9 +2416,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -2604,9 +2540,7 @@
     },
     "/my/{name}/action/bank/withdraw/gold": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Withdraw Bank Gold",
         "description": "Withdraw gold from your bank.",
         "operationId": "action_withdraw_bank_gold_my__name__action_bank_withdraw_gold_post",
@@ -2662,9 +2596,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -2772,9 +2704,7 @@
     },
     "/my/{name}/action/bank/buy_expansion": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Buy Bank Expansion",
         "description": "Buy a 20 slots bank expansion.",
         "operationId": "action_buy_bank_expansion_my__name__action_bank_buy_expansion_post",
@@ -2820,9 +2750,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -2914,9 +2842,7 @@
     },
     "/my/{name}/action/npc/buy": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Npc Buy Item",
         "description": "Buy an item from an NPC on the character's map.",
         "operationId": "action_npc_buy_item_my__name__action_npc_buy_post",
@@ -2988,9 +2914,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -3130,9 +3054,7 @@
     },
     "/my/{name}/action/npc/sell": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Npc Sell Item",
         "description": "Sell an item to an NPC on the character's map.",
         "operationId": "action_npc_sell_item_my__name__action_npc_sell_post",
@@ -3204,9 +3126,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -3330,9 +3250,7 @@
     },
     "/my/{name}/action/recycling": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Recycling",
         "description": "Recycling an item. The character must be on a map with a workshop (only for equipments and weapons).",
         "operationId": "action_recycling_my__name__action_recycling_post",
@@ -3404,9 +3322,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -3546,9 +3462,7 @@
     },
     "/my/{name}/action/grandexchange/buy": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Ge Buy Item",
         "description": "Buy an item at the Grand Exchange on the character's map.",
         "operationId": "action_ge_buy_item_my__name__action_grandexchange_buy_post",
@@ -3620,9 +3534,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -3778,9 +3690,7 @@
     },
     "/my/{name}/action/grandexchange/sell": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Ge Create Sell Order",
         "description": "Create a sell order at the Grand Exchange on the character's map. \nPlease note there is a 3% listing tax, charged at the time of posting, on the total price.",
         "operationId": "action_ge_create_sell_order_my__name__action_grandexchange_sell_post",
@@ -3852,9 +3762,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -3994,9 +3902,7 @@
     },
     "/my/{name}/action/grandexchange/cancel": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Ge Cancel Sell Order",
         "description": "Cancel a sell order at the Grand Exchange on the character's map.",
         "operationId": "action_ge_cancel_sell_order_my__name__action_grandexchange_cancel_post",
@@ -4068,9 +3974,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -4194,9 +4098,7 @@
     },
     "/my/{name}/action/task/complete": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Complete Task",
         "description": "Complete a task.",
         "operationId": "action_complete_task_my__name__action_task_complete_post",
@@ -4242,9 +4144,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -4368,9 +4268,7 @@
     },
     "/my/{name}/action/task/exchange": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Task Exchange",
         "description": "Exchange 6 tasks coins for a random reward. Rewards are exclusive items or resources.",
         "operationId": "action_task_exchange_my__name__action_task_exchange_post",
@@ -4416,9 +4314,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -4526,9 +4422,7 @@
     },
     "/my/{name}/action/task/new": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Accept New Task",
         "description": "Accepting a new task.",
         "operationId": "action_accept_new_task_my__name__action_task_new_post",
@@ -4574,9 +4468,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -4668,9 +4560,7 @@
     },
     "/my/{name}/action/task/trade": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Task Trade",
         "description": "Trading items with a Tasks Master.",
         "operationId": "action_task_trade_my__name__action_task_trade_post",
@@ -4726,9 +4616,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -4852,9 +4740,7 @@
     },
     "/my/{name}/action/task/cancel": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Task Cancel",
         "description": "Cancel a task for 1 tasks coin.",
         "operationId": "action_task_cancel_my__name__action_task_cancel_post",
@@ -4900,9 +4786,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -4994,9 +4878,7 @@
     },
     "/my/{name}/action/give/gold": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Give Gold",
         "description": "Give gold to another character in your account on the same map.",
         "operationId": "action_give_gold_my__name__action_give_gold_post",
@@ -5052,9 +4934,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -5130,9 +5010,7 @@
     },
     "/my/{name}/action/give/item": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Give Items",
         "description": "Give items to another character in your account on the same map.\nThe cooldown will be 3 seconds multiplied by the number of different items given.",
         "operationId": "action_give_items_my__name__action_give_item_post",
@@ -5204,9 +5082,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -5298,9 +5174,7 @@
     },
     "/my/{name}/action/delete": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Delete Item",
         "description": "Delete an item from your character's inventory.",
         "operationId": "action_delete_item_my__name__action_delete_post",
@@ -5356,9 +5230,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -5434,9 +5306,7 @@
     },
     "/my/{name}/action/change_skin": {
       "post": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Action Change Skin",
         "description": "Change the skin of your character.",
         "operationId": "action_change_skin_my__name__action_change_skin_post",
@@ -5492,9 +5362,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -5554,9 +5422,7 @@
     },
     "/my/logs": {
       "get": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Get All Characters Logs",
         "description": "History of the last 5000 actions of all your characters.",
         "operationId": "get_all_characters_logs_my_logs_get",
@@ -5642,9 +5508,7 @@
     },
     "/my/logs/{name}": {
       "get": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Get Character Logs",
         "description": "History of the last actions of your character.",
         "operationId": "get_character_logs_my_logs__name__get",
@@ -5742,9 +5606,7 @@
     },
     "/my/characters": {
       "get": {
-        "tags": [
-          "My characters"
-        ],
+        "tags": ["My characters"],
         "summary": "Get My Characters",
         "description": "List of your characters.",
         "operationId": "get_my_characters_my_characters_get",
@@ -5769,9 +5631,7 @@
     },
     "/accounts/create": {
       "post": {
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "summary": "Create Account",
         "operationId": "create_account_accounts_create_post",
         "requestBody": {
@@ -5807,9 +5667,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -5853,9 +5711,7 @@
     },
     "/accounts/forgot_password": {
       "post": {
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "summary": "Forgot Password",
         "description": "Request a password reset.",
         "operationId": "forgot_password_accounts_forgot_password_post",
@@ -5892,9 +5748,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -5906,9 +5760,7 @@
     },
     "/accounts/reset_password": {
       "post": {
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "summary": "Reset Password",
         "description": "Reset password with a token. Use /forgot_password to get a token by email.",
         "operationId": "reset_password_accounts_reset_password_post",
@@ -5945,9 +5797,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -6007,9 +5857,7 @@
     },
     "/accounts/{account}/achievements": {
       "get": {
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "summary": "Get Account Achievements",
         "description": "Retrieve the achievements of a account.",
         "operationId": "get_account_achievements_accounts__account__achievements_get",
@@ -6112,9 +5960,7 @@
     },
     "/accounts/{account}/characters": {
       "get": {
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "summary": "Get Account Characters",
         "description": "Account character lists.",
         "operationId": "get_account_characters_accounts__account__characters_get",
@@ -6148,9 +5994,7 @@
     },
     "/accounts/{account}": {
       "get": {
-        "tags": [
-          "Accounts"
-        ],
+        "tags": ["Accounts"],
         "summary": "Get Account",
         "description": "Retrieve the details of an account.",
         "operationId": "get_account_accounts__account__get",
@@ -6200,9 +6044,7 @@
     },
     "/achievements": {
       "get": {
-        "tags": [
-          "Achievements"
-        ],
+        "tags": ["Achievements"],
         "summary": "Get All Achievements",
         "description": "List of all achievements.",
         "operationId": "get_all_achievements_achievements_get",
@@ -6266,9 +6108,7 @@
     },
     "/achievements/{code}": {
       "get": {
-        "tags": [
-          "Achievements"
-        ],
+        "tags": ["Achievements"],
         "summary": "Get Achievement",
         "description": "Retrieve the details of an achievement.",
         "operationId": "get_achievement_achievements__code__get",
@@ -6318,9 +6158,7 @@
     },
     "/badges": {
       "get": {
-        "tags": [
-          "Badges"
-        ],
+        "tags": ["Badges"],
         "summary": "Get All Badges",
         "description": "List of all badges.",
         "operationId": "get_all_badges_badges_get",
@@ -6369,9 +6207,7 @@
     },
     "/badges/{code}": {
       "get": {
-        "tags": [
-          "Badges"
-        ],
+        "tags": ["Badges"],
         "summary": "Get Badge",
         "description": "Retrieve the details of a badge.",
         "operationId": "get_badge_badges__code__get",
@@ -6421,9 +6257,7 @@
     },
     "/characters/create": {
       "post": {
-        "tags": [
-          "Characters"
-        ],
+        "tags": ["Characters"],
         "summary": "Create Character",
         "description": "Create new character on your account. You can create up to 5 characters.",
         "operationId": "create_character_characters_create_post",
@@ -6460,9 +6294,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -6527,9 +6359,7 @@
     },
     "/characters/delete": {
       "post": {
-        "tags": [
-          "Characters"
-        ],
+        "tags": ["Characters"],
         "summary": "Delete Character",
         "description": "Delete character on your account.",
         "operationId": "delete_character_characters_delete_post",
@@ -6566,9 +6396,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -6601,9 +6429,7 @@
     },
     "/characters/active": {
       "get": {
-        "tags": [
-          "Characters"
-        ],
+        "tags": ["Characters"],
         "summary": "Get Active Characters",
         "description": "Fetch active characters details.",
         "operationId": "get_active_characters_characters_active_get",
@@ -6652,9 +6478,7 @@
     },
     "/characters/{name}": {
       "get": {
-        "tags": [
-          "Characters"
-        ],
+        "tags": ["Characters"],
         "summary": "Get Character",
         "description": "Retrieve the details of a character.",
         "operationId": "get_character_characters__name__get",
@@ -6704,9 +6528,7 @@
     },
     "/effects": {
       "get": {
-        "tags": [
-          "Effects"
-        ],
+        "tags": ["Effects"],
         "summary": "Get All Effects",
         "description": "List of all effects. Effects are used by equipment, tools, runes, consumables and monsters. An effect is an action that produces an effect on the game.",
         "operationId": "get_all_effects_effects_get",
@@ -6755,9 +6577,7 @@
     },
     "/effects/{code}": {
       "get": {
-        "tags": [
-          "Effects"
-        ],
+        "tags": ["Effects"],
         "summary": "Get Effect",
         "description": "Retrieve the details of an effect.",
         "operationId": "get_effect_effects__code__get",
@@ -6807,9 +6627,7 @@
     },
     "/events/active": {
       "get": {
-        "tags": [
-          "Events"
-        ],
+        "tags": ["Events"],
         "summary": "Get All Active Events",
         "description": "Fetch active events details.",
         "operationId": "get_all_active_events_events_active_get",
@@ -6858,9 +6676,7 @@
     },
     "/events": {
       "get": {
-        "tags": [
-          "Events"
-        ],
+        "tags": ["Events"],
         "summary": "Get All Events",
         "description": "Fetch events details.",
         "operationId": "get_all_events_events_get",
@@ -6924,9 +6740,7 @@
     },
     "/events/spawn": {
       "post": {
-        "tags": [
-          "Events"
-        ],
+        "tags": ["Events"],
         "summary": "Spawn Event",
         "description": "Spawn a specific event by code consuming 1 event token.\n\nRules:\n  - Maximum active events defined by utils.config.max_active_events().\n  - Event must not already be active.\n  - Member or founder account required.",
         "operationId": "spawn_event_events_spawn_post",
@@ -6963,9 +6777,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -7030,9 +6842,7 @@
     },
     "/grandexchange/history/{code}": {
       "get": {
-        "tags": [
-          "Grand Exchange"
-        ],
+        "tags": ["Grand Exchange"],
         "summary": "Get Ge Sell History",
         "description": "Fetch the sales history of the item for the last 7 days.",
         "operationId": "get_ge_sell_history_grandexchange_history__code__get",
@@ -7133,9 +6943,7 @@
     },
     "/grandexchange/orders": {
       "get": {
-        "tags": [
-          "Grand Exchange"
-        ],
+        "tags": ["Grand Exchange"],
         "summary": "Get Ge Sell Orders",
         "description": "Fetch all sell orders.",
         "operationId": "get_ge_sell_orders_grandexchange_orders_get",
@@ -7208,9 +7016,7 @@
     },
     "/grandexchange/orders/{id}": {
       "get": {
-        "tags": [
-          "Grand Exchange"
-        ],
+        "tags": ["Grand Exchange"],
         "summary": "Get Ge Sell Order",
         "description": "Retrieve the sell order of a item.",
         "operationId": "get_ge_sell_order_grandexchange_orders__id__get",
@@ -7260,9 +7066,7 @@
     },
     "/items": {
       "get": {
-        "tags": [
-          "Items"
-        ],
+        "tags": ["Items"],
         "summary": "Get All Items",
         "description": "Fetch items details.",
         "operationId": "get_all_items_items_get",
@@ -7389,9 +7193,7 @@
     },
     "/items/{code}": {
       "get": {
-        "tags": [
-          "Items"
-        ],
+        "tags": ["Items"],
         "summary": "Get Item",
         "description": "Retrieve the details of a item.",
         "operationId": "get_item_items__code__get",
@@ -7441,9 +7243,7 @@
     },
     "/leaderboard/characters": {
       "get": {
-        "tags": [
-          "Leaderboard"
-        ],
+        "tags": ["Leaderboard"],
         "summary": "Get Characters Leaderboard",
         "description": "Fetch leaderboard details.",
         "operationId": "get_characters_leaderboard_leaderboard_characters_get",
@@ -7519,9 +7319,7 @@
     },
     "/leaderboard/accounts": {
       "get": {
-        "tags": [
-          "Leaderboard"
-        ],
+        "tags": ["Leaderboard"],
         "summary": "Get Accounts Leaderboard",
         "description": "Fetch leaderboard details.",
         "operationId": "get_accounts_leaderboard_leaderboard_accounts_get",
@@ -7597,9 +7395,7 @@
     },
     "/maps": {
       "get": {
-        "tags": [
-          "Maps"
-        ],
+        "tags": ["Maps"],
         "summary": "Get All Maps",
         "description": "Fetch maps details.",
         "operationId": "get_all_maps_maps_get",
@@ -7702,9 +7498,7 @@
     },
     "/maps/{layer}": {
       "get": {
-        "tags": [
-          "Maps"
-        ],
+        "tags": ["Maps"],
         "summary": "Get Layer Maps",
         "description": "Fetch maps details.",
         "operationId": "get_layer_maps_maps__layer__get",
@@ -7807,9 +7601,7 @@
     },
     "/maps/{layer}/{x}/{y}": {
       "get": {
-        "tags": [
-          "Maps"
-        ],
+        "tags": ["Maps"],
         "summary": "Get Map By Position",
         "description": "Retrieve the details of a map by layer and coordinates.",
         "operationId": "get_map_by_position_maps__layer___x___y__get",
@@ -7884,9 +7676,7 @@
     },
     "/maps/id/{map_id}": {
       "get": {
-        "tags": [
-          "Maps"
-        ],
+        "tags": ["Maps"],
         "summary": "Get Map By Id",
         "description": "Retrieve the details of a map by its unique ID.",
         "operationId": "get_map_by_id_maps_id__map_id__get",
@@ -7935,9 +7725,7 @@
     },
     "/monsters": {
       "get": {
-        "tags": [
-          "Monsters"
-        ],
+        "tags": ["Monsters"],
         "summary": "Get All Monsters",
         "description": "Fetch monsters details.",
         "operationId": "get_all_monsters_monsters_get",
@@ -8034,9 +7822,7 @@
     },
     "/monsters/{code}": {
       "get": {
-        "tags": [
-          "Monsters"
-        ],
+        "tags": ["Monsters"],
         "summary": "Get Monster",
         "description": "Retrieve the details of a monster.",
         "operationId": "get_monster_monsters__code__get",
@@ -8086,9 +7872,7 @@
     },
     "/npcs/details": {
       "get": {
-        "tags": [
-          "NPCs"
-        ],
+        "tags": ["NPCs"],
         "summary": "Get All Npcs",
         "description": "Fetch NPCs details.",
         "operationId": "get_all_npcs_npcs_details_get",
@@ -8164,9 +7948,7 @@
     },
     "/npcs/details/{code}": {
       "get": {
-        "tags": [
-          "NPCs"
-        ],
+        "tags": ["NPCs"],
         "summary": "Get Npc",
         "description": "Retrieve the details of a NPC.",
         "operationId": "get_npc_npcs_details__code__get",
@@ -8216,9 +7998,7 @@
     },
     "/npcs/items/{code}": {
       "get": {
-        "tags": [
-          "NPCs"
-        ],
+        "tags": ["NPCs"],
         "summary": "Get Npc Items",
         "description": "Retrieve the items list of a NPC. If the NPC has items to buy, sell or trade, they will be displayed.",
         "operationId": "get_npc_items_npcs_items__code__get",
@@ -8295,9 +8075,7 @@
     },
     "/npcs/items": {
       "get": {
-        "tags": [
-          "NPCs"
-        ],
+        "tags": ["NPCs"],
         "summary": "Get All Npcs Items",
         "description": "Retrieve the list of all NPC items.",
         "operationId": "get_all_npcs_items_npcs_items_get",
@@ -8382,9 +8160,7 @@
     },
     "/resources": {
       "get": {
-        "tags": [
-          "Resources"
-        ],
+        "tags": ["Resources"],
         "summary": "Get All Resources",
         "description": "Fetch resources details.",
         "operationId": "get_all_resources_resources_get",
@@ -8484,9 +8260,7 @@
     },
     "/resources/{code}": {
       "get": {
-        "tags": [
-          "Resources"
-        ],
+        "tags": ["Resources"],
         "summary": "Get Resource",
         "description": "Retrieve the details of a resource.",
         "operationId": "get_resource_resources__code__get",
@@ -8536,9 +8310,7 @@
     },
     "/tasks/list": {
       "get": {
-        "tags": [
-          "Tasks"
-        ],
+        "tags": ["Tasks"],
         "summary": "Get All Tasks",
         "description": "Fetch the list of all tasks.",
         "operationId": "get_all_tasks_tasks_list_get",
@@ -8641,9 +8413,7 @@
     },
     "/tasks/list/{code}": {
       "get": {
-        "tags": [
-          "Tasks"
-        ],
+        "tags": ["Tasks"],
         "summary": "Get Task",
         "description": "Retrieve the details of a task.",
         "operationId": "get_task_tasks_list__code__get",
@@ -8693,9 +8463,7 @@
     },
     "/tasks/rewards": {
       "get": {
-        "tags": [
-          "Tasks"
-        ],
+        "tags": ["Tasks"],
         "summary": "Get All Tasks Rewards",
         "description": "Fetch the list of all tasks rewards. To obtain these rewards, you must exchange 6 task coins with a tasks master.",
         "operationId": "get_all_tasks_rewards_tasks_rewards_get",
@@ -8744,9 +8512,7 @@
     },
     "/tasks/rewards/{code}": {
       "get": {
-        "tags": [
-          "Tasks"
-        ],
+        "tags": ["Tasks"],
         "summary": "Get Tasks Reward",
         "description": "Retrieve the details of a tasks reward.",
         "operationId": "get_tasks_reward_tasks_rewards__code__get",
@@ -8796,9 +8562,7 @@
     },
     "/simulation/fight_simulation": {
       "post": {
-        "tags": [
-          "Simulation"
-        ],
+        "tags": ["Simulation"],
         "summary": "Fight Simulation",
         "description": "Simulate combat with fake characters against a monster multiple times.\nMember or founder account required.",
         "operationId": "fight_simulation_simulation_fight_simulation_post",
@@ -8851,9 +8615,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -8886,9 +8648,7 @@
     },
     "/token": {
       "post": {
-        "tags": [
-          "Token"
-        ],
+        "tags": ["Token"],
         "summary": "Generate Token",
         "description": "Use your account as HTTPBasic Auth to generate your token to use the API. You can also generate your token directly on the website.",
         "operationId": "generate_token_token_post",
@@ -8915,9 +8675,7 @@
                     "code": 422,
                     "message": "Request could not be processed due to an invalid payload.",
                     "data": {
-                      "field_name": [
-                        "Field required"
-                      ]
+                      "field_name": ["Field required"]
                     }
                   }
                 }
@@ -8972,9 +8730,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "type"
-        ],
+        "required": ["type"],
         "title": "AccessSchema"
       },
       "AccountAchievementSchema": {
@@ -9122,9 +8878,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "AccountDetailsSchema"
       },
       "AccountLeaderboardSchema": {
@@ -9170,20 +8924,12 @@
       },
       "AccountLeaderboardType": {
         "type": "string",
-        "enum": [
-          "achievements_points",
-          "gold"
-        ],
+        "enum": ["achievements_points", "gold"],
         "title": "AccountLeaderboardType"
       },
       "AccountStatus": {
         "type": "string",
-        "enum": [
-          "standard",
-          "founder",
-          "gold_founder",
-          "vip_founder"
-        ],
+        "enum": ["standard", "founder", "gold_founder", "vip_founder"],
         "title": "AccountStatus"
       },
       "AchievementResponseSchema": {
@@ -9193,9 +8939,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "AchievementResponseSchema"
       },
       "AchievementRewardsSchema": {
@@ -9207,9 +8951,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "gold"
-        ],
+        "required": ["gold"],
         "title": "AchievementRewardsSchema"
       },
       "AchievementSchema": {
@@ -9367,15 +9109,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "account",
-          "skin",
-          "x",
-          "y",
-          "layer",
-          "map_id"
-        ],
+        "required": ["name", "account", "skin", "x", "y", "layer", "map_id"],
         "title": "ActiveCharacterSchema"
       },
       "ActiveEventResponseSchema": {
@@ -9385,9 +9119,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "ActiveEventResponseSchema"
       },
       "ActiveEventSchema": {
@@ -9474,11 +9206,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "username",
-          "password",
-          "email"
-        ],
+        "required": ["username", "password", "email"],
         "title": "AddAccountSchema"
       },
       "AddCharacterSchema": {
@@ -9501,10 +9229,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "skin"
-        ],
+        "required": ["name", "skin"],
         "title": "AddCharacterSchema"
       },
       "BadgeConditionSchema": {
@@ -9522,9 +9247,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code"
-        ],
+        "required": ["code"],
         "title": "BadgeConditionSchema"
       },
       "BadgeResponseSchema": {
@@ -9534,9 +9257,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "BadgeResponseSchema"
       },
       "BadgeSchema": {
@@ -9567,11 +9288,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "description",
-          "conditions"
-        ],
+        "required": ["code", "description", "conditions"],
         "title": "BadgeSchema"
       },
       "BankExtensionSchema": {
@@ -9584,9 +9301,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "price"
-        ],
+        "required": ["price"],
         "title": "BankExtensionSchema"
       },
       "BankExtensionTransactionResponseSchema": {
@@ -9596,9 +9311,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "BankExtensionTransactionResponseSchema"
       },
       "BankExtensionTransactionSchema": {
@@ -9629,11 +9342,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "transaction",
-          "character"
-        ],
+        "required": ["cooldown", "transaction", "character"],
         "title": "BankExtensionTransactionSchema"
       },
       "BankGoldTransactionResponseSchema": {
@@ -9643,9 +9352,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "BankGoldTransactionResponseSchema"
       },
       "BankGoldTransactionSchema": {
@@ -9676,11 +9383,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "bank",
-          "character"
-        ],
+        "required": ["cooldown", "bank", "character"],
         "title": "BankGoldTransactionSchema"
       },
       "BankItemTransactionResponseSchema": {
@@ -9690,9 +9393,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "BankItemTransactionResponseSchema"
       },
       "BankItemTransactionSchema": {
@@ -9731,12 +9432,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "items",
-          "bank",
-          "character"
-        ],
+        "required": ["cooldown", "items", "bank", "character"],
         "title": "BankItemTransactionSchema"
       },
       "BankResponseSchema": {
@@ -9746,9 +9442,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "BankResponseSchema"
       },
       "BankSchema": {
@@ -9779,12 +9473,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "slots",
-          "expansions",
-          "next_expansion_cost",
-          "gold"
-        ],
+        "required": ["slots", "expansions", "next_expansion_cost", "gold"],
         "title": "BankSchema"
       },
       "ChangePassword": {
@@ -9807,10 +9496,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "current_password",
-          "new_password"
-        ],
+        "required": ["current_password", "new_password"],
         "title": "ChangePassword"
       },
       "ChangeSkinCharacterDataSchema": {
@@ -9838,11 +9524,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "skin",
-          "character"
-        ],
+        "required": ["cooldown", "skin", "character"],
         "title": "ChangeSkinCharacterDataSchema"
       },
       "ChangeSkinCharacterSchema": {
@@ -9857,9 +9539,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "skin"
-        ],
+        "required": ["skin"],
         "title": "ChangeSkinCharacterSchema"
       },
       "ChangeSkinResponseSchema": {
@@ -9869,9 +9549,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "ChangeSkinResponseSchema"
       },
       "CharacterFightDataSchema": {
@@ -9902,11 +9580,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "fight",
-          "characters"
-        ],
+        "required": ["cooldown", "fight", "characters"],
         "title": "CharacterFightDataSchema"
       },
       "CharacterFightResponseSchema": {
@@ -9916,9 +9590,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CharacterFightResponseSchema"
       },
       "CharacterFightSchema": {
@@ -9959,13 +9631,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "result",
-          "turns",
-          "opponent",
-          "logs",
-          "characters"
-        ],
+        "required": ["result", "turns", "opponent", "logs", "characters"],
         "title": "CharacterFightSchema"
       },
       "CharacterLeaderboardSchema": {
@@ -10184,12 +9850,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "destination",
-          "path",
-          "character"
-        ],
+        "required": ["cooldown", "destination", "path", "character"],
         "title": "CharacterMovementDataSchema"
       },
       "CharacterMovementResponseSchema": {
@@ -10199,9 +9860,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CharacterMovementResponseSchema"
       },
       "CharacterMultiFightResultSchema": {
@@ -10236,13 +9895,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "character_name",
-          "xp",
-          "gold",
-          "drops",
-          "final_hp"
-        ],
+        "required": ["character_name", "xp", "gold", "drops", "final_hp"],
         "title": "CharacterMultiFightResultSchema"
       },
       "CharacterResponseSchema": {
@@ -10252,9 +9905,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CharacterResponseSchema"
       },
       "CharacterRestDataSchema": {
@@ -10282,11 +9933,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "hp_restored",
-          "character"
-        ],
+        "required": ["cooldown", "hp_restored", "character"],
         "title": "CharacterRestDataSchema"
       },
       "CharacterRestResponseSchema": {
@@ -10296,9 +9943,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CharacterRestResponseSchema"
       },
       "CharacterSchema": {
@@ -10876,12 +10521,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "destination",
-          "transition",
-          "character"
-        ],
+        "required": ["cooldown", "destination", "transition", "character"],
         "title": "CharacterTransitionDataSchema"
       },
       "CharacterTransitionResponseSchema": {
@@ -10891,9 +10531,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CharacterTransitionResponseSchema"
       },
       "CharactersListSchema": {
@@ -10908,9 +10546,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CharactersListSchema"
       },
       "CombatResultSchema": {
@@ -10943,12 +10579,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "result",
-          "turns",
-          "logs",
-          "character_results"
-        ],
+        "required": ["result", "turns", "logs", "character_results"],
         "title": "CombatResultSchema"
       },
       "CombatSimulationDataSchema": {
@@ -10978,12 +10609,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "results",
-          "wins",
-          "losses",
-          "winrate"
-        ],
+        "required": ["results", "wins", "losses", "winrate"],
         "title": "CombatSimulationDataSchema"
       },
       "CombatSimulationRequestSchema": {
@@ -11013,11 +10639,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "characters",
-          "monster",
-          "iterations"
-        ],
+        "required": ["characters", "monster", "iterations"],
         "title": "CombatSimulationRequestSchema"
       },
       "CombatSimulationResponseSchema": {
@@ -11032,9 +10654,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "CombatSimulationResponseSchema"
       },
       "ConditionOperator": {
@@ -11072,11 +10692,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "operator",
-          "value"
-        ],
+        "required": ["code", "operator", "value"],
         "title": "ConditionSchema"
       },
       "CooldownSchema": {
@@ -11186,9 +10802,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code"
-        ],
+        "required": ["code"],
         "title": "CraftingSchema"
       },
       "DataPage_AccountAchievementSchema_": {
@@ -11226,9 +10840,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[AccountAchievementSchema]"
       },
       "DataPage_AccountLeaderboardSchema_": {
@@ -11266,9 +10878,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[AccountLeaderboardSchema]"
       },
       "DataPage_AchievementSchema_": {
@@ -11306,9 +10916,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[AchievementSchema]"
       },
       "DataPage_ActiveCharacterSchema_": {
@@ -11346,9 +10954,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[ActiveCharacterSchema]"
       },
       "DataPage_ActiveEventSchema_": {
@@ -11386,9 +10992,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[ActiveEventSchema]"
       },
       "DataPage_BadgeSchema_": {
@@ -11426,9 +11030,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[BadgeSchema]"
       },
       "DataPage_CharacterLeaderboardSchema_": {
@@ -11466,9 +11068,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[CharacterLeaderboardSchema]"
       },
       "DataPage_DropRateSchema_": {
@@ -11506,9 +11106,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[DropRateSchema]"
       },
       "DataPage_EffectSchema_": {
@@ -11546,9 +11144,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[EffectSchema]"
       },
       "DataPage_EventSchema_": {
@@ -11586,9 +11182,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[EventSchema]"
       },
       "DataPage_GEOrderSchema_": {
@@ -11626,9 +11220,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[GEOrderSchema]"
       },
       "DataPage_GeOrderHistorySchema_": {
@@ -11666,9 +11258,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[GeOrderHistorySchema]"
       },
       "DataPage_ItemSchema_": {
@@ -11706,9 +11296,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[ItemSchema]"
       },
       "DataPage_LogSchema_": {
@@ -11746,9 +11334,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[LogSchema]"
       },
       "DataPage_MapSchema_": {
@@ -11786,9 +11372,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[MapSchema]"
       },
       "DataPage_MonsterSchema_": {
@@ -11826,9 +11410,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[MonsterSchema]"
       },
       "DataPage_NPCItem_": {
@@ -11866,9 +11448,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[NPCItem]"
       },
       "DataPage_NPCSchema_": {
@@ -11906,9 +11486,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[NPCSchema]"
       },
       "DataPage_ResourceSchema_": {
@@ -11946,9 +11524,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[ResourceSchema]"
       },
       "DataPage_SimpleItemSchema_": {
@@ -11986,9 +11562,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[SimpleItemSchema]"
       },
       "DataPage_TaskFullSchema_": {
@@ -12026,9 +11600,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DataPage[TaskFullSchema]"
       },
       "DeleteCharacterSchema": {
@@ -12043,9 +11615,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "DeleteCharacterSchema"
       },
       "DeleteItemResponseSchema": {
@@ -12055,9 +11625,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DeleteItemResponseSchema"
       },
       "DeleteItemSchema": {
@@ -12088,11 +11656,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "item",
-          "character"
-        ],
+        "required": ["cooldown", "item", "character"],
         "title": "DeleteItemSchema"
       },
       "DepositWithdrawGoldSchema": {
@@ -12105,9 +11669,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "quantity"
-        ],
+        "required": ["quantity"],
         "title": "DepositWithdrawGoldSchema"
       },
       "DestinationSchema": {
@@ -12160,12 +11722,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "rate",
-          "min_quantity",
-          "max_quantity"
-        ],
+        "required": ["code", "rate", "min_quantity", "max_quantity"],
         "title": "DropRateSchema"
       },
       "DropSchema": {
@@ -12182,10 +11739,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "quantity"
-        ],
+        "required": ["code", "quantity"],
         "title": "DropSchema"
       },
       "EffectResponseSchema": {
@@ -12195,9 +11749,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "EffectResponseSchema"
       },
       "EffectSchema": {
@@ -12235,13 +11787,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "description",
-          "type",
-          "subtype"
-        ],
+        "required": ["name", "code", "description", "type", "subtype"],
         "title": "EffectSchema"
       },
       "EffectSubtype": {
@@ -12261,11 +11807,7 @@
       },
       "EffectType": {
         "type": "string",
-        "enum": [
-          "equipment",
-          "consumable",
-          "combat"
-        ],
+        "enum": ["equipment", "consumable", "combat"],
         "title": "EffectType"
       },
       "EquipRequestSchema": {
@@ -12304,12 +11846,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "slot",
-          "item",
-          "character"
-        ],
+        "required": ["cooldown", "slot", "item", "character"],
         "title": "EquipRequestSchema"
       },
       "EquipSchema": {
@@ -12338,10 +11875,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "slot"
-        ],
+        "required": ["code", "slot"],
         "title": "EquipSchema"
       },
       "EquipmentResponseSchema": {
@@ -12351,9 +11885,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "EquipmentResponseSchema"
       },
       "EventContentSchema": {
@@ -12373,10 +11905,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "type",
-          "code"
-        ],
+        "required": ["type", "code"],
         "title": "EventContentSchema"
       },
       "EventMapSchema": {
@@ -12408,13 +11937,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "map_id",
-          "x",
-          "y",
-          "layer",
-          "skin"
-        ],
+        "required": ["map_id", "x", "y", "layer", "skin"],
         "title": "EventMapSchema"
       },
       "EventSchema": {
@@ -12457,14 +11980,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "content",
-          "maps",
-          "duration",
-          "rate"
-        ],
+        "required": ["name", "code", "content", "maps", "duration", "rate"],
         "title": "EventSchema"
       },
       "FakeCharacterSchema": {
@@ -12584,9 +12100,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "level"
-        ],
+        "required": ["level"],
         "title": "FakeCharacterSchema"
       },
       "FightRequestSchema": {
@@ -12608,10 +12122,7 @@
       },
       "FightResult": {
         "type": "string",
-        "enum": [
-          "win",
-          "loss"
-        ],
+        "enum": ["win", "loss"],
         "title": "FightResult"
       },
       "GEBuyOrderSchema": {
@@ -12630,10 +12141,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "quantity"
-        ],
+        "required": ["id", "quantity"],
         "title": "GEBuyOrderSchema"
       },
       "GECancelOrderSchema": {
@@ -12645,9 +12153,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "title": "GECancelOrderSchema"
       },
       "GECreateOrderTransactionResponseSchema": {
@@ -12657,9 +12163,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "GECreateOrderTransactionResponseSchema"
       },
       "GEOrderCreatedSchema": {
@@ -12743,11 +12247,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "quantity",
-          "price"
-        ],
+        "required": ["code", "quantity", "price"],
         "title": "GEOrderCreationrSchema"
       },
       "GEOrderResponseSchema": {
@@ -12757,9 +12257,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "GEOrderResponseSchema"
       },
       "GEOrderSchema": {
@@ -12800,14 +12298,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "seller",
-          "code",
-          "quantity",
-          "price",
-          "created_at"
-        ],
+        "required": ["id", "seller", "code", "quantity", "price", "created_at"],
         "title": "GEOrderSchema"
       },
       "GEOrderTransactionSchema": {
@@ -12838,11 +12329,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "order",
-          "character"
-        ],
+        "required": ["cooldown", "order", "character"],
         "title": "GEOrderTransactionSchema"
       },
       "GETransactionListSchema": {
@@ -12873,11 +12360,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "order",
-          "character"
-        ],
+        "required": ["cooldown", "order", "character"],
         "title": "GETransactionListSchema"
       },
       "GETransactionResponseSchema": {
@@ -12887,9 +12370,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "GETransactionResponseSchema"
       },
       "GETransactionSchema": {
@@ -12921,23 +12402,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "code",
-          "quantity",
-          "price",
-          "total_price"
-        ],
+        "required": ["id", "code", "quantity", "price", "total_price"],
         "title": "GETransactionSchema"
       },
       "GatheringSkill": {
         "type": "string",
-        "enum": [
-          "mining",
-          "woodcutting",
-          "fishing",
-          "alchemy"
-        ],
+        "enum": ["mining", "woodcutting", "fishing", "alchemy"],
         "title": "GatheringSkill"
       },
       "GeOrderHistorySchema": {
@@ -13029,12 +12499,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "quantity",
-          "receiver_character",
-          "character"
-        ],
+        "required": ["cooldown", "quantity", "receiver_character", "character"],
         "title": "GiveGoldDataSchema"
       },
       "GiveGoldResponseSchema": {
@@ -13044,9 +12509,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "GiveGoldResponseSchema"
       },
       "GiveGoldSchema": {
@@ -13065,10 +12528,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "quantity",
-          "character"
-        ],
+        "required": ["quantity", "character"],
         "title": "GiveGoldSchema"
       },
       "GiveItemDataSchema": {
@@ -13107,12 +12567,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "items",
-          "receiver_character",
-          "character"
-        ],
+        "required": ["cooldown", "items", "receiver_character", "character"],
         "title": "GiveItemDataSchema"
       },
       "GiveItemResponseSchema": {
@@ -13122,9 +12577,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "GiveItemResponseSchema"
       },
       "GiveItemsSchema": {
@@ -13147,10 +12600,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "character"
-        ],
+        "required": ["items", "character"],
         "title": "GiveItemsSchema"
       },
       "GoldSchema": {
@@ -13163,9 +12613,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "quantity"
-        ],
+        "required": ["quantity"],
         "title": "GoldSchema"
       },
       "HTTPValidationError": {
@@ -13218,11 +12666,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "slot",
-          "code",
-          "quantity"
-        ],
+        "required": ["slot", "code", "quantity"],
         "title": "InventorySlot"
       },
       "ItemResponseSchema": {
@@ -13232,9 +12676,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "ItemResponseSchema"
       },
       "ItemSchema": {
@@ -13455,12 +12897,7 @@
       },
       "MapAccessType": {
         "type": "string",
-        "enum": [
-          "standard",
-          "teleportation",
-          "conditional",
-          "blocked"
-        ],
+        "enum": ["standard", "teleportation", "conditional", "blocked"],
         "title": "MapAccessType"
       },
       "MapContentSchema": {
@@ -13480,10 +12917,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "type",
-          "code"
-        ],
+        "required": ["type", "code"],
         "title": "MapContentSchema"
       },
       "MapContentType": {
@@ -13501,11 +12935,7 @@
       },
       "MapLayer": {
         "type": "string",
-        "enum": [
-          "interior",
-          "overworld",
-          "underground"
-        ],
+        "enum": ["interior", "overworld", "underground"],
         "title": "MapLayer"
       },
       "MapResponseSchema": {
@@ -13515,9 +12945,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "MapResponseSchema"
       },
       "MapSchema": {
@@ -13592,9 +13020,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "MonsterResponseSchema"
       },
       "MonsterSchema": {
@@ -13729,11 +13155,7 @@
       },
       "MonsterType": {
         "type": "string",
-        "enum": [
-          "normal",
-          "elite",
-          "boss"
-        ],
+        "enum": ["normal", "elite", "boss"],
         "title": "MonsterType"
       },
       "MyAccountDetails": {
@@ -13832,9 +13254,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "MyAccountDetailsSchema"
       },
       "MyCharactersListSchema": {
@@ -13849,9 +13269,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "MyCharactersListSchema"
       },
       "NPCItem": {
@@ -13885,11 +13303,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "npc",
-          "currency"
-        ],
+        "required": ["code", "npc", "currency"],
         "title": "NPCItem"
       },
       "NPCResponseSchema": {
@@ -13899,9 +13313,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "NPCResponseSchema"
       },
       "NPCSchema": {
@@ -13931,20 +13343,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "description",
-          "type"
-        ],
+        "required": ["name", "code", "description", "type"],
         "title": "NPCSchema"
       },
       "NPCType": {
         "type": "string",
-        "enum": [
-          "merchant",
-          "trader"
-        ],
+        "enum": ["merchant", "trader"],
         "title": "NPCType"
       },
       "NpcItemTransactionSchema": {
@@ -13976,13 +13380,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "quantity",
-          "currency",
-          "price",
-          "total_price"
-        ],
+        "required": ["code", "quantity", "currency", "price", "total_price"],
         "title": "NpcItemTransactionSchema"
       },
       "NpcMerchantBuySchema": {
@@ -14001,10 +13399,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "quantity"
-        ],
+        "required": ["code", "quantity"],
         "title": "NpcMerchantBuySchema"
       },
       "NpcMerchantTransactionResponseSchema": {
@@ -14014,9 +13409,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "NpcMerchantTransactionResponseSchema"
       },
       "NpcMerchantTransactionSchema": {
@@ -14047,11 +13440,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "transaction",
-          "character"
-        ],
+        "required": ["cooldown", "transaction", "character"],
         "title": "NpcMerchantTransactionSchema"
       },
       "PasswordResetConfirmSchema": {
@@ -14071,10 +13460,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "token",
-          "new_password"
-        ],
+        "required": ["token", "new_password"],
         "title": "PasswordResetConfirmSchema"
       },
       "PasswordResetRequestSchema": {
@@ -14087,9 +13473,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "email"
-        ],
+        "required": ["email"],
         "title": "PasswordResetRequestSchema"
       },
       "PasswordResetResponseSchema": {
@@ -14101,9 +13485,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "title": "PasswordResetResponseSchema"
       },
       "RateLimitSchema": {
@@ -14120,10 +13502,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "type",
-          "value"
-        ],
+        "required": ["type", "value"],
         "title": "RateLimitSchema"
       },
       "RecyclingDataSchema": {
@@ -14154,11 +13533,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "details",
-          "character"
-        ],
+        "required": ["cooldown", "details", "character"],
         "title": "RecyclingDataSchema"
       },
       "RecyclingItemsSchema": {
@@ -14173,9 +13548,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items"
-        ],
+        "required": ["items"],
         "title": "RecyclingItemsSchema"
       },
       "RecyclingResponseSchema": {
@@ -14185,9 +13558,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "RecyclingResponseSchema"
       },
       "RecyclingSchema": {
@@ -14207,9 +13578,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code"
-        ],
+        "required": ["code"],
         "title": "RecyclingSchema"
       },
       "ResourceResponseSchema": {
@@ -14219,9 +13588,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "ResourceResponseSchema"
       },
       "ResourceSchema": {
@@ -14260,13 +13627,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "skill",
-          "level",
-          "drops"
-        ],
+        "required": ["name", "code", "skill", "level", "drops"],
         "title": "ResourceSchema"
       },
       "ResponseSchema": {
@@ -14277,9 +13638,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "title": "ResponseSchema"
       },
       "RewardDataResponseSchema": {
@@ -14289,9 +13648,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "RewardDataResponseSchema"
       },
       "RewardDataSchema": {
@@ -14322,11 +13679,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "rewards",
-          "character"
-        ],
+        "required": ["cooldown", "rewards", "character"],
         "title": "RewardDataSchema"
       },
       "RewardResponseSchema": {
@@ -14336,9 +13689,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "RewardResponseSchema"
       },
       "RewardsSchema": {
@@ -14358,10 +13709,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "gold"
-        ],
+        "required": ["items", "gold"],
         "title": "RewardsSchema"
       },
       "SeasonBadgeSchema": {
@@ -14383,11 +13731,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "description",
-          "required_points"
-        ],
+        "required": ["code", "description", "required_points"],
         "title": "SeasonBadgeSchema"
       },
       "SeasonSchema": {
@@ -14426,10 +13770,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "badges",
-          "skins"
-        ],
+        "required": ["badges", "skins"],
         "title": "SeasonSchema"
       },
       "SeasonSkinSchema": {
@@ -14451,11 +13792,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "description",
-          "required_points"
-        ],
+        "required": ["code", "description", "required_points"],
         "title": "SeasonSkinSchema"
       },
       "SimpleEffectSchema": {
@@ -14478,11 +13815,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "value",
-          "description"
-        ],
+        "required": ["code", "value", "description"],
         "title": "SimpleEffectSchema"
       },
       "SimpleItemSchema": {
@@ -14501,10 +13834,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "quantity"
-        ],
+        "required": ["code", "quantity"],
         "title": "SimpleItemSchema"
       },
       "Skill": {
@@ -14549,11 +13879,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "details",
-          "character"
-        ],
+        "required": ["cooldown", "details", "character"],
         "title": "SkillDataSchema"
       },
       "SkillInfoSchema": {
@@ -14573,10 +13899,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "xp",
-          "items"
-        ],
+        "required": ["xp", "items"],
         "title": "SkillInfoSchema"
       },
       "SkillResponseSchema": {
@@ -14586,9 +13909,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "SkillResponseSchema"
       },
       "SpawnEventRequest": {
@@ -14600,9 +13921,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code"
-        ],
+        "required": ["code"],
         "title": "SpawnEventRequest",
         "description": "Model for the request to spawn a specific event"
       },
@@ -14613,9 +13932,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "StatusResponseSchema"
       },
       "StatusSchema": {
@@ -14689,10 +14006,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "value"
-        ],
+        "required": ["code", "value"],
         "title": "StorageEffectSchema"
       },
       "TaskCancelledResponseSchema": {
@@ -14702,9 +14016,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "TaskCancelledResponseSchema"
       },
       "TaskCancelledSchema": {
@@ -14727,10 +14039,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "character"
-        ],
+        "required": ["cooldown", "character"],
         "title": "TaskCancelledSchema"
       },
       "TaskDataSchema": {
@@ -14761,11 +14070,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "task",
-          "character"
-        ],
+        "required": ["cooldown", "task", "character"],
         "title": "TaskDataSchema"
       },
       "TaskFullResponseSchema": {
@@ -14775,9 +14080,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "TaskFullResponseSchema"
       },
       "TaskFullSchema": {
@@ -14844,9 +14147,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "TaskResponseSchema"
       },
       "TaskSchema": {
@@ -14880,12 +14181,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "type",
-          "total",
-          "rewards"
-        ],
+        "required": ["code", "type", "total", "rewards"],
         "title": "TaskSchema"
       },
       "TaskTradeDataSchema": {
@@ -14916,11 +14212,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "trade",
-          "character"
-        ],
+        "required": ["cooldown", "trade", "character"],
         "title": "TaskTradeDataSchema"
       },
       "TaskTradeResponseSchema": {
@@ -14930,9 +14222,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "TaskTradeResponseSchema"
       },
       "TaskTradeSchema": {
@@ -14949,18 +14239,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "quantity"
-        ],
+        "required": ["code", "quantity"],
         "title": "TaskTradeSchema"
       },
       "TaskType": {
         "type": "string",
-        "enum": [
-          "monsters",
-          "items"
-        ],
+        "enum": ["monsters", "items"],
         "title": "TaskType"
       },
       "TokenResponseSchema": {
@@ -14971,9 +14255,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "token"
-        ],
+        "required": ["token"],
         "title": "TokenResponseSchema"
       },
       "TransitionSchema": {
@@ -15012,12 +14294,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "map_id",
-          "x",
-          "y",
-          "layer"
-        ],
+        "required": ["map_id", "x", "y", "layer"],
         "title": "TransitionSchema"
       },
       "UnequipSchema": {
@@ -15040,9 +14317,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "slot"
-        ],
+        "required": ["slot"],
         "title": "UnequipSchema"
       },
       "UseItemResponseSchema": {
@@ -15052,9 +14327,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "UseItemResponseSchema"
       },
       "UseItemSchema": {
@@ -15085,11 +14358,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "cooldown",
-          "item",
-          "character"
-        ],
+        "required": ["cooldown", "item", "character"],
         "title": "UseItemSchema"
       },
       "ValidationError": {
@@ -15118,11 +14387,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError"
       },
       "ErrorSchema": {
@@ -15142,10 +14407,7 @@
             "additionalProperties": true
           }
         },
-        "required": [
-          "code",
-          "message"
-        ]
+        "required": ["code", "message"]
       },
       "ErrorResponseSchema": {
         "type": "object",
@@ -15154,9 +14416,7 @@
             "$ref": "#/components/schemas/ErrorSchema"
           }
         },
-        "required": [
-          "error"
-        ]
+        "required": ["error"]
       }
     },
     "securitySchemes": {

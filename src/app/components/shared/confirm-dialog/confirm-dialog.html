@@ -1,23 +1,24 @@
 @if (dialogService.state().visible) {
-  <div class="dialog-backdrop" (click)="onBackdropClick()">
-    <div class="dialog" (click)="onDialogClick($event)">
-      <div class="dialog-header">
-        <h3 class="dialog-title">{{ dialogService.state().title }}</h3>
-      </div>
-      <div class="dialog-body">
-        <p class="dialog-message">{{ dialogService.state().message }}</p>
-      </div>
-      <div class="dialog-footer">
-        <button class="dialog-button dialog-button-cancel" (click)="onCancel()">
-          {{ dialogService.state().cancelText }}
-        </button>
-        <button
-          class="dialog-button dialog-button-confirm"
-          [class.dialog-button-danger]="dialogService.state().confirmDanger"
-          (click)="onConfirm()">
-          {{ dialogService.state().confirmText }}
-        </button>
-      </div>
+<div class="dialog-backdrop" (click)="onBackdropClick()">
+  <div class="dialog" (click)="onDialogClick($event)">
+    <div class="dialog-header">
+      <h3 class="dialog-title">{{ dialogService.state().title }}</h3>
+    </div>
+    <div class="dialog-body">
+      <p class="dialog-message">{{ dialogService.state().message }}</p>
+    </div>
+    <div class="dialog-footer">
+      <button class="dialog-button dialog-button-cancel" (click)="onCancel()">
+        {{ dialogService.state().cancelText }}
+      </button>
+      <button
+        class="dialog-button dialog-button-confirm"
+        [class.dialog-button-danger]="dialogService.state().confirmDanger"
+        (click)="onConfirm()"
+      >
+        {{ dialogService.state().confirmText }}
+      </button>
     </div>
   </div>
+</div>
 }

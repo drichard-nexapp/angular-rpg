@@ -8,7 +8,8 @@ export class GlobalErrorHandler implements ErrorHandler {
   private errorHandler = inject(ErrorHandlerService)
 
   handleError(error: Error | unknown): void {
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unexpected error occurred'
     const errorStack = error instanceof Error ? error.stack : undefined
 
     this.logger.error(errorMessage, 'GlobalErrorHandler', {
@@ -18,7 +19,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     this.errorHandler.handleError(
       errorMessage,
-      'An unexpected error occurred. Please try again.'
+      'An unexpected error occurred. Please try again.',
     )
 
     console.error('Uncaught error:', error)

@@ -22,7 +22,10 @@ export function isApiError(err: unknown): err is ApiErrorResponse {
   )
 }
 
-export function extractErrorMessage(err: unknown, fallback = 'An unexpected error occurred'): string {
+export function extractErrorMessage(
+  err: unknown,
+  fallback = 'An unexpected error occurred',
+): string {
   if (isApiError(err)) {
     return err.error?.message || fallback
   }

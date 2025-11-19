@@ -4,6 +4,11 @@ import {
   actionFightMyNameActionFightPost,
   actionGatheringMyNameActionGatheringPost,
   actionCraftingMyNameActionCraftingPost,
+  actionGiveItemsMyNameActionGiveItemPost,
+  actionEquipItemMyNameActionEquipPost,
+  actionUnequipItemMyNameActionUnequipPost,
+  type SimpleItemSchema,
+  type ItemSlot,
 } from '../../sdk/api'
 import type { Character, Cooldown } from '../domain/types'
 import { CharacterService } from './character.service'
@@ -39,7 +44,10 @@ export class ActionService {
         path: { name: selected.name },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -57,7 +65,8 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Rest Character')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to rest character'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to rest character'
       return { success: false, error: errorMessage }
     }
   }
@@ -77,7 +86,10 @@ export class ActionService {
         path: { name: selected.name },
       })
 
-      const data = unwrapApiItem<{ characters: Character[]; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{
+        characters: Character[]
+        cooldown: Cooldown
+      }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -96,7 +108,8 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Fight Monster')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fight monster'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fight monster'
       return { success: false, error: errorMessage }
     }
   }
@@ -116,7 +129,10 @@ export class ActionService {
         path: { name: selected.name },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -134,12 +150,16 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Gather Resource')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to gather resource'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to gather resource'
       return { success: false, error: errorMessage }
     }
   }
 
-  async craftItem(itemCode: string, quantity: number = 1): Promise<ActionResult> {
+  async craftItem(
+    itemCode: string,
+    quantity = 1,
+  ): Promise<ActionResult> {
     const selected = this.characterService.getSelectedCharacter()
     if (!selected) {
       return { success: false, error: 'No character selected' }
@@ -155,7 +175,10 @@ export class ActionService {
         body: { code: itemCode, quantity },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -173,7 +196,154 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Craft Item')
-      const errorMessage = err instanceof Error ? err.message : 'Failed to craft item'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to craft item'
+      return { success: false, error: errorMessage }
+    }
+  }
+
+  async giveItems(
+    targetCharacter: string,
+    items: SimpleItemSchema[],
+  ): Promise<ActionResult> {
+    const selected = this.characterService.getSelectedCharacter()
+    if (!selected) {
+      return { success: false, error: 'No character selected' }
+    }
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      return { success: false, error: 'Character is on cooldown' }
+    }
+
+    try {
+      const response = await actionGiveItemsMyNameActionGiveItemPost({
+        path: { name: selected.name },
+        body: {
+          character: targetCharacter,
+          items: items,
+        },
+      })
+
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
+      if (!data) {
+        return { success: false, error: 'Invalid response from server' }
+      }
+
+      const { character, cooldown } = data
+
+      if (character) {
+        this.updateCharacterCache(character)
+      }
+
+      if (cooldown) {
+        this.cooldownService.setCooldown(selected.name, cooldown)
+      }
+
+      return { success: true }
+    } catch (err) {
+      this.errorHandler.handleError(err, 'Give Items')
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to give items'
+      return { success: false, error: errorMessage }
+    }
+  }
+
+  async equipItem(
+    itemCode: string,
+    slot: ItemSlot,
+    quantity?: number,
+  ): Promise<ActionResult> {
+    const selected = this.characterService.getSelectedCharacter()
+    if (!selected) {
+      return { success: false, error: 'No character selected' }
+    }
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      return { success: false, error: 'Character is on cooldown' }
+    }
+
+    try {
+      const response = await actionEquipItemMyNameActionEquipPost({
+        path: { name: selected.name },
+        body: {
+          code: itemCode,
+          slot: slot,
+          quantity: quantity,
+        },
+      })
+
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
+      if (!data) {
+        return { success: false, error: 'Invalid response from server' }
+      }
+
+      const { character, cooldown } = data
+
+      if (character) {
+        this.updateCharacterCache(character)
+      }
+
+      if (cooldown) {
+        this.cooldownService.setCooldown(selected.name, cooldown)
+      }
+
+      return { success: true }
+    } catch (err) {
+      this.errorHandler.handleError(err, 'Equip Item')
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to equip item'
+      return { success: false, error: errorMessage }
+    }
+  }
+
+  async unequipItem(slot: ItemSlot, quantity?: number): Promise<ActionResult> {
+    const selected = this.characterService.getSelectedCharacter()
+    if (!selected) {
+      return { success: false, error: 'No character selected' }
+    }
+
+    if (this.cooldownService.isOnCooldown(selected.name)) {
+      return { success: false, error: 'Character is on cooldown' }
+    }
+
+    try {
+      const response = await actionUnequipItemMyNameActionUnequipPost({
+        path: { name: selected.name },
+        body: {
+          slot: slot,
+          quantity: quantity,
+        },
+      })
+
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
+        response,
+        null,
+      )
+      if (!data) {
+        return { success: false, error: 'Invalid response from server' }
+      }
+
+      const { character, cooldown } = data
+
+      if (character) {
+        this.updateCharacterCache(character)
+      }
+
+      if (cooldown) {
+        this.cooldownService.setCooldown(selected.name, cooldown)
+      }
+
+      return { success: true }
+    } catch (err) {
+      this.errorHandler.handleError(err, 'Unequip Item')
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to unequip item'
       return { success: false, error: errorMessage }
     }
   }

@@ -43,6 +43,10 @@
   padding: 4px;
   box-sizing: border-box;
   position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
 
   &.ascii {
     font-family: 'Courier New', monospace;
@@ -68,6 +72,28 @@
   &.has-character {
     border: 3px solid #ff6b6b;
     box-shadow: 0 0 10px #ff6b6b80;
+  }
+
+  &.selected-tile {
+    border: 3px solid #3498db;
+    box-shadow:
+      0 0 15px #3498db,
+      inset 0 0 10px #3498db40;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 15px #3498db,
+      inset 0 0 10px #3498db40;
+  }
+  50% {
+    box-shadow:
+      0 0 25px #3498db,
+      inset 0 0 15px #3498db60;
   }
 }
 
@@ -98,7 +124,9 @@
   font-size: 40px;
   font-weight: bold;
   color: #ffd700;
-  text-shadow: 0 0 8px #ffd700cc, 0 2px 4px #0008;
+  text-shadow:
+    0 0 8px #ffd700cc,
+    0 2px 4px #0008;
 }
 
 .resource-marker {
@@ -106,14 +134,47 @@
   filter: drop-shadow(0 0 6px #0ff9) drop-shadow(0 2px 4px #0006);
 }
 
+.tile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.characters-overlay {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
 .character-marker {
-  font-weight: bold;
-  font-size: 12px;
-  color: #fff;
-  background: #000b;
-  padding: 4px 8px;
+  font-size: 20px;
+  line-height: 1;
+  filter: drop-shadow(0 0 2px #000) drop-shadow(0 1px 2px #0008);
+  background: #0008;
   border-radius: 4px;
-  text-shadow: 0 1px 2px #000c;
+  padding: 2px;
+}
+
+.character-marker-image {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 3px #ff6b6b) drop-shadow(0 2px 4px #0008);
+  border: 2px solid #ff6b6b;
+  border-radius: 4px;
+  background: #0008;
 }
 
 .workshop-marker {
@@ -134,4 +195,35 @@
 .tasks-master-marker {
   font-size: 32px;
   filter: drop-shadow(0 0 6px #ff8c00aa) drop-shadow(0 2px 4px #0006);
+}
+
+.tile-tooltip {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  animation: tooltip-fade-in 0.15s ease-out;
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }

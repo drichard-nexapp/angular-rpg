@@ -1,50 +1,47 @@
 @if (loading()) {
-  <div class="loading">
-    Loading maps...
-  </div>
-}
-
-@if (error()) {
-  <div class="error">
-    {{ error() }}
-  </div>
-}
-
-@if (!loading() && !error()) {
-  @for (layer of layers(); track layer.name) {
-    <section class="layer-section">
-      <h2>{{ layer.name }}</h2>
-      <div class="map-container">
-        <div class="map-grid">
-          @for (row of layer.grid; track $index) {
-            <div class="map-row">
-              @for (tile of row; track $index) {
-                @if (tile) {
-                  <div
-                    class="map-tile ascii clickable"
-                    [class.has-character]="hasCharacter(tile)"
-                    [style.background-color]="getSkinColor(tile.skin)"
-                    (click)="onTileClick(tile)">
-                    @if (hasCharacter(tile)) {
-                      @let character = getCharacterAt(tile);
-                      @if (character) {
-                        <div class="character-marker-emoji">{{ getSkinSymbol(character.skin) }}</div>
-                      } @else {
-                        <div class="character-marker-ascii">@</div>
-                      }
-                    } @else {
-                      @let rendered = getTileRender(tile);
-                      <div [class]="rendered.cssClass">{{ rendered.value }}</div>
-                    }
-                  </div>
-                } @else {
-                  <div class="map-tile empty"></div>
-                }
+<div class="loading">Loading maps...</div>
+} @if (error()) {
+<div class="error">{{ error() }}</div>
+} @if (!loading() && !error()) { @for (layer of layers(); track layer.name) {
+<section class="layer-section">
+  <h2>{{ layer.name }}</h2>
+  <div class="map-container" #mapContainer>
+    <div class="map-grid">
+      @for (row of layer.grid; track $index) {
+      <div class="map-row">
+        @for (tile of row; track $index) { @if (tile) {
+        <div
+          class="map-tile ascii clickable"
+          [class.has-character]="hasCharacter(tile)"
+          [class.selected-tile]="isTileSelected(tile)"
+          [style.background-image]="'url(' + getMapImageUrl(tile.skin) + ')'"
+          (click)="onTileClick(tile)"
+          (mouseenter)="onTileMouseEnter(tile)"
+          (mouseleave)="onTileMouseLeave()"
+        >
+          @let characters = getCharactersAt(tile);
+          <div class="tile-content">
+            @if (characters.length > 0) {
+            <div class="characters-overlay">
+              @for (character of characters; track character.name) {
+              <img
+                [src]="getCharacterSkinImageUrl(character.skin)"
+                [alt]="character.name"
+                class="character-marker-image"
+              />
               }
             </div>
-          }
+            }
+          </div>
         </div>
+        } @else {
+        <div class="map-tile empty"></div>
+        } }
       </div>
-    </section>
-  }
-}
+      }
+    </div>
+  </div>
+</section>
+} @if (hoveredTile()) {
+<div class="tile-tooltip">{{ getTileSummary(hoveredTile()) }}</div>
+} }
