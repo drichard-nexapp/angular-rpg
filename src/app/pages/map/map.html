@@ -1,6 +1,6 @@
 @if (loading()) {
 <div class="loading">Loading maps...</div>
-}  @if (!loading() ) { @for (layer of layers(); track layer) {
+} @if (!loading() ) { @for (layer of layers(); track layer) {
 <section class="layer-section">
   <h2>{{ layer }}</h2>
   <div class="map-container" #mapContainer>

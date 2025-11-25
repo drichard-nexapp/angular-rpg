@@ -1,6 +1,5 @@
 import type { Map as MapTile } from '../../domain/types'
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TileUtils {
   static hasMonster(tile: MapTile | null): boolean {
     if (!tile) return false

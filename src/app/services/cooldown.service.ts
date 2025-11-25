@@ -67,13 +67,13 @@ export class CooldownService implements OnDestroy {
 
   clearCooldown(characterName: string): void {
     const updated = { ...this.cooldowns() }
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+
     delete updated[characterName]
     this.cooldowns.set(updated)
 
     if (this.intervals[characterName]) {
       clearInterval(this.intervals[characterName])
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+
       delete this.intervals[characterName]
     }
   }

@@ -12,7 +12,7 @@
       </div>
       <div class="events-float-list">
         @for (event of activeEvents(); track event.code) {
-        <div class="event-float-item" >
+        <div class="event-float-item">
           <div class="event-float-name">{{ event.name }}</div>
           <div class="event-float-details">
             <span class="event-float-duration">{{ event.duration }}m</span>
@@ -47,14 +47,12 @@
       >
         Move to This Tile
       </button>
-      }
-        @if (isMonsterTile()) {
+      } @if (isMonsterTile()) {
       <button class="show-details-button" (click)="loadMonsterDetails()">
         ? Show Monster Details
       </button>
-      }
-        @if (showMonsterDetails()) {
-      @if(this.mapService.currentMonsterDetails(); as monsterDetails){
+      } @if (showMonsterDetails()) { @if
+      (this.mapService.currentMonsterDetails(); as monsterDetails) {
       <div class="monster-details-section">
         <img
           [src]="getMonsterImageUrl(monsterDetails.code)"
@@ -111,8 +109,7 @@
         <div class="monster-rewards">
           <strong>Rewards:</strong>
           <div class="monster-info-item">
-            Gold: {{ monsterDetails.min_gold }}-{{ monsterDetails.max_gold
-            }}
+            Gold: {{ monsterDetails.min_gold }}-{{ monsterDetails.max_gold }}
           </div>
           @if (monsterDetails.drops.length > 0) {
           <div class="drops-list">
@@ -126,9 +123,7 @@
           }
         </div>
       </div>
-      }
-      }
-        @if (isMonsterTile()) {
+      } } @if (isMonsterTile()) {
       <button
         class="fight-button"
         [disabled]="!selectedCharacter()"
@@ -137,8 +132,7 @@
         @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!))
         { Queue Fight } @else { Fight }
       </button>
-      }
-        @if (isResourceTile() && !resourceDetails()) {
+      } @if (isResourceTile() && !resourceDetails()) {
       <button class="show-details-button" (click)="loadResourceDetails()">
         ? Show Resource Details
       </button>
@@ -375,168 +369,21 @@
     </app-map>
 
     @if (selectedCharacter() && showInventory()) {
-      <app-inventory [selectedCharacter]="selectedCharacter()!" (onClose)="toggleInventory()"></app-inventory>
+    <app-inventory
+      [selectedCharacter]="selectedCharacter()!"
+      (onClose)="toggleInventory()"
+    ></app-inventory>
     } @if (selectedCharacter() && showSkills()) {
-    <div class="skills-panel">
-      <div class="skills-header">
-        <h3>📊 Skills - {{ selectedCharacter()!.name }}</h3>
-        <button class="close-panel-button" (click)="toggleSkills()">×</button>
-      </div>
-      <div class="skills-grid">
-        <div class="skill-card">
-          <div class="skill-name">⚔️ Combat</div>
-          <div class="skill-level">Level {{ selectedCharacter()!.level }}</div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.xp / selectedCharacter()!.max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.xp }} / {{ selectedCharacter()!.max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">⛏️ Mining</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.mining_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.mining_xp / selectedCharacter()!.mining_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.mining_xp }} / {{
-            selectedCharacter()!.mining_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">🪓 Woodcutting</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.woodcutting_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.woodcutting_xp / selectedCharacter()!.woodcutting_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.woodcutting_xp }} / {{
-            selectedCharacter()!.woodcutting_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">🎣 Fishing</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.fishing_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.fishing_xp / selectedCharacter()!.fishing_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.fishing_xp }} / {{
-            selectedCharacter()!.fishing_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">🔨 Weaponcrafting</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.weaponcrafting_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.weaponcrafting_xp / selectedCharacter()!.weaponcrafting_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.weaponcrafting_xp }} / {{
-            selectedCharacter()!.weaponcrafting_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">🛡️ Gearcrafting</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.gearcrafting_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.gearcrafting_xp / selectedCharacter()!.gearcrafting_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.gearcrafting_xp }} / {{
-            selectedCharacter()!.gearcrafting_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">💎 Jewelrycrafting</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.jewelrycrafting_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.jewelrycrafting_xp / selectedCharacter()!.jewelrycrafting_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.jewelrycrafting_xp }} / {{
-            selectedCharacter()!.jewelrycrafting_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">🍳 Cooking</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.cooking_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.cooking_xp / selectedCharacter()!.cooking_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.cooking_xp }} / {{
-            selectedCharacter()!.cooking_max_xp }} XP
-          </div>
-        </div>
-
-        <div class="skill-card">
-          <div class="skill-name">⚗️ Alchemy</div>
-          <div class="skill-level">
-            Level {{ selectedCharacter()!.alchemy_level }}
-          </div>
-          <div class="skill-progress-bar">
-            <div
-              class="skill-progress-fill"
-              [style.width.%]="(selectedCharacter()!.alchemy_xp / selectedCharacter()!.alchemy_max_xp) * 100"
-            ></div>
-          </div>
-          <div class="skill-xp">
-            {{ selectedCharacter()!.alchemy_xp }} / {{
-            selectedCharacter()!.alchemy_max_xp }} XP
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-skill
+      [selectedCharacter]="selectedCharacter()!"
+      (onClose)="toggleSkills()"
+    ></app-skill>
     } @if (selectedCharacter() && showEquipment()) {
-    <app-equipment [selectedCharacter]="selectedCharacter()!" (onClose)="toggleEquipment()" ></app-equipment>
-  } @if (selectedCharacter() && getMacrosForCharacter().length > 0) {
+    <app-equipment
+      [selectedCharacter]="selectedCharacter()!"
+      (onClose)="toggleEquipment()"
+    ></app-equipment>
+    } @if (selectedCharacter() && getMacrosForCharacter().length > 0) {
     <div class="macro-panel-float">
       <div class="macro-header">
         <h3>🎬 Macros</h3>
@@ -602,9 +449,11 @@
     <div class="characters-layer">
       @for (character of characters(); track character.name) {
       <div
+        tabindex="0"
         class="character"
         [class.selected]="isSelected(character)"
         [class.on-cooldown]="isCharacterOnCooldown(character)"
+        role="button"
         (click)="selectCharacter(character)"
       >
         <div class="character-name">{{ character.name }}</div>

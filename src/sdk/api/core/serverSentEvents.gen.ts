@@ -74,11 +74,11 @@ export interface StreamEvent<TData = unknown> {
   retry?: number
 }
 
-export type ServerSentEventsResult<
+export interface ServerSentEventsResult<
   TData = unknown,
   TReturn = void,
   TNext = unknown,
-> = {
+> {
   stream: AsyncGenerator<
     TData extends Record<string, unknown> ? TData[keyof TData] : TData,
     TReturn,
@@ -175,7 +175,7 @@ export const createSseClient = <TData = unknown>({
 
             for (const chunk of chunks) {
               const lines = chunk.split('\n')
-              const dataLines: Array<string> = []
+              const dataLines: string[] = []
               let eventName: string | undefined
 
               for (const line of lines) {

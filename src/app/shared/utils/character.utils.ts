@@ -1,6 +1,5 @@
 import type { Character, TilePosition } from '../../domain/types'
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class CharacterUtils {
   static getPosition(character: Character | null): TilePosition | null {
     if (!character) return null

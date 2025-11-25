@@ -1,0 +1,157 @@
+<div class="skills-panel">
+  <div class="skills-header">
+    <h3>📊 Skills - {{ selectedCharacter()!.name }}</h3>
+    <button class="close-panel-button" (click)="close()">×</button>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-name">⚔️ Combat</div>
+      <div class="skill-level">Level {{ selectedCharacter()!.level }}</div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.xp / selectedCharacter()!.max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.xp }} / {{ selectedCharacter()!.max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">⛏️ Mining</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.mining_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.mining_xp / selectedCharacter()!.mining_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.mining_xp }} / {{
+        selectedCharacter()!.mining_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">🪓 Woodcutting</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.woodcutting_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.woodcutting_xp / selectedCharacter()!.woodcutting_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.woodcutting_xp }} / {{
+        selectedCharacter()!.woodcutting_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">🎣 Fishing</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.fishing_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.fishing_xp / selectedCharacter()!.fishing_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.fishing_xp }} / {{
+        selectedCharacter()!.fishing_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">🔨 Weaponcrafting</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.weaponcrafting_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.weaponcrafting_xp / selectedCharacter()!.weaponcrafting_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.weaponcrafting_xp }} / {{
+        selectedCharacter()!.weaponcrafting_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">🛡️ Gearcrafting</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.gearcrafting_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.gearcrafting_xp / selectedCharacter()!.gearcrafting_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.gearcrafting_xp }} / {{
+        selectedCharacter()!.gearcrafting_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">💎 Jewelrycrafting</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.jewelrycrafting_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.jewelrycrafting_xp / selectedCharacter()!.jewelrycrafting_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.jewelrycrafting_xp }} / {{
+        selectedCharacter()!.jewelrycrafting_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">🍳 Cooking</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.cooking_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.cooking_xp / selectedCharacter()!.cooking_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.cooking_xp }} / {{
+        selectedCharacter()!.cooking_max_xp }} XP
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-name">⚗️ Alchemy</div>
+      <div class="skill-level">
+        Level {{ selectedCharacter()!.alchemy_level }}
+      </div>
+      <div class="skill-progress-bar">
+        <div
+          class="skill-progress-fill"
+          [style.width.%]="(selectedCharacter()!.alchemy_xp / selectedCharacter()!.alchemy_max_xp) * 100"
+        ></div>
+      </div>
+      <div class="skill-xp">
+        {{ selectedCharacter()!.alchemy_xp }} / {{
+        selectedCharacter()!.alchemy_max_xp }} XP
+      </div>
+    </div>
+  </div>
+</div>

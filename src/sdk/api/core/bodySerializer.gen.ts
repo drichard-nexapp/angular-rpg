@@ -10,7 +10,7 @@ export type QuerySerializer = (query: Record<string, unknown>) => string
 
 export type BodySerializer = (body: any) => any
 
-type QuerySerializerOptionsObject = {
+interface QuerySerializerOptionsObject {
   allowReserved?: boolean
   array?: Partial<SerializerOptions<ArrayStyle>>
   object?: Partial<SerializerOptions<ObjectStyle>>
@@ -51,7 +51,7 @@ const serializeUrlSearchParamsPair = (
 }
 
 export const formDataBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
+  bodySerializer: <T extends Record<string, any> | Record<string, any>[]>(
     body: T,
   ): FormData => {
     const data = new FormData()
@@ -79,7 +79,7 @@ export const jsonBodySerializer = {
 }
 
 export const urlSearchParamsBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
+  bodySerializer: <T extends Record<string, any> | Record<string, any>[]>(
     body: T,
   ): string => {
     const data = new URLSearchParams()

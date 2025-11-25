@@ -37,10 +37,11 @@ import { LoggerService } from '../../services/logger.service'
 import { ErrorHandlerService } from '../../services/error-handler.service'
 import { MonstersService } from '../../stores/monstersStore/monsters.service'
 import { Inventory } from './inventory/inventory'
+import { Skill } from './skill/skill'
 
 @Component({
   selector: 'app-gui',
-  imports: [Map, ErrorDisplay, FormsModule, Equipment, Inventory],
+  imports: [Map, ErrorDisplay, FormsModule, Equipment, Inventory, Skill],
   templateUrl: './gui.html',
   styleUrl: './gui.scss',
 })

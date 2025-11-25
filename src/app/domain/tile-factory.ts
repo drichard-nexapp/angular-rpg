@@ -8,7 +8,6 @@ import { GrandExchangeTile } from './grand-exchange-tile'
 import { TasksMasterTile } from './tasks-master-tile'
 import { TerrainTile } from './terrain-tile'
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TileFactory {
   static createTile(data: TileData): TileBase {
     if (!data.interactions || !data.interactions.content) {

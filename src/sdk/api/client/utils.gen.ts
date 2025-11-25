@@ -277,7 +277,7 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
 }
 
 export const mergeHeaders = (
-  ...headers: Array<Required<Config>['headers'] | undefined>
+  ...headers: (Required<Config>['headers'] | undefined)[]
 ): HttpHeaders => {
   let mergedHeaders = new HttpHeaders()
 
@@ -341,7 +341,7 @@ type ResInterceptor<Res, Req, Options> = (
 ) => Res | Promise<Res>
 
 class Interceptors<Interceptor> {
-  fns: Array<Interceptor | null> = []
+  fns: (Interceptor | null)[] = []
 
   clear(): void {
     this.fns = []
