@@ -5,7 +5,6 @@ import {
   getNpcItemsNpcsItemsCodeGet,
   getAllActiveEventsEventsActiveGet,
   getAllItemsItemsGet,
-  ItemSlot,
 } from '../../../sdk/api'
 import { Map } from '../map/map'
 import type {
@@ -16,16 +15,6 @@ import type {
   Map as MapTile,
   ActiveEvent,
 } from '../../domain/types'
-import {
-  CharacterService,
-  InventoryService,
-  MapService,
-  CooldownService,
-  ActionService,
-  NpcService,
-  ErrorHandlerService,
-  LoggerService,
-} from '../../services'
 import { ActionQueueService } from '../../services/action-queue.service'
 import { MacroService } from '../../services/macro.service'
 import { ActionExecutorService } from '../../services/action-executor.service'
@@ -34,25 +23,36 @@ import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
 import { TileUtils, CharacterUtils } from '../../shared/utils'
 import { ErrorDisplay } from '../../components/shared/error-display/error-display'
 import {
-  getItemImageUrl,
   getMonsterImageUrl,
   getResourceImageUrl,
 } from '../../shared/asset-urls'
+import { Equipment } from './equipment/equipment'
+import { CharacterService } from '../../services/character.service'
+import { InventoryService } from '../../services/inventory.service'
+import { MapService } from '../../services/map.service'
+import { CooldownService } from '../../services/cooldown.service'
+import { ActionService } from '../../services/action.service'
+import { NpcService } from '../../services/npc.service'
+import { LoggerService } from '../../services/logger.service'
+import { ErrorHandlerService } from '../../services/error-handler.service'
+import { MonstersService } from '../../stores/monstersStore/monsters.service'
+import { Inventory } from './inventory/inventory'
 
 @Component({
   selector: 'app-gui',
-  imports: [Map, ErrorDisplay, FormsModule],
+  imports: [Map, ErrorDisplay, FormsModule, Equipment, Inventory],
   templateUrl: './gui.html',
   styleUrl: './gui.scss',
 })
 export class GUI {
   private characterService = inject(CharacterService)
   private inventoryService = inject(InventoryService)
-  private mapService = inject(MapService)
+  protected mapService = inject(MapService)
   private cooldownService = inject(CooldownService)
   private actionService = inject(ActionService)
   queueService = inject(ActionQueueService)
   macroService = inject(MacroService)
+  monstersService = inject(MonstersService)
   private actionExecutor = inject(ActionExecutorService)
   private npcService = inject(NpcService)
   private logger = inject(LoggerService)
@@ -60,7 +60,6 @@ export class GUI {
 
   selectedCharacter = this.characterService.getSelectedCharacterSignal()
   characters = this.characterService.getCharactersSignal()
-  scrollToPosition = signal<{ x: number; y: number } | null>(null)
   selectedTile = signal<MapTile | null>(null)
 
   npcItemsQuery = injectQuery(() => ({
@@ -113,15 +112,7 @@ export class GUI {
     )
   })
 
-  characterInventory = computed(() => {
-    return this.inventoryService.getInventory(this.selectedCharacter())
-  })
-
-  givingItem = signal<{ code: string; quantity: number; slot: number } | null>(
-    null,
-  )
-  giveTargetCharacter = ''
-  giveQuantity = 1
+  showMonsterDetails = signal<boolean>(false)
 
   getInventoryQuantity(itemCode: string): number {
     return this.inventoryService.getItemQuantity(
@@ -147,13 +138,6 @@ export class GUI {
     TileUtils.getWorkshopCode(this.currentTileDetails()),
   )
 
-  monsterDetails = computed(() => {
-    const code = this.monsterCode()
-    if (!code || code !== this.mapService.getMonsterCode()) {
-      return null
-    }
-    return this.mapService.getMonsterData()
-  })
   resourceDetails = computed(() => {
     const code = this.resourceCode()
     if (!code || code !== this.mapService.getResourceCode()) {
@@ -178,7 +162,7 @@ export class GUI {
   showEquipment = signal(false)
 
   constructor() {
-    this.characterService.loadCharactersList()
+    void this.characterService.loadCharactersList()
   }
 
   selectCharacter(character: Character): void {
@@ -197,7 +181,7 @@ export class GUI {
         })
       }
 
-      this.mapService.setMonsterCode(null)
+      this.showMonsterDetails.set(false)
       this.mapService.setResourceCode(null)
       this.mapService.setNpcCode(null)
     }
@@ -211,7 +195,7 @@ export class GUI {
     if (!tile) return
     this.selectedTile.set(tile)
     this.mapService.setTilePosition({ x: tile.x, y: tile.y })
-    this.mapService.setMonsterCode(null)
+    this.showMonsterDetails.set(false)
     this.mapService.setResourceCode(null)
     this.mapService.setNpcCode(null)
   }
@@ -248,17 +232,13 @@ export class GUI {
     }
   }
 
-  onEventClick(event: ActiveEvent): void {
-    this.scrollToPosition.set({ x: event.map.x, y: event.map.y })
-    setTimeout(() => {
-      this.scrollToPosition.set(null)
-    }, 100)
-  }
-
-  loadMonsterDetails() {
+  async loadMonsterDetails() {
     const monsterCode = this.monsterCode()
     if (monsterCode) {
-      this.mapService.setMonsterCode(monsterCode)
+      const monsterDetails =
+        await this.monstersService.fetchMonsterDetails(monsterCode)
+      this.mapService.setCurrentMonsterDetails(monsterDetails)
+      this.showMonsterDetails.set(true)
     }
   }
 
@@ -293,7 +273,7 @@ export class GUI {
   }
 
   hideMonsterDetails() {
-    this.mapService.setMonsterCode(null)
+    this.showMonsterDetails.set(false)
   }
 
   hideResourceDetails() {
@@ -563,7 +543,6 @@ export class GUI {
       this.showEquipment.set(false)
     }
   }
-
   toggleEquipment(): void {
     this.showEquipment.set(!this.showEquipment())
     if (this.showEquipment()) {
@@ -660,111 +639,6 @@ export class GUI {
     }
   }
 
-  getOtherCharacters(): Character[] {
-    const selected = this.selectedCharacter()
-    if (!selected) return []
-    return this.characters().filter((c) => c.name !== selected.name)
-  }
-
-  startGiveItem(slot: { code: string; quantity: number; slot: number }): void {
-    this.givingItem.set(slot)
-    this.giveQuantity = 1
-    const otherChars = this.getOtherCharacters()
-    if (otherChars.length > 0) {
-      this.giveTargetCharacter = otherChars[0].name
-    }
-  }
-
-  cancelGiveItem(): void {
-    this.givingItem.set(null)
-    this.giveTargetCharacter = ''
-    this.giveQuantity = 1
-  }
-
-  async confirmGiveItem(): Promise<void> {
-    const item = this.givingItem()
-    if (!item || !this.giveTargetCharacter) return
-
-    const result = await this.actionService.giveItems(
-      this.giveTargetCharacter,
-      [{ code: item.code, quantity: this.giveQuantity }],
-    )
-
-    if (result.success) {
-      this.errorHandler.handleSuccess(
-        `Gave ${this.giveQuantity}× ${item.code} to ${this.giveTargetCharacter}`,
-        'Give Item',
-      )
-      this.cancelGiveItem()
-    }
-  }
-
-  canEquipItem(itemCode: string): boolean {
-    const item = this.items().find((i) => i.code === itemCode)
-    if (!item) return false
-
-    const equipableTypes = [
-      'weapon',
-      'shield',
-      'helmet',
-      'body_armor',
-      'leg_armor',
-      'boots',
-      'ring',
-      'amulet',
-      'artifact',
-      'utility',
-      'bag',
-    ]
-    return equipableTypes.includes(item.type)
-  }
-
-  getItemSlot(itemCode: string): ItemSlot | null {
-    const item = this.items().find((i) => i.code === itemCode)
-    if (!item) return null
-
-    const typeToSlot: Record<string, ItemSlot> = {
-      weapon: 'weapon',
-      shield: 'shield',
-      helmet: 'helmet',
-      body_armor: 'body_armor',
-      leg_armor: 'leg_armor',
-      boots: 'boots',
-      ring: 'ring1',
-      amulet: 'amulet',
-      artifact: 'artifact1',
-      utility: 'utility1',
-      bag: 'bag',
-    }
-
-    return typeToSlot[item.type] || null
-  }
-
-  async startEquipItem(slot: {
-    code: string
-    quantity: number
-    slot: number
-  }): Promise<void> {
-    const itemSlot = this.getItemSlot(slot.code)
-    if (!itemSlot) {
-      this.errorHandler.handleError('Cannot determine item slot', 'Equip Item')
-      return
-    }
-
-    const item = this.items().find((i) => i.code === slot.code)
-    const quantity = item?.type === 'utility' ? 1 : undefined
-
-    const result = await this.actionService.equipItem(
-      slot.code,
-      itemSlot,
-      quantity,
-    )
-
-    if (result.success) {
-      this.errorHandler.handleSuccess(`Equipped ${slot.code}`, 'Equip Item')
-    }
-  }
-
   isMacroPlaying(): boolean {
     const selected = this.selectedCharacter()
     if (!selected) return false
@@ -775,10 +649,6 @@ export class GUI {
     const selected = this.selectedCharacter()
     if (!selected) return null
     return this.macroService.getPlaybackState(selected.name)
-  }
-
-  getItemImageUrl(code: string): string {
-    return getItemImageUrl(code)
   }
 
   getMonsterImageUrl(code: string): string {

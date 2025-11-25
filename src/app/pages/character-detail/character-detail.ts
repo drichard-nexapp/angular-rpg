@@ -6,13 +6,12 @@ import type { Character } from '../../domain/types'
 import { unwrapApiItem } from '../../shared/utils'
 import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
 import { SafePositionPipe } from '../../shared/pipes/safe-coordinate.pipe'
-import { LoggerService } from '../../services'
+import { LoggerService } from '../../services/logger.service'
 
 @Component({
   selector: 'app-character-detail',
   imports: [SafePositionPipe],
   templateUrl: './character-detail.html',
-  styleUrl: './character-detail.scss',
 })
 export class CharacterDetail {
   private route = inject(ActivatedRoute)

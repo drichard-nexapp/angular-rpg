@@ -14,12 +14,11 @@ import {
 import type { Character } from '../../domain/types'
 import { unwrapApiResponse } from '../../shared/utils'
 import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
-import {
-  CharacterManagementService,
-  ConfirmDialogService,
-} from '../../services'
+
 import { SafePositionPipe } from '../../shared/pipes/safe-coordinate.pipe'
 import { getCharacterImageUrl } from '../../shared/asset-urls'
+import { CharacterManagementService } from '../../services/character-management.service'
+import { ConfirmDialogService } from '../../services/confirm-dialog.service'
 
 @Component({
   selector: 'app-characters',

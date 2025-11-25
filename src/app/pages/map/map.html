@@ -1,13 +1,11 @@
 @if (loading()) {
 <div class="loading">Loading maps...</div>
-} @if (error()) {
-<div class="error">{{ error() }}</div>
-} @if (!loading() && !error()) { @for (layer of layers(); track layer.name) {
+}  @if (!loading() ) { @for (layer of layers(); track layer) {
 <section class="layer-section">
-  <h2>{{ layer.name }}</h2>
+  <h2>{{ layer }}</h2>
   <div class="map-container" #mapContainer>
     <div class="map-grid">
-      @for (row of layer.grid; track $index) {
+      @for (row of grid(); track $index) {
       <div class="map-row">
         @for (tile of row; track $index) { @if (tile) {
         <div

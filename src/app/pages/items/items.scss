@@ -50,7 +50,7 @@
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .search-box {
@@ -68,7 +68,7 @@
 
   &:focus {
     border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    box-shadow: 0 0 0 3px rgb(74 144 226 / 10%);
   }
 }
 
@@ -131,7 +131,7 @@
   &:hover {
     background: #d32f2f;
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
   }
 }
 
@@ -150,11 +150,11 @@
   flex-direction: column;
   gap: 10px;
   transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
 
   &:hover {
     border-color: #4a90e2;
-    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+    box-shadow: 0 4px 12px rgb(74 144 226 / 20%);
     transform: translateY(-2px);
   }
 }

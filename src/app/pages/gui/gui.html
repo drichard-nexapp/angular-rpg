@@ -12,7 +12,7 @@
       </div>
       <div class="events-float-list">
         @for (event of activeEvents(); track event.code) {
-        <div class="event-float-item" (click)="onEventClick(event)">
+        <div class="event-float-item" >
           <div class="event-float-name">{{ event.name }}</div>
           <div class="event-float-details">
             <span class="event-float-duration">{{ event.duration }}m</span>
@@ -47,74 +47,77 @@
       >
         Move to This Tile
       </button>
-      } @if (isMonsterTile() && !monsterDetails()) {
+      }
+        @if (isMonsterTile()) {
       <button class="show-details-button" (click)="loadMonsterDetails()">
         ? Show Monster Details
       </button>
-      } @if (monsterDetails()) {
+      }
+        @if (showMonsterDetails()) {
+      @if(this.mapService.currentMonsterDetails(); as monsterDetails){
       <div class="monster-details-section">
         <img
-          [src]="getMonsterImageUrl(monsterDetails()!.code)"
-          [alt]="monsterDetails()!.name"
+          [src]="getMonsterImageUrl(monsterDetails.code)"
+          [alt]="monsterDetails.name"
           class="monster-image"
         />
         <div class="monster-header">
-          <h4>{{ monsterDetails()!.name }}</h4>
+          <h4>{{ monsterDetails.name }}</h4>
           <button class="hide-details-button" (click)="hideMonsterDetails()">
             Hide
           </button>
         </div>
         <div class="monster-basic-info">
           <div class="monster-info-item">
-            <strong>Level:</strong> {{ monsterDetails()!.level }}
+            <strong>Level:</strong> {{ monsterDetails.level }}
           </div>
           <div class="monster-info-item">
-            <strong>Type:</strong> {{ monsterDetails()!.type }}
+            <strong>Type:</strong> {{ monsterDetails.type }}
           </div>
           <div class="monster-info-item">
-            <strong>HP:</strong> {{ monsterDetails()!.hp }}
+            <strong>HP:</strong> {{ monsterDetails.hp }}
           </div>
         </div>
 
         <div class="monster-stats">
           <strong>Attacks:</strong>
           <div class="stats-grid">
-            <div class="stat-item">🔥 {{ monsterDetails()!.attack_fire }}</div>
-            <div class="stat-item">🌍 {{ monsterDetails()!.attack_earth }}</div>
-            <div class="stat-item">💧 {{ monsterDetails()!.attack_water }}</div>
-            <div class="stat-item">💨 {{ monsterDetails()!.attack_air }}</div>
+            <div class="stat-item">🔥 {{ monsterDetails.attack_fire }}</div>
+            <div class="stat-item">🌍 {{ monsterDetails.attack_earth }}</div>
+            <div class="stat-item">💧 {{ monsterDetails.attack_water }}</div>
+            <div class="stat-item">💨 {{ monsterDetails.attack_air }}</div>
           </div>
         </div>
 
         <div class="monster-stats">
           <strong>Resistances:</strong>
           <div class="stats-grid">
-            <div class="stat-item">🔥 {{ monsterDetails()!.res_fire }}%</div>
-            <div class="stat-item">🌍 {{ monsterDetails()!.res_earth }}%</div>
-            <div class="stat-item">💧 {{ monsterDetails()!.res_water }}%</div>
-            <div class="stat-item">💨 {{ monsterDetails()!.res_air }}%</div>
+            <div class="stat-item">🔥 {{ monsterDetails.res_fire }}%</div>
+            <div class="stat-item">🌍 {{ monsterDetails.res_earth }}%</div>
+            <div class="stat-item">💧 {{ monsterDetails.res_water }}%</div>
+            <div class="stat-item">💨 {{ monsterDetails.res_air }}%</div>
           </div>
         </div>
 
         <div class="monster-stats">
           <div class="monster-info-item">
-            <strong>Critical:</strong> {{ monsterDetails()!.critical_strike }}%
+            <strong>Critical:</strong> {{ monsterDetails.critical_strike }}%
           </div>
           <div class="monster-info-item">
-            <strong>Initiative:</strong> {{ monsterDetails()!.initiative }}
+            <strong>Initiative:</strong> {{ monsterDetails.initiative }}
           </div>
         </div>
 
         <div class="monster-rewards">
           <strong>Rewards:</strong>
           <div class="monster-info-item">
-            Gold: {{ monsterDetails()!.min_gold }}-{{ monsterDetails()!.max_gold
+            Gold: {{ monsterDetails.min_gold }}-{{ monsterDetails.max_gold
             }}
           </div>
-          @if (monsterDetails()!.drops.length > 0) {
+          @if (monsterDetails.drops.length > 0) {
           <div class="drops-list">
             <strong>Possible Drops:</strong>
-            @for (drop of monsterDetails()!.drops; track drop.code) {
+            @for (drop of monsterDetails.drops; track drop.code) {
             <div class="drop-item-detail">
               {{ drop.code }} ({{ drop.rate }})
             </div>
@@ -123,7 +126,9 @@
           }
         </div>
       </div>
-      } @if (isMonsterTile()) {
+      }
+      }
+        @if (isMonsterTile()) {
       <button
         class="fight-button"
         [disabled]="!selectedCharacter()"
@@ -132,7 +137,8 @@
         @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!))
         { Queue Fight } @else { Fight }
       </button>
-      } @if (isResourceTile() && !resourceDetails()) {
+      }
+        @if (isResourceTile() && !resourceDetails()) {
       <button class="show-details-button" (click)="loadResourceDetails()">
         ? Show Resource Details
       </button>
@@ -363,82 +369,13 @@
     <app-map
       [characters]="characters()"
       [selectedCharacter]="selectedCharacter()"
-      [scrollToPosition]="scrollToPosition()"
       [selectedTile]="selectedTile()"
       (tileClick)="onTileClick($event)"
     >
     </app-map>
 
     @if (selectedCharacter() && showInventory()) {
-    <div class="inventory-panel">
-      <div class="inventory-header">
-        <h3>📦 Inventory - {{ selectedCharacter()!.name }}</h3>
-        <button class="close-panel-button" (click)="toggleInventory()">
-          ×
-        </button>
-      </div>
-      <div class="inventory-capacity-bar">
-        {{ characterInventory().length }}/{{
-        selectedCharacter()!.inventory_max_items }} slots
-      </div>
-      <div class="inventory-grid">
-        @for (slot of characterInventory(); track slot.slot) {
-        <div class="inventory-item">
-          <img
-            [src]="getItemImageUrl(slot.code)"
-            [alt]="slot.code"
-            class="item-image"
-          />
-          <div class="item-info">
-            <div class="item-code">{{ slot.code }}</div>
-            <div class="item-quantity">× {{ slot.quantity }}</div>
-          </div>
-          <div class="item-actions">
-            @if (canEquipItem(slot.code)) {
-            <button class="equip-item-button" (click)="startEquipItem(slot)">
-              Equip
-            </button>
-            }
-            <button class="give-item-button" (click)="startGiveItem(slot)">
-              Give
-            </button>
-          </div>
-        </div>
-        } @if (characterInventory().length === 0) {
-        <div class="empty-message">Inventory is empty</div>
-        }
-      </div>
-      @if (givingItem()) {
-      <div class="give-item-dialog">
-        <h4>Give {{ givingItem()!.code }}</h4>
-        <label>
-          Target Character:
-          <select [(ngModel)]="giveTargetCharacter">
-            @for (char of getOtherCharacters(); track char.name) {
-            <option [value]="char.name">{{ char.name }}</option>
-            }
-          </select>
-        </label>
-        <label>
-          Quantity:
-          <input
-            type="number"
-            [(ngModel)]="giveQuantity"
-            min="1"
-            [max]="givingItem()!.quantity"
-          />
-        </label>
-        <div class="dialog-buttons">
-          <button class="confirm-button" (click)="confirmGiveItem()">
-            Confirm
-          </button>
-          <button class="cancel-button" (click)="cancelGiveItem()">
-            Cancel
-          </button>
-        </div>
-      </div>
-      }
-    </div>
+      <app-inventory [selectedCharacter]="selectedCharacter()!" (onClose)="toggleInventory()"></app-inventory>
     } @if (selectedCharacter() && showSkills()) {
     <div class="skills-panel">
       <div class="skills-header">
@@ -598,235 +535,8 @@
       </div>
     </div>
     } @if (selectedCharacter() && showEquipment()) {
-    <div class="equipment-panel">
-      <div class="equipment-header">
-        <h3>⚔️ Equipment - {{ selectedCharacter()!.name }}</h3>
-        <button class="close-panel-button" (click)="toggleEquipment()">
-          ×
-        </button>
-      </div>
-      <div class="equipment-grid">
-        <div class="equipment-slot">
-          <div class="slot-label">Weapon</div>
-          @if (selectedCharacter()!.weapon_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.weapon_slot)"
-            [alt]="selectedCharacter()!.weapon_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.weapon_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Shield</div>
-          @if (selectedCharacter()!.shield_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.shield_slot)"
-            [alt]="selectedCharacter()!.shield_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.shield_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Helmet</div>
-          @if (selectedCharacter()!.helmet_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.helmet_slot)"
-            [alt]="selectedCharacter()!.helmet_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.helmet_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Body Armor</div>
-          @if (selectedCharacter()!.body_armor_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.body_armor_slot)"
-            [alt]="selectedCharacter()!.body_armor_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.body_armor_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Leg Armor</div>
-          @if (selectedCharacter()!.leg_armor_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.leg_armor_slot)"
-            [alt]="selectedCharacter()!.leg_armor_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.leg_armor_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Boots</div>
-          @if (selectedCharacter()!.boots_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.boots_slot)"
-            [alt]="selectedCharacter()!.boots_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.boots_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Ring 1</div>
-          @if (selectedCharacter()!.ring1_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.ring1_slot)"
-            [alt]="selectedCharacter()!.ring1_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.ring1_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Ring 2</div>
-          @if (selectedCharacter()!.ring2_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.ring2_slot)"
-            [alt]="selectedCharacter()!.ring2_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.ring2_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Amulet</div>
-          @if (selectedCharacter()!.amulet_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.amulet_slot)"
-            [alt]="selectedCharacter()!.amulet_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.amulet_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Artifact 1</div>
-          @if (selectedCharacter()!.artifact1_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.artifact1_slot)"
-            [alt]="selectedCharacter()!.artifact1_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.artifact1_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Artifact 2</div>
-          @if (selectedCharacter()!.artifact2_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.artifact2_slot)"
-            [alt]="selectedCharacter()!.artifact2_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.artifact2_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Artifact 3</div>
-          @if (selectedCharacter()!.artifact3_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.artifact3_slot)"
-            [alt]="selectedCharacter()!.artifact3_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.artifact3_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Utility 1</div>
-          @if (selectedCharacter()!.utility1_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.utility1_slot)"
-            [alt]="selectedCharacter()!.utility1_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.utility1_slot || 'Empty' }} @if
-            (selectedCharacter()!.utility1_slot) {
-            <span class="utility-quantity"
-              >× {{ selectedCharacter()!.utility1_slot_quantity }}</span
-            >
-            }
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Utility 2</div>
-          @if (selectedCharacter()!.utility2_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.utility2_slot)"
-            [alt]="selectedCharacter()!.utility2_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.utility2_slot || 'Empty' }} @if
-            (selectedCharacter()!.utility2_slot) {
-            <span class="utility-quantity"
-              >× {{ selectedCharacter()!.utility2_slot_quantity }}</span
-            >
-            }
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Bag</div>
-          @if (selectedCharacter()!.bag_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.bag_slot)"
-            [alt]="selectedCharacter()!.bag_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.bag_slot || 'Empty' }}
-          </div>
-        </div>
-        <div class="equipment-slot">
-          <div class="slot-label">Rune</div>
-          @if (selectedCharacter()!.rune_slot) {
-          <img
-            [src]="getItemImageUrl(selectedCharacter()!.rune_slot)"
-            [alt]="selectedCharacter()!.rune_slot"
-            class="equipment-image"
-          />
-          }
-          <div class="slot-item">
-            {{ selectedCharacter()!.rune_slot || 'Empty' }}
-          </div>
-        </div>
-      </div>
-    </div>
-    } @if (selectedCharacter() && getMacrosForCharacter().length > 0) {
+    <app-equipment [selectedCharacter]="selectedCharacter()!" (onClose)="toggleEquipment()" ></app-equipment>
+  } @if (selectedCharacter() && getMacrosForCharacter().length > 0) {
     <div class="macro-panel-float">
       <div class="macro-header">
         <h3>🎬 Macros</h3>

@@ -1,20 +1,18 @@
-import { Injectable, signal } from '@angular/core'
+import { EventEmitter, Injectable, Output, signal } from '@angular/core'
 import { injectQuery } from '@tanstack/angular-query-experimental'
 import {
   getMapByPositionMapsLayerXYGet,
-  getMonsterMonstersCodeGet,
   getResourceResourcesCodeGet,
   getNpcNpcsDetailsCodeGet,
-  getLayerMapsMapsLayerGet,
 } from '../../sdk/api'
 import type {
   TilePosition,
   Map as MapTile,
-  Monster,
   Resource,
   Npc,
+  Monster,
 } from '../domain/types'
-import { unwrapApiItem, unwrapApiResponse } from '../shared/utils'
+import { unwrapApiItem } from '../shared/utils'
 import { QUERY_KEYS, APP_CONFIG } from '../shared/constants'
 
 @Injectable({
@@ -22,7 +20,7 @@ import { QUERY_KEYS, APP_CONFIG } from '../shared/constants'
 })
 export class MapService {
   private currentTilePosition = signal<TilePosition | null>(null)
-  private currentMonsterCode = signal<string | null>(null)
+  public currentMonsterDetails = signal<Monster | null>(null)
   private currentResourceCode = signal<string | null>(null)
   private currentNpcCode = signal<string | null>(null)
 
@@ -47,29 +45,6 @@ export class MapService {
     },
     enabled: !!this.currentTilePosition(),
     staleTime: APP_CONFIG.CACHE.STALE_TIME_30_MIN,
-  }))
-
-  monsterDetailsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.monsters.detail(this.currentMonsterCode() || ''),
-    queryFn: async (): Promise<Monster | null> => {
-      const monsterCode = this.currentMonsterCode()
-      if (!monsterCode) return null
-
-      const response = await getMonsterMonstersCodeGet({
-        path: { code: monsterCode },
-      })
-
-      const monsterData = unwrapApiItem<Monster>(response, null)
-      if (monsterData) {
-        return {
-          ...monsterData,
-          drops: monsterData.drops || [],
-        }
-      }
-      return null
-    },
-    enabled: !!this.currentMonsterCode(),
-    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
   }))
 
   resourceDetailsQuery = injectQuery(() => ({
@@ -112,14 +87,6 @@ export class MapService {
     return this.currentTilePosition()
   }
 
-  setMonsterCode(code: string | null): void {
-    this.currentMonsterCode.set(code)
-  }
-
-  getMonsterCode(): string | null {
-    return this.currentMonsterCode()
-  }
-
   setResourceCode(code: string | null): void {
     this.currentResourceCode.set(code)
   }
@@ -140,10 +107,6 @@ export class MapService {
     return this.tileDetailsQuery.data() ?? null
   }
 
-  getMonsterData(): Monster | null {
-    return this.monsterDetailsQuery.data() ?? null
-  }
-
   getResourceData(): Resource | null {
     return this.resourceDetailsQuery.data() ?? null
   }
@@ -154,52 +117,12 @@ export class MapService {
 
   clearAll(): void {
     this.currentTilePosition.set(null)
-    this.currentMonsterCode.set(null)
+    this.currentMonsterDetails.set(null)
     this.currentResourceCode.set(null)
     this.currentNpcCode.set(null)
   }
 
-  async fetchAllLayerTiles(layerName: string): Promise<MapTile[]> {
-    const allTiles: MapTile[] = []
-    let page = 1
-    let hasMore = true
-
-    while (hasMore) {
-      const layerResponse = await getLayerMapsMapsLayerGet({
-        path: { layer: layerName as 'overworld' },
-        query: { page, size: 100 },
-      })
-
-      const tiles = unwrapApiResponse<MapTile[]>(layerResponse, [])
-      allTiles.push(...tiles)
-
-      if (tiles.length === 0 || tiles.length < 100) {
-        hasMore = false
-      } else {
-        page++
-      }
-    }
-
-    return allTiles
-  }
-
-  createGrid(tiles: MapTile[]): (MapTile | null)[][] {
-    if (tiles.length === 0) return []
-
-    const minX = Math.min(...tiles.map((t) => t.x))
-    const maxX = Math.max(...tiles.map((t) => t.x))
-    const minY = Math.min(...tiles.map((t) => t.y))
-    const maxY = Math.max(...tiles.map((t) => t.y))
-
-    const grid: (MapTile | null)[][] = []
-    for (let y = minY; y <= maxY; y++) {
-      const row: (MapTile | null)[] = []
-      for (let x = minX; x <= maxX; x++) {
-        const tile = tiles.find((t) => t.x === x && t.y === y)
-        row.push(tile || null)
-      }
-      grid.push(row)
-    }
-    return grid
+  setCurrentMonsterDetails(monsterDetails: null | Monster) {
+    this.currentMonsterDetails.set(monsterDetails)
   }
 }

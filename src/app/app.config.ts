@@ -23,7 +23,7 @@ import {
   loadingInterceptor,
 } from './interceptors'
 import { APP_CONFIG } from './shared/constants'
-import { GlobalErrorHandler } from './services'
+import { GlobalErrorHandler } from './services/global-error-handler'
 
 export const appConfig: ApplicationConfig = {
   providers: [

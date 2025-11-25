@@ -77,9 +77,11 @@
           class="character-card"
         >
           <div class="character-header">
-            <span class="character-icon"
-              >{{ getCharacterImage(character.skin) }}</span
-            >
+            <img
+              class="character-icon"
+              [src]="getCharacterImage(character.skin)"
+              alt="Character skin"
+            />
             <h2>{{ character.name }}</h2>
           </div>
           <p><strong>Skin:</strong> {{ character.skin }}</p>

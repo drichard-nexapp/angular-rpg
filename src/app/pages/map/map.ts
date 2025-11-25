@@ -1,24 +1,22 @@
 import {
   Component,
-  computed,
   input,
   output,
   inject,
   effect,
   signal,
-  viewChild,
-  ElementRef,
+  computed,
 } from '@angular/core'
-import { injectQuery } from '@tanstack/angular-query-experimental'
 import { TileBase, TileFactory } from '../../domain/tile'
-import type { Character, MapLayer, Map as MapTile } from '../../domain/types'
-import { MapService, LoggerService } from '../../services'
-import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
+import type { Character, Map as MapTile } from '../../domain/types'
+import { LoggerService } from '../../services/logger.service'
 import { CharacterUtils } from '../../shared/utils'
 import {
   getMapImageUrl,
   getCharacterSkinImageUrl,
 } from '../../shared/asset-urls'
+import { TilesStore } from '../../stores/tilesStore/tiles.store'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-map',
@@ -27,34 +25,42 @@ import {
   styleUrl: './map.scss',
 })
 export class Map {
-  private mapService = inject(MapService)
   private logger = inject(LoggerService)
+  private tilesStore = inject(TilesStore)
+
+  store = toSignal(this.tilesStore.useStore())
+  loading = toSignal(this.tilesStore.useStore((t) => t.loading))
+
+  layers = computed(() => {
+    return ['overworld']
+  })
 
   characters = input.required<Character[]>()
   selectedCharacter = input<Character | null>(null)
-  scrollToPosition = input<{ x: number; y: number } | null>(null)
   selectedTile = input<MapTile | null>(null)
-  tileClick = output<MapTile>()
-
-  mapContainer = viewChild<ElementRef<HTMLDivElement>>('mapContainer')
   hoveredTile = signal<MapTile | null>(null)
 
-  mapsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.maps.layer('overworld'),
-    queryFn: async (): Promise<MapLayer[]> => {
-      const tiles = await this.mapService.fetchAllLayerTiles('overworld')
-      const grid = this.mapService.createGrid(tiles)
-      return [{ name: 'overworld', tiles, grid }]
-    },
-    staleTime: APP_CONFIG.CACHE.STALE_TIME_10_MIN,
-  }))
+  tileClick = output<MapTile>()
+  protected readonly grid = computed(() => {
+    const tiles = Object.values(this.store()?.tiles || [])
+    console.log(tiles)
+    if (tiles.length === 0) return []
 
-  layers = computed((): MapLayer[] => this.mapsQuery.data() ?? [])
-  loading = computed((): boolean => this.mapsQuery.isPending())
-  error = computed((): string | null => {
-    const mapsError = this.mapsQuery.error()
-    if (mapsError) return (mapsError as Error).message
-    return null
+    const minX = Math.min(...tiles.map((t) => t.x))
+    const maxX = Math.max(...tiles.map((t) => t.x))
+    const minY = Math.min(...tiles.map((t) => t.y))
+    const maxY = Math.max(...tiles.map((t) => t.y))
+
+    const grid: (MapTile | null)[][] = []
+    for (let y = minY; y <= maxY; y++) {
+      const row: (MapTile | null)[] = []
+      for (let x = minX; x <= maxX; x++) {
+        const tile = tiles.find((t) => t.x === x && t.y === y)
+        row.push(tile || null)
+      }
+      grid.push(row)
+    }
+    return grid
   })
 
   constructor() {
@@ -69,15 +75,6 @@ export class Map {
           'Map',
         )
       })
-    })
-
-    effect(() => {
-      const position = this.scrollToPosition()
-      const container = this.mapContainer()
-
-      if (position && container) {
-        this.scrollToTile(position.x, position.y)
-      }
     })
   }
 
@@ -179,43 +176,5 @@ export class Map {
     }
 
     return parts.join(' | ')
-  }
-
-  private scrollToTile(x: number, y: number): void {
-    const container = this.mapContainer()
-    if (!container) return
-
-    const layers = this.layers()
-    if (layers.length === 0) return
-
-    const tiles = layers[0].tiles
-    if (!tiles || tiles.length === 0) return
-
-    const minX = Math.min(...tiles.map((t) => t.x))
-    const minY = Math.min(...tiles.map((t) => t.y))
-
-    const gridCol = x - minX
-    const gridRow = y - minY
-
-    const tileSize = 32
-    const scrollX =
-      gridCol * tileSize -
-      container.nativeElement.clientWidth / 2 +
-      tileSize / 2
-    const scrollY =
-      gridRow * tileSize -
-      container.nativeElement.clientHeight / 2 +
-      tileSize / 2
-
-    container.nativeElement.scrollTo({
-      left: scrollX,
-      top: scrollY,
-      behavior: 'smooth',
-    })
-
-    this.logger.info(
-      `Scrolling to tile (${x}, ${y}) at grid position (${gridRow}, ${gridCol})`,
-      'Map',
-    )
   }
 }

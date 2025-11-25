@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http'
 import { inject } from '@angular/core'
 import { finalize } from 'rxjs'
-import { LoadingService } from '../services'
+import { LoadingService } from '../services/loading.service'
 
 export const SKIP_LOADING_HEADER = 'X-Skip-Loading'
 

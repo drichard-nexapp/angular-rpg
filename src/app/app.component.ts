@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core'
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router'
 import { ConfirmDialog } from './components/shared/confirm-dialog/confirm-dialog'
 import { ActionExecutorService } from './services/action-executor.service'
+import { TilesService } from './stores/tilesStore/tiles.service'
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,10 @@ import { ActionExecutorService } from './services/action-executor.service'
 export class AppComponent {
   title = 'angular-app'
   private actionExecutor = inject(ActionExecutorService)
+  private tilesService = inject(TilesService)
 
   constructor() {
     this.actionExecutor.initialize()
+    this.tilesService.initialize()
   }
 }

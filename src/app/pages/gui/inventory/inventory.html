@@ -1,0 +1,69 @@
+<div class="inventory-panel">
+  <div class="inventory-header">
+    <h3>📦 Inventory - {{ selectedCharacter()!.name }}</h3>
+    <button class="close-panel-button" (click)="close()">
+      ×
+    </button>
+  </div>
+  <div class="inventory-capacity-bar">
+    {{ characterInventory().length }}/{{
+      selectedCharacter()!.inventory_max_items }} slots
+  </div>
+  <div class="inventory-grid">
+    @for (slot of characterInventory(); track slot.slot) {
+      <div class="inventory-item">
+        <img
+          [src]="getItemImageUrl(slot.code)"
+          [alt]="slot.code"
+          class="item-image"
+        />
+        <div class="item-info">
+          <div class="item-code">{{ slot.code }}</div>
+          <div class="item-quantity">× {{ slot.quantity }}</div>
+        </div>
+        <div class="item-actions">
+          @if (canEquipItem(slot.code)) {
+            <button class="equip-item-button" (click)="startEquipItem(slot)">
+              Equip
+            </button>
+          }
+          <button class="give-item-button" (click)="startGiveItem(slot)">
+            Give
+          </button>
+        </div>
+      </div>
+    } @if (characterInventory().length === 0) {
+    <div class="empty-message">Inventory is empty</div>
+  }
+  </div>
+  @if (givingItem()) {
+    <div class="give-item-dialog">
+      <h4>Give {{ givingItem()!.code }}</h4>
+      <label>
+        Target Character:
+        <select [(ngModel)]="giveTargetCharacter">
+          @for (char of getOtherCharacters(); track char.name) {
+            <option [value]="char.name">{{ char.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Quantity:
+        <input
+          type="number"
+          [(ngModel)]="giveQuantity"
+          min="1"
+          [max]="givingItem()!.quantity"
+        />
+      </label>
+      <div class="dialog-buttons">
+        <button class="confirm-button" (click)="confirmGiveItem()">
+          Confirm
+        </button>
+        <button class="cancel-button" (click)="cancelGiveItem()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  }
+</div>

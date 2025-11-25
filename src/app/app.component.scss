@@ -3,7 +3,7 @@
   padding: 12px 20px;
   display: flex;
   gap: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
   a {
     color: white;
@@ -15,7 +15,7 @@
     transition: all 0.2s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgb(255 255 255 / 10%);
     }
 
     &.active {
@@ -25,35 +25,31 @@
 }
 
 :host {
-  --bright-blue: oklch(51.01% 0.274 263.83);
-  --electric-violet: oklch(53.18% 0.28 296.97);
-  --french-violet: oklch(47.66% 0.246 305.88);
-  --vivid-pink: oklch(69.02% 0.277 332.77);
-  --hot-red: oklch(61.42% 0.238 15.34);
-  --orange-red: oklch(63.32% 0.24 31.68);
-
-  --gray-900: oklch(19.37% 0.006 300.98);
-  --gray-700: oklch(36.98% 0.014 302.71);
-  --gray-400: oklch(70.9% 0.015 304.04);
-
+  --bright-blue: oklch(51.01% 0.274 263.83deg);
+  --electric-violet: oklch(53.18% 0.28 296.97deg);
+  --french-violet: oklch(47.66% 0.246 305.88deg);
+  --vivid-pink: oklch(69.02% 0.277 332.77deg);
+  --hot-red: oklch(61.42% 0.238 15.34deg);
+  --orange-red: oklch(63.32% 0.24 31.68deg);
+  --gray-900: oklch(19.37% 0.006 300.98deg);
+  --gray-700: oklch(36.98% 0.014 302.71deg);
+  --gray-400: oklch(70.9% 0.015 304.04deg);
   --red-to-pink-to-purple-vertical-gradient: linear-gradient(
     180deg,
     var(--orange-red) 0%,
     var(--vivid-pink) 50%,
     var(--electric-violet) 100%
   );
-
   --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
     90deg,
     var(--orange-red) 0%,
     var(--vivid-pink) 50%,
     var(--electric-violet) 100%
   );
-
   --pill-accent: var(--bright-blue);
 
   font-family:
-    'Inter',
+    Inter,
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
@@ -106,11 +102,6 @@ main {
   position: relative;
 }
 
-.content {
-  max-width: 1200px;
-  width: 100%;
-}
-
 .characters-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -123,7 +114,7 @@ main {
   border: 1px solid var(--gray-400);
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
@@ -131,11 +122,11 @@ main {
 
 .character-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
 }
 
 .character-card h2 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
   color: var(--gray-900);
   font-size: 1.5rem;
 }
@@ -185,16 +176,17 @@ main {
 
 .pill-group {
   display: flex;
-  flex-direction: column;
+  flex-flow: column wrap;
   align-items: start;
-  flex-wrap: wrap;
   gap: 1.25rem;
 }
 
 .pill {
   display: flex;
   align-items: center;
+
   --pill-accent: var(--bright-blue);
+
   background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
   color: var(--pill-accent);
   padding-inline: 0.75rem;
@@ -202,12 +194,12 @@ main {
   border-radius: 2.75rem;
   border: 0;
   transition: background 0.3s ease;
-  font-family: var(--inter-font);
+  font-family: var(--inter-font), serif;
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 500;
   line-height: 1.4rem;
-  letter-spacing: -0.00875rem;
+  letter-spacing: -0.0088rem;
   text-decoration: none;
 }
 
@@ -218,9 +210,11 @@ main {
 .pill-group .pill:nth-child(6n + 1) {
   --pill-accent: var(--bright-blue);
 }
+
 .pill-group .pill:nth-child(6n + 2) {
   --pill-accent: var(--french-violet);
 }
+
 .pill-group .pill:nth-child(6n + 3),
 .pill-group .pill:nth-child(6n + 4),
 .pill-group .pill:nth-child(6n + 5) {
@@ -247,7 +241,7 @@ main {
   fill: var(--gray-900);
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (width <= 650px) {
   .content {
     flex-direction: column;
     width: max-content;
