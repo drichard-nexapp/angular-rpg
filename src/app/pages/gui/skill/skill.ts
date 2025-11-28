@@ -10,9 +10,9 @@ import { Character } from '../../../domain/types'
 export class Skill {
   public selectedCharacter = input.required<Character>()
   @Output()
-  public onClose = new EventEmitter()
+  public closeTrigger = new EventEmitter()
 
   public close() {
-    this.onClose.emit()
+    this.closeTrigger.emit()
   }
 }

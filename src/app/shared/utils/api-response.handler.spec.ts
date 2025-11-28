@@ -8,10 +8,7 @@ describe('API Response Handler', () => {
           data: [{ id: 1, name: 'Test' }],
         },
       }
-      const result = unwrapApiResponse<{ id: number; name: string }[]>(
-        response,
-        [],
-      )
+      const result = unwrapApiResponse<{ id: number; name: string }[]>(response, [])
       expect(result).toEqual([{ id: 1, name: 'Test' }])
     })
 
@@ -75,10 +72,7 @@ describe('API Response Handler', () => {
           { id: 2, name: 'Test2' },
         ],
       }
-      const result = unwrapApiResponse<{ id: number; name: string }[]>(
-        response,
-        [],
-      )
+      const result = unwrapApiResponse<{ id: number; name: string }[]>(response, [])
       expect(result).toEqual([
         { id: 1, name: 'Test' },
         { id: 2, name: 'Test2' },
@@ -110,10 +104,7 @@ describe('API Response Handler', () => {
           extra: 'field',
         },
       }
-      const result = unwrapApiResponse<{ id: number; name: string }[]>(
-        response,
-        [],
-      )
+      const result = unwrapApiResponse<{ id: number; name: string }[]>(response, [])
       expect(result).toEqual([{ id: 1, name: 'Nested' }])
     })
   })

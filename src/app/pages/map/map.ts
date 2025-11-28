@@ -1,20 +1,9 @@
-import {
-  Component,
-  input,
-  output,
-  inject,
-  effect,
-  signal,
-  computed,
-} from '@angular/core'
+import { Component, input, output, inject, effect, signal, computed } from '@angular/core'
 import { TileBase, TileFactory } from '../../domain/tile'
 import type { Character, Map as MapTile } from '../../domain/types'
 import { LoggerService } from '../../services/logger.service'
 import { CharacterUtils } from '../../shared/utils'
-import {
-  getMapImageUrl,
-  getCharacterSkinImageUrl,
-} from '../../shared/asset-urls'
+import { getMapImageUrl, getCharacterSkinImageUrl } from '../../shared/asset-urls'
 import { TilesStore } from '../../stores/tilesStore/tiles.store'
 import { toSignal } from '@angular/core/rxjs-interop'
 
@@ -42,8 +31,7 @@ export class Map {
 
   tileClick = output<MapTile>()
   protected readonly grid = computed(() => {
-    const tiles = Object.values(this.store()?.tiles || [])
-    console.log(tiles)
+    const tiles = Object.values(this.store()?.tiles ?? [])
     if (tiles.length === 0) return []
 
     const minX = Math.min(...tiles.map((t) => t.x))

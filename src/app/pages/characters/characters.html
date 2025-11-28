@@ -8,104 +8,85 @@
     </div>
 
     @if (showCreateForm()) {
-    <form
-      [formGroup]="characterForm"
-      (ngSubmit)="createCharacter()"
-      class="create-character-form"
-    >
-      <h2>Create New Character</h2>
+      <form class="create-character-form" [formGroup]="characterForm" (ngSubmit)="createCharacter()">
+        <h2>Create New Character</h2>
 
-      @if (createError()) {
-      <div class="error">{{ createError() }}</div>
-      }
+        @if (createError()) {
+          <div class="error">{{ createError() }}</div>
+        }
 
-      <div class="form-group">
-        <label for="character-name">Character Name</label>
-        <input
-          id="character-name"
-          type="text"
-          formControlName="name"
-          placeholder="Enter character name (3-12 characters)"
-          maxlength="12"
-          [disabled]="creatingCharacter()"
-          [class.invalid]="nameControl?.invalid && nameControl?.touched"
-        />
-        @if (getNameError()) {
-        <div class="error-message">{{ getNameError() }}</div>
-        } @if (!getNameError()) {
-        <small>Letters, numbers, hyphens, and underscores only</small>
+        <div class="form-group">
+          <label for="character-name">Character Name</label>
+          <input
+            formControlName="name"
+            id="character-name"
+            maxlength="12"
+            placeholder="Enter character name (3-12 characters)"
+            type="text"
+            [class.invalid]="nameControl?.invalid && nameControl?.touched"
+            [disabled]="creatingCharacter()" />
+          @if (getNameError()) {
+            <div class="error-message">{{ getNameError() }}</div>
+          }
+          @if (!getNameError()) {
+            <small>Letters, numbers, hyphens, and underscores only</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="character-skin">Skin</label>
+          <select formControlName="skin" id="character-skin" [disabled]="creatingCharacter()">
+            @for (skin of availableSkins; track skin) {
+              <option [value]="skin">{{ getCharacterImage(skin) }} {{ skin }}</option>
+            }
+          </select>
+        </div>
+
+        <button class="submit-btn" type="submit" [disabled]="creatingCharacter() || characterForm.invalid">
+          {{ creatingCharacter() ? 'Creating...' : 'Create' }}
+        </button>
+      </form>
+    }
+    @if (loading()) {
+      <div class="loading">Loading characters...</div>
+    }
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+    @if (deleteError()) {
+      <div class="error">{{ deleteError() }}</div>
+    }
+    @if (!loading() && !error()) {
+      <div class="characters-list">
+        @if (characters().length === 0) {
+          <div class="no-characters">No characters found</div>
+        }
+        @for (character of characters(); track character.name) {
+          <div class="character-card-wrapper">
+            <a class="character-card" [routerLink]="['/characters', character.name]">
+              <div class="character-header">
+                <img alt="Character skin" class="character-icon" [src]="getCharacterImage(character.skin)" />
+                <h2>{{ character.name }}</h2>
+              </div>
+              <p><strong>Skin:</strong> {{ character.skin }}</p>
+              <p><strong>Level:</strong> {{ character.level }}</p>
+              <p><strong>HP:</strong> {{ character.hp }} / {{ character.max_hp }}</p>
+              <p><strong>Gold:</strong> {{ character.gold }}</p>
+              <p><strong>Position:</strong> {{ character | safePosition }}</p>
+              @if (character.task) {
+                <p><strong>Task:</strong> {{ character.task }}</p>
+              }
+            </a>
+            <button
+              class="delete-character-btn"
+              title="Delete character"
+              [disabled]="isDeleting(character.name)"
+              (click)="deleteCharacter(character.name)">
+              {{ isDeleting(character.name) ? 'Deleting...' : '×' }}
+            </button>
+          </div>
         }
       </div>
-
-      <div class="form-group">
-        <label for="character-skin">Skin</label>
-        <select
-          id="character-skin"
-          formControlName="skin"
-          [disabled]="creatingCharacter()"
-        >
-          @for (skin of availableSkins; track skin) {
-          <option [value]="skin">
-            {{ getCharacterImage(skin) }} {{ skin }}
-          </option>
-          }
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        class="submit-btn"
-        [disabled]="creatingCharacter() || characterForm.invalid"
-      >
-        {{ creatingCharacter() ? 'Creating...' : 'Create' }}
-      </button>
-    </form>
-    } @if (loading()) {
-    <div class="loading">Loading characters...</div>
-    } @if (error()) {
-    <div class="error">{{ error() }}</div>
-    } @if (deleteError()) {
-    <div class="error">{{ deleteError() }}</div>
-    } @if (!loading() && !error()) {
-    <div class="characters-list">
-      @if (characters().length === 0) {
-      <div class="no-characters">No characters found</div>
-      } @for (character of characters(); track character.name) {
-      <div class="character-card-wrapper">
-        <a
-          [routerLink]="['/characters', character.name]"
-          class="character-card"
-        >
-          <div class="character-header">
-            <img
-              class="character-icon"
-              [src]="getCharacterImage(character.skin)"
-              alt="Character skin"
-            />
-            <h2>{{ character.name }}</h2>
-          </div>
-          <p><strong>Skin:</strong> {{ character.skin }}</p>
-          <p><strong>Level:</strong> {{ character.level }}</p>
-          <p>
-            <strong>HP:</strong> {{ character.hp }} / {{ character.max_hp }}
-          </p>
-          <p><strong>Gold:</strong> {{ character.gold }}</p>
-          <p><strong>Position:</strong> {{ character | safePosition }}</p>
-          @if (character.task) {
-          <p><strong>Task:</strong> {{ character.task }}</p>
-          }
-        </a>
-        <button
-          class="delete-character-btn"
-          (click)="deleteCharacter(character.name)"
-          [disabled]="isDeleting(character.name)"
-          title="Delete character"
-        >
-          {{ isDeleting(character.name) ? 'Deleting...' : '×' }}
-        </button>
-      </div>
-      }
-    </div>
     }
   </div>
 </main>

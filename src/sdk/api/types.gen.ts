@@ -183,11 +183,7 @@ export type AccountLeaderboardType = 'achievements_points' | 'gold'
 /**
  * AccountStatus
  */
-export type AccountStatus =
-  | 'standard'
-  | 'founder'
-  | 'gold_founder'
-  | 'vip_founder'
+export type AccountStatus = 'standard' | 'founder' | 'gold_founder' | 'vip_founder'
 
 /**
  * AchievementResponseSchema
@@ -1663,14 +1659,7 @@ export interface CombatSimulationResponseSchema {
 /**
  * ConditionOperator
  */
-export type ConditionOperator =
-  | 'eq'
-  | 'ne'
-  | 'gt'
-  | 'lt'
-  | 'cost'
-  | 'has_item'
-  | 'achievement_unlocked'
+export type ConditionOperator = 'eq' | 'ne' | 'gt' | 'lt' | 'cost' | 'has_item' | 'achievement_unlocked'
 
 /**
  * ConditionSchema
@@ -3442,11 +3431,7 @@ export type LogType =
 /**
  * MapAccessType
  */
-export type MapAccessType =
-  | 'standard'
-  | 'teleportation'
-  | 'conditional'
-  | 'blocked'
+export type MapAccessType = 'standard' | 'teleportation' | 'conditional' | 'blocked'
 
 /**
  * MapContentSchema
@@ -3467,14 +3452,7 @@ export interface MapContentSchema {
 /**
  * MapContentType
  */
-export type MapContentType =
-  | 'monster'
-  | 'resource'
-  | 'workshop'
-  | 'bank'
-  | 'grand_exchange'
-  | 'tasks_master'
-  | 'npc'
+export type MapContentType = 'monster' | 'resource' | 'workshop' | 'bank' | 'grand_exchange' | 'tasks_master' | 'npc'
 
 /**
  * MapLayer
@@ -4712,8 +4690,7 @@ export interface GetServerDetailsGetResponses {
   200: StatusResponseSchema
 }
 
-export type GetServerDetailsGetResponse =
-  GetServerDetailsGetResponses[keyof GetServerDetailsGetResponses]
+export type GetServerDetailsGetResponse = GetServerDetailsGetResponses[keyof GetServerDetailsGetResponses]
 
 export interface GetBankDetailsMyBankGetData {
   body?: never
@@ -4729,8 +4706,7 @@ export interface GetBankDetailsMyBankGetResponses {
   200: BankResponseSchema
 }
 
-export type GetBankDetailsMyBankGetResponse =
-  GetBankDetailsMyBankGetResponses[keyof GetBankDetailsMyBankGetResponses]
+export type GetBankDetailsMyBankGetResponse = GetBankDetailsMyBankGetResponses[keyof GetBankDetailsMyBankGetResponses]
 
 export interface GetBankItemsMyBankItemsGetData {
   body?: never
@@ -7106,8 +7082,7 @@ export interface GetAllBadgesBadgesGetResponses {
   200: DataPageBadgeSchema
 }
 
-export type GetAllBadgesBadgesGetResponse =
-  GetAllBadgesBadgesGetResponses[keyof GetAllBadgesBadgesGetResponses]
+export type GetAllBadgesBadgesGetResponse = GetAllBadgesBadgesGetResponses[keyof GetAllBadgesBadgesGetResponses]
 
 export interface GetBadgeBadgesCodeGetData {
   body?: never
@@ -7130,8 +7105,7 @@ export interface GetBadgeBadgesCodeGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetBadgeBadgesCodeGetError =
-  GetBadgeBadgesCodeGetErrors[keyof GetBadgeBadgesCodeGetErrors]
+export type GetBadgeBadgesCodeGetError = GetBadgeBadgesCodeGetErrors[keyof GetBadgeBadgesCodeGetErrors]
 
 export interface GetBadgeBadgesCodeGetResponses {
   /**
@@ -7140,8 +7114,7 @@ export interface GetBadgeBadgesCodeGetResponses {
   200: BadgeResponseSchema
 }
 
-export type GetBadgeBadgesCodeGetResponse =
-  GetBadgeBadgesCodeGetResponses[keyof GetBadgeBadgesCodeGetResponses]
+export type GetBadgeBadgesCodeGetResponse = GetBadgeBadgesCodeGetResponses[keyof GetBadgeBadgesCodeGetResponses]
 
 export interface CreateCharacterCharactersCreatePostData {
   body: AddCharacterSchema
@@ -7304,8 +7277,7 @@ export interface GetAllEffectsEffectsGetResponses {
   200: DataPageEffectSchema
 }
 
-export type GetAllEffectsEffectsGetResponse =
-  GetAllEffectsEffectsGetResponses[keyof GetAllEffectsEffectsGetResponses]
+export type GetAllEffectsEffectsGetResponse = GetAllEffectsEffectsGetResponses[keyof GetAllEffectsEffectsGetResponses]
 
 export interface GetEffectEffectsCodeGetData {
   body?: never
@@ -7328,8 +7300,7 @@ export interface GetEffectEffectsCodeGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetEffectEffectsCodeGetError =
-  GetEffectEffectsCodeGetErrors[keyof GetEffectEffectsCodeGetErrors]
+export type GetEffectEffectsCodeGetError = GetEffectEffectsCodeGetErrors[keyof GetEffectEffectsCodeGetErrors]
 
 export interface GetEffectEffectsCodeGetResponses {
   /**
@@ -7338,8 +7309,7 @@ export interface GetEffectEffectsCodeGetResponses {
   200: EffectResponseSchema
 }
 
-export type GetEffectEffectsCodeGetResponse =
-  GetEffectEffectsCodeGetResponses[keyof GetEffectEffectsCodeGetResponses]
+export type GetEffectEffectsCodeGetResponse = GetEffectEffectsCodeGetResponses[keyof GetEffectEffectsCodeGetResponses]
 
 export interface GetAllActiveEventsEventsActiveGetData {
   body?: never
@@ -7404,8 +7374,7 @@ export interface GetAllEventsEventsGetResponses {
   200: DataPageEventSchema
 }
 
-export type GetAllEventsEventsGetResponse =
-  GetAllEventsEventsGetResponses[keyof GetAllEventsEventsGetResponses]
+export type GetAllEventsEventsGetResponse = GetAllEventsEventsGetResponses[keyof GetAllEventsEventsGetResponses]
 
 export interface SpawnEventEventsSpawnPostData {
   body: SpawnEventRequest
@@ -7433,8 +7402,7 @@ export interface SpawnEventEventsSpawnPostErrors {
   564: ErrorResponseSchema
 }
 
-export type SpawnEventEventsSpawnPostError =
-  SpawnEventEventsSpawnPostErrors[keyof SpawnEventEventsSpawnPostErrors]
+export type SpawnEventEventsSpawnPostError = SpawnEventEventsSpawnPostErrors[keyof SpawnEventEventsSpawnPostErrors]
 
 export interface SpawnEventEventsSpawnPostResponses {
   /**
@@ -7644,8 +7612,7 @@ export interface GetAllItemsItemsGetResponses {
   200: DataPageItemSchema
 }
 
-export type GetAllItemsItemsGetResponse =
-  GetAllItemsItemsGetResponses[keyof GetAllItemsItemsGetResponses]
+export type GetAllItemsItemsGetResponse = GetAllItemsItemsGetResponses[keyof GetAllItemsItemsGetResponses]
 
 export interface GetItemItemsCodeGetData {
   body?: never
@@ -7668,8 +7635,7 @@ export interface GetItemItemsCodeGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetItemItemsCodeGetError =
-  GetItemItemsCodeGetErrors[keyof GetItemItemsCodeGetErrors]
+export type GetItemItemsCodeGetError = GetItemItemsCodeGetErrors[keyof GetItemItemsCodeGetErrors]
 
 export interface GetItemItemsCodeGetResponses {
   /**
@@ -7678,8 +7644,7 @@ export interface GetItemItemsCodeGetResponses {
   200: ItemResponseSchema
 }
 
-export type GetItemItemsCodeGetResponse =
-  GetItemItemsCodeGetResponses[keyof GetItemItemsCodeGetResponses]
+export type GetItemItemsCodeGetResponse = GetItemItemsCodeGetResponses[keyof GetItemItemsCodeGetResponses]
 
 export interface GetCharactersLeaderboardLeaderboardCharactersGetData {
   body?: never
@@ -7816,8 +7781,7 @@ export interface GetAllMapsMapsGetResponses {
   200: DataPageMapSchema
 }
 
-export type GetAllMapsMapsGetResponse =
-  GetAllMapsMapsGetResponses[keyof GetAllMapsMapsGetResponses]
+export type GetAllMapsMapsGetResponse = GetAllMapsMapsGetResponses[keyof GetAllMapsMapsGetResponses]
 
 export interface GetLayerMapsMapsLayerGetData {
   body?: never
@@ -7941,8 +7905,7 @@ export interface GetMapByIdMapsIdMapIdGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetMapByIdMapsIdMapIdGetError =
-  GetMapByIdMapsIdMapIdGetErrors[keyof GetMapByIdMapsIdMapIdGetErrors]
+export type GetMapByIdMapsIdMapIdGetError = GetMapByIdMapsIdMapIdGetErrors[keyof GetMapByIdMapsIdMapIdGetErrors]
 
 export interface GetMapByIdMapsIdMapIdGetResponses {
   /**
@@ -8029,8 +7992,7 @@ export interface GetMonsterMonstersCodeGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetMonsterMonstersCodeGetError =
-  GetMonsterMonstersCodeGetErrors[keyof GetMonsterMonstersCodeGetErrors]
+export type GetMonsterMonstersCodeGetError = GetMonsterMonstersCodeGetErrors[keyof GetMonsterMonstersCodeGetErrors]
 
 export interface GetMonsterMonstersCodeGetResponses {
   /**
@@ -8105,8 +8067,7 @@ export interface GetNpcNpcsDetailsCodeGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetNpcNpcsDetailsCodeGetError =
-  GetNpcNpcsDetailsCodeGetErrors[keyof GetNpcNpcsDetailsCodeGetErrors]
+export type GetNpcNpcsDetailsCodeGetError = GetNpcNpcsDetailsCodeGetErrors[keyof GetNpcNpcsDetailsCodeGetErrors]
 
 export interface GetNpcNpcsDetailsCodeGetResponses {
   /**
@@ -8352,8 +8313,7 @@ export interface GetAllTasksTasksListGetResponses {
   200: DataPageTaskFullSchema
 }
 
-export type GetAllTasksTasksListGetResponse =
-  GetAllTasksTasksListGetResponses[keyof GetAllTasksTasksListGetResponses]
+export type GetAllTasksTasksListGetResponse = GetAllTasksTasksListGetResponses[keyof GetAllTasksTasksListGetResponses]
 
 export interface GetTaskTasksListCodeGetData {
   body?: never
@@ -8376,8 +8336,7 @@ export interface GetTaskTasksListCodeGetErrors {
   404: ErrorResponseSchema
 }
 
-export type GetTaskTasksListCodeGetError =
-  GetTaskTasksListCodeGetErrors[keyof GetTaskTasksListCodeGetErrors]
+export type GetTaskTasksListCodeGetError = GetTaskTasksListCodeGetErrors[keyof GetTaskTasksListCodeGetErrors]
 
 export interface GetTaskTasksListCodeGetResponses {
   /**
@@ -8386,8 +8345,7 @@ export interface GetTaskTasksListCodeGetResponses {
   200: TaskFullResponseSchema
 }
 
-export type GetTaskTasksListCodeGetResponse =
-  GetTaskTasksListCodeGetResponses[keyof GetTaskTasksListCodeGetResponses]
+export type GetTaskTasksListCodeGetResponse = GetTaskTasksListCodeGetResponses[keyof GetTaskTasksListCodeGetResponses]
 
 export interface GetAllTasksRewardsTasksRewardsGetData {
   body?: never
@@ -8506,8 +8464,7 @@ export interface GenerateTokenTokenPostErrors {
   455: ErrorResponseSchema
 }
 
-export type GenerateTokenTokenPostError =
-  GenerateTokenTokenPostErrors[keyof GenerateTokenTokenPostErrors]
+export type GenerateTokenTokenPostError = GenerateTokenTokenPostErrors[keyof GenerateTokenTokenPostErrors]
 
 export interface GenerateTokenTokenPostResponses {
   /**
@@ -8516,5 +8473,4 @@ export interface GenerateTokenTokenPostResponses {
   200: TokenResponseSchema
 }
 
-export type GenerateTokenTokenPostResponse =
-  GenerateTokenTokenPostResponses[keyof GenerateTokenTokenPostResponses]
+export type GenerateTokenTokenPostResponse = GenerateTokenTokenPostResponses[keyof GenerateTokenTokenPostResponses]

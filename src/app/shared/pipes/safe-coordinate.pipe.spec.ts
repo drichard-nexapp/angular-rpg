@@ -269,10 +269,7 @@ describe('SafePositionPipe', () => {
     })
 
     it('should return (?, ?) when coordinates are not number types', () => {
-      const character = createMockCharacter(
-        '5' as unknown as number,
-        '10' as unknown as number,
-      )
+      const character = createMockCharacter('5' as unknown as number, '10' as unknown as number)
       expect(pipe.transform(character)).toBe('(?, ?)')
     })
   })

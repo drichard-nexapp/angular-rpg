@@ -1,17 +1,11 @@
 @if (errorHandler.currentError()) {
-<div class="error-display">
-  <div class="error-content">
-    @if (errorHandler.currentError()!.context) {
-    <strong class="error-context"
-      >{{ errorHandler.currentError()!.context }}:</strong
-    >
-    }
-    <span class="error-message"
-      >{{ errorHandler.currentError()!.message }}</span
-    >
+  <div class="error-display">
+    <div class="error-content">
+      @if (errorHandler.currentError()!.context) {
+        <strong class="error-context">{{ errorHandler.currentError()!.context }}:</strong>
+      }
+      <span class="error-message">{{ errorHandler.currentError()!.message }}</span>
+    </div>
+    <button aria-label="Close error" class="error-close" (click)="close()">×</button>
   </div>
-  <button class="error-close" (click)="close()" aria-label="Close error">
-    ×
-  </button>
-</div>
 }

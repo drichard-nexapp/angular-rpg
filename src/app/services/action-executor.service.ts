@@ -25,28 +25,16 @@ export class ActionExecutorService implements OnDestroy {
   private subscription?: Subscription
 
   initialize(): void {
-    this.subscription = this.cooldownService.cooldownCompleted.subscribe(
-      (characterName) => {
-        this.logger.info(
-          `Cooldown completed for ${characterName}`,
-          'ActionExecutor',
-        )
-        void this.executeNextAction(characterName)
-      },
-    )
+    this.subscription = this.cooldownService.cooldownCompleted.subscribe((characterName) => {
+      this.logger.info(`Cooldown completed for ${characterName}`, 'ActionExecutor')
+      void this.executeNextAction(characterName)
+    })
     this.logger.info('ActionExecutor initialized', 'ActionExecutor')
-  }
-
-  triggerExecution(characterName: string): void {
-    void this.executeNextAction(characterName)
   }
 
   private async executeNextAction(characterName: string): Promise<void> {
     if (this.queueService.isExecuting(characterName)) {
-      this.logger.warn(
-        `Already executing action for ${characterName}`,
-        'ActionExecutor',
-      )
+      this.logger.warn(`Already executing action for ${characterName}`, 'ActionExecutor')
       return
     }
 
@@ -61,10 +49,7 @@ export class ActionExecutorService implements OnDestroy {
     }
 
     if (!nextAction) {
-      this.logger.info(
-        `No actions to execute for ${characterName}`,
-        'ActionExecutor',
-      )
+      this.logger.info(`No actions to execute for ${characterName}`, 'ActionExecutor')
       return
     }
 
@@ -85,9 +70,7 @@ export class ActionExecutorService implements OnDestroy {
 
     if (!isSelectedCharacter) {
       this.characterService.selectCharacter(
-        this.characterService['charactersData']().find(
-          (c) => c.name === characterName,
-        ) || null,
+        this.characterService.charactersData().find((c) => c.name === characterName) ?? null,
       )
     }
 
@@ -97,50 +80,27 @@ export class ActionExecutorService implements OnDestroy {
       if (result.success) {
         const source = isMacroAction ? 'Macro' : 'Auto-Execute'
         this.errorHandler.handleSuccess(`${nextAction.label} completed`, source)
-        this.logger.info(
-          `Action executed successfully: ${nextAction.type}`,
-          'ActionExecutor',
-        )
+        this.logger.info(`Action executed successfully: ${nextAction.type}`, 'ActionExecutor')
       } else {
         const source = isMacroAction ? 'Macro' : 'Auto-Execute'
-        this.errorHandler.handleError(
-          result.error || 'Action failed',
-          `${source}: ${nextAction.label}`,
-        )
+        this.errorHandler.handleError(result.error ?? 'Action failed', `${source}: ${nextAction.label}`)
         if (isMacroAction) {
-          this.macroService.setPlaybackError(
-            characterName,
-            result.error || 'Action failed',
-          )
+          this.macroService.setPlaybackError(characterName, result.error ?? 'Action failed')
         } else {
-          this.queueService.setError(
-            characterName,
-            result.error || 'Action failed',
-          )
+          this.queueService.setError(characterName, result.error ?? 'Action failed')
         }
-        this.logger.error(
-          `Action failed: ${nextAction.type} - ${result.error}`,
-          'ActionExecutor',
-        )
+        this.logger.error(`Action failed: ${nextAction.type} - ${result.error}`, 'ActionExecutor')
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error'
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       const source = isMacroAction ? 'Macro' : 'Auto-Execute'
-      this.errorHandler.handleError(
-        errorMessage,
-        `${source}: ${nextAction.label}`,
-      )
+      this.errorHandler.handleError(errorMessage, `${source}: ${nextAction.label}`)
       if (isMacroAction) {
         this.macroService.setPlaybackError(characterName, errorMessage)
       } else {
         this.queueService.setError(characterName, errorMessage)
       }
-      this.logger.error(
-        `Action execution error: ${errorMessage}`,
-        'ActionExecutor',
-        error,
-      )
+      this.logger.error(`Action execution error: ${errorMessage}`, 'ActionExecutor', error)
     } finally {
       if (!isMacroAction) {
         this.queueService.setExecuting(characterName, false)
@@ -156,9 +116,7 @@ export class ActionExecutorService implements OnDestroy {
     this.queueService.dequeue(characterName)
   }
 
-  private async executeAction(
-    action: QueuedAction | RecordedAction,
-  ): Promise<{ success: boolean; error?: string }> {
+  private async executeAction(action: QueuedAction | RecordedAction): Promise<{ success: boolean; error?: string }> {
     switch (action.type) {
       case 'fight':
         return this.executeFight()
@@ -192,16 +150,12 @@ export class ActionExecutorService implements OnDestroy {
     return this.actionService.restCharacter()
   }
 
-  private async executeCraft(
-    action: QueuedAction | RecordedAction,
-  ): Promise<{ success: boolean; error?: string }> {
+  private async executeCraft(action: QueuedAction | RecordedAction): Promise<{ success: boolean; error?: string }> {
     const params = action.params as { itemCode: string; quantity: number }
     return this.actionService.craftItem(params.itemCode, params.quantity)
   }
 
-  private async executeMove(
-    action: QueuedAction | RecordedAction,
-  ): Promise<{ success: boolean; error?: string }> {
+  private async executeMove(action: QueuedAction | RecordedAction): Promise<{ success: boolean; error?: string }> {
     const params = action.params as { x: number; y: number }
     try {
       await this.characterService.moveCharacter(params.x, params.y)
@@ -209,8 +163,7 @@ export class ActionExecutorService implements OnDestroy {
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to move character',
+        error: error instanceof Error ? error.message : 'Failed to move character',
       }
     }
   }

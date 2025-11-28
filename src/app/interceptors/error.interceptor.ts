@@ -8,9 +8,7 @@ export const SKIP_ERROR_HANDLER_HEADER = 'X-Skip-Error-Handler'
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const skipErrorHandler = req.headers.has(SKIP_ERROR_HANDLER_HEADER)
-  const cleanedReq = skipErrorHandler
-    ? req.clone({ headers: req.headers.delete(SKIP_ERROR_HANDLER_HEADER) })
-    : req
+  const cleanedReq = skipErrorHandler ? req.clone({ headers: req.headers.delete(SKIP_ERROR_HANDLER_HEADER) }) : req
 
   const errorHandler = inject(ErrorHandlerService)
   const logger = inject(LoggerService)
@@ -18,11 +16,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(cleanedReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (skipErrorHandler) {
-        logger.error(
-          `Error (silently handled): ${error.message}`,
-          `HTTP ${error.status}`,
-          { url: req.url, method: req.method },
-        )
+        logger.error(`Error (silently handled): ${error.message}`, `HTTP ${error.status}`, {
+          url: req.url,
+          method: req.method,
+        })
         return throwError(() => error)
       }
       let errorMessage: string
@@ -34,11 +31,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.status === 0) {
           errorMessage = 'Network error - please check your connection'
         } else if (error.status >= 400 && error.status < 500) {
-          errorMessage =
-            error.error?.message || `Client Error: ${error.statusText}`
+          errorMessage = error.error?.message || `Client Error: ${error.statusText}`
         } else if (error.status >= 500) {
-          errorMessage =
-            error.error?.message || `Server Error: ${error.statusText}`
+          errorMessage = error.error?.message || `Server Error: ${error.statusText}`
         } else {
           errorMessage = error.error?.message || error.message
         }

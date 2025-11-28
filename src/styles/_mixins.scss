@@ -116,11 +116,7 @@
 }
 
 @mixin card-gradient {
-  background: linear-gradient(
-    135deg,
-    $color-bg-tertiary 0%,
-    $color-bg-hover 100%
-  );
+  background: linear-gradient(135deg, $color-bg-tertiary 0%, $color-bg-hover 100%);
   border: $border-width-md solid $color-border-secondary;
   border-radius: $border-radius-lg;
   padding: $spacing-md;

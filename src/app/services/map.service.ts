@@ -1,17 +1,7 @@
-import { EventEmitter, Injectable, Output, signal } from '@angular/core'
+import { Injectable, signal } from '@angular/core'
 import { injectQuery } from '@tanstack/angular-query-experimental'
-import {
-  getMapByPositionMapsLayerXYGet,
-  getResourceResourcesCodeGet,
-  getNpcNpcsDetailsCodeGet,
-} from '../../sdk/api'
-import type {
-  TilePosition,
-  Map as MapTile,
-  Resource,
-  Npc,
-  Monster,
-} from '../domain/types'
+import { getMapByPositionMapsLayerXYGet, getResourceResourcesCodeGet, getNpcNpcsDetailsCodeGet } from '../../sdk/api'
+import type { TilePosition, Map as MapTile, Resource, Npc, Monster } from '../domain/types'
 import { unwrapApiItem } from '../shared/utils'
 import { QUERY_KEYS, APP_CONFIG } from '../shared/constants'
 
@@ -25,10 +15,7 @@ export class MapService {
   private currentNpcCode = signal<string | null>(null)
 
   tileDetailsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.maps.tileDetails(
-      this.currentTilePosition()?.x || 0,
-      this.currentTilePosition()?.y || 0,
-    ),
+    queryKey: QUERY_KEYS.maps.tileDetails(this.currentTilePosition()?.x ?? 0, this.currentTilePosition()?.y || 0),
     queryFn: async (): Promise<MapTile | null> => {
       const pos = this.currentTilePosition()
       if (!pos) return null
@@ -48,7 +35,7 @@ export class MapService {
   }))
 
   resourceDetailsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.resources.detail(this.currentResourceCode() || ''),
+    queryKey: QUERY_KEYS.resources.detail(this.currentResourceCode() ?? ''),
     queryFn: async (): Promise<Resource | null> => {
       const resourceCode = this.currentResourceCode()
       if (!resourceCode) return null
@@ -64,7 +51,7 @@ export class MapService {
   }))
 
   npcDetailsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.npcs.detail(this.currentNpcCode() || ''),
+    queryKey: QUERY_KEYS.npcs.detail(this.currentNpcCode() ?? ''),
     queryFn: async (): Promise<Npc | null> => {
       const npcCode = this.currentNpcCode()
       if (!npcCode) return null

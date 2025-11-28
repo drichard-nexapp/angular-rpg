@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import {
-  QueryClient,
-  provideTanStackQuery,
-} from '@tanstack/angular-query-experimental'
+import { QueryClient, provideTanStackQuery } from '@tanstack/angular-query-experimental'
 import { CharacterManagementService } from './character-management.service'
 
 describe('CharacterManagementService', () => {
@@ -10,10 +7,7 @@ describe('CharacterManagementService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        CharacterManagementService,
-        provideTanStackQuery(new QueryClient()),
-      ],
+      providers: [CharacterManagementService, provideTanStackQuery(new QueryClient())],
     })
     service = TestBed.inject(CharacterManagementService)
   })
@@ -38,25 +32,19 @@ describe('CharacterManagementService', () => {
     it('should reject names shorter than 3 characters', () => {
       const result = service.validateCharacterName('ab')
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain(
-        'Character name must be at least 3 characters',
-      )
+      expect(result.errors).toContain('Character name must be at least 3 characters')
     })
 
     it('should reject names longer than 12 characters', () => {
       const result = service.validateCharacterName('abcdefghijklm')
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain(
-        'Character name must be at most 12 characters',
-      )
+      expect(result.errors).toContain('Character name must be at most 12 characters')
     })
 
     it('should reject names with invalid characters', () => {
       const result = service.validateCharacterName('test@char')
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain(
-        'Character name can only contain letters, numbers, hyphens, and underscores',
-      )
+      expect(result.errors).toContain('Character name can only contain letters, numbers, hyphens, and underscores')
     })
 
     it('should accept names with letters, numbers, hyphens, and underscores', () => {

@@ -44,10 +44,7 @@ export class ActionService {
         path: { name: selected.name },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -65,8 +62,7 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Rest Character')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to rest character'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to rest character'
       return { success: false, error: errorMessage }
     }
   }
@@ -108,8 +104,7 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Fight Monster')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to fight monster'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fight monster'
       return { success: false, error: errorMessage }
     }
   }
@@ -129,10 +124,7 @@ export class ActionService {
         path: { name: selected.name },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -150,8 +142,7 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Gather Resource')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to gather resource'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to gather resource'
       return { success: false, error: errorMessage }
     }
   }
@@ -172,10 +163,7 @@ export class ActionService {
         body: { code: itemCode, quantity },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -193,16 +181,12 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Craft Item')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to craft item'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to craft item'
       return { success: false, error: errorMessage }
     }
   }
 
-  async giveItems(
-    targetCharacter: string,
-    items: SimpleItemSchema[],
-  ): Promise<ActionResult> {
+  async giveItems(targetCharacter: string, items: SimpleItemSchema[]): Promise<ActionResult> {
     const selected = this.characterService.getSelectedCharacter()
     if (!selected) {
       return { success: false, error: 'No character selected' }
@@ -221,10 +205,7 @@ export class ActionService {
         },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -242,17 +223,12 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Give Items')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to give items'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to give items'
       return { success: false, error: errorMessage }
     }
   }
 
-  async equipItem(
-    itemCode: string,
-    slot: ItemSlot,
-    quantity?: number,
-  ): Promise<ActionResult> {
+  async equipItem(itemCode: string, slot: ItemSlot, quantity?: number): Promise<ActionResult> {
     const selected = this.characterService.getSelectedCharacter()
     if (!selected) {
       return { success: false, error: 'No character selected' }
@@ -272,10 +248,7 @@ export class ActionService {
         },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -293,8 +266,7 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Equip Item')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to equip item'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to equip item'
       return { success: false, error: errorMessage }
     }
   }
@@ -318,10 +290,7 @@ export class ActionService {
         },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) {
         return { success: false, error: 'Invalid response from server' }
       }
@@ -339,8 +308,7 @@ export class ActionService {
       return { success: true }
     } catch (err) {
       this.errorHandler.handleError(err, 'Unequip Item')
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to unequip item'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to unequip item'
       return { success: false, error: errorMessage }
     }
   }

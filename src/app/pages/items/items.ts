@@ -48,7 +48,7 @@ export class Items {
     }
 
     if (this.craftableFilter()) {
-      items = items.filter((item) => item.craft && item.craft.skill)
+      items = items.filter((item) => item.craft?.skill)
     }
 
     return items
@@ -62,7 +62,7 @@ export class Items {
   loading = computed((): boolean => this.itemsQuery.isPending())
   error = computed((): string | null => {
     const itemsError = this.itemsQuery.error()
-    if (itemsError) return (itemsError as Error).message
+    if (itemsError) return (itemsError).message
     return null
   })
 

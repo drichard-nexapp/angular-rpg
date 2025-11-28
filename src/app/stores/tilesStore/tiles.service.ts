@@ -1,10 +1,7 @@
 import { inject, Injectable } from '@angular/core'
 import type { Map as MapTile } from '../../domain/types'
 
-import {
-  getLayerMapsMapsLayerGet,
-  getMapByPositionMapsLayerXYGet,
-} from '../../../sdk/api'
+import { getLayerMapsMapsLayerGet, getMapByPositionMapsLayerXYGet } from '../../../sdk/api'
 import { unwrapApiItem, unwrapApiResponse } from '../../shared/utils'
 import { TilesStore } from './tiles.store'
 import { subDays } from 'date-fns'
@@ -21,8 +18,6 @@ export class TilesService {
   }
 
   async fetchTileDetails(layer: 'overworld', pos: { x: number; y: number }) {
-    if (!pos) return null
-
     const response = await getMapByPositionMapsLayerXYGet({
       path: {
         layer: layer,
@@ -63,7 +58,7 @@ export class TilesService {
     const state = this.tilesStore.getState()
 
     if (state.lastUpdated && state.lastUpdated <= subDays(new Date(), 7))
-      this.initLayer('overworld').then(({ tiles }) => {
+      void this.initLayer('overworld').then(({ tiles }) => {
         const tilesById = tiles.reduce((acc, val) => {
           return { ...acc, [val.map_id]: val }
         }, {})

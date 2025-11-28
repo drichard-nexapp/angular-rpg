@@ -1,10 +1,5 @@
 import { Injectable, signal } from '@angular/core'
-import type {
-  Macro,
-  RecordedAction,
-  MacroRecordingState,
-  MacroPlaybackState,
-} from '../domain/macro.types'
+import type { Macro, RecordedAction, MacroRecordingState, MacroPlaybackState } from '../domain/macro.types'
 import { LoggerService } from './logger.service'
 
 @Injectable({
@@ -26,9 +21,7 @@ export class MacroService {
   }
 
   getMacrosForCharacter(characterName: string): Macro[] {
-    return this.getMacros().filter(
-      (m) => m.isShared || m.characterName === characterName,
-    )
+    return this.getMacros().filter((m) => m.isShared ?? m.characterName === characterName)
   }
 
   getMacro(macroId: string): Macro | null {
@@ -67,15 +60,9 @@ export class MacroService {
     this.logger.info(`Started recording for ${characterName}`, 'MacroService')
   }
 
-  recordAction(
-    characterName: string,
-    action: Omit<RecordedAction, 'id' | 'recordedAt'>,
-  ): boolean {
+  recordAction(characterName: string, action: Omit<RecordedAction, 'id' | 'recordedAt'>): boolean {
     if (!this.isRecording(characterName)) {
-      this.logger.warn(
-        `Not recording for ${characterName}, cannot record action`,
-        'MacroService',
-      )
+      this.logger.warn(`Not recording for ${characterName}, cannot record action`, 'MacroService')
       return false
     }
 
@@ -99,30 +86,20 @@ export class MacroService {
       return newStates
     })
 
-    this.logger.info(
-      `Recorded action for ${characterName}: ${action.type}`,
-      'MacroService',
-    )
+    this.logger.info(`Recorded action for ${characterName}: ${action.type}`, 'MacroService')
     return true
   }
 
-  stopRecording(
-    characterName: string,
-    macroName: string,
-    isShared = false,
-  ): Macro | null {
+  stopRecording(characterName: string, macroName: string, isShared = false): Macro | null {
     const recordingState = this.getRecordingState(characterName)
 
-    if (!recordingState || !recordingState.isRecording) {
+    if (!recordingState?.isRecording) {
       this.logger.warn(`Not recording for ${characterName}`, 'MacroService')
       return null
     }
 
     if (recordingState.actions.length === 0) {
-      this.logger.warn(
-        `No actions recorded for ${characterName}`,
-        'MacroService',
-      )
+      this.logger.warn(`No actions recorded for ${characterName}`, 'MacroService')
       this.cancelRecording(characterName)
       return null
     }
@@ -194,11 +171,7 @@ export class MacroService {
   }
 
   getPlaybackState(characterName: string): MacroPlaybackState | null {
-    return (
-      Array.from(this.playbackStates().values()).find(
-        (state) => state.characterName === characterName,
-      ) ?? null
-    )
+    return Array.from(this.playbackStates().values()).find((state) => state.characterName === characterName) ?? null
   }
 
   startPlayback(macroId: string, characterName: string, loop = false): boolean {
@@ -209,10 +182,7 @@ export class MacroService {
     }
 
     if (this.isPlaying(characterName)) {
-      this.logger.warn(
-        `Already playing macro for ${characterName}`,
-        'MacroService',
-      )
+      this.logger.warn(`Already playing macro for ${characterName}`, 'MacroService')
       return false
     }
 
@@ -229,10 +199,7 @@ export class MacroService {
       return newStates
     })
 
-    this.logger.info(
-      `Started playback of macro "${macro.name}" for ${characterName} (loop: ${loop})`,
-      'MacroService',
-    )
+    this.logger.info(`Started playback of macro "${macro.name}" for ${characterName} (loop: ${loop})`, 'MacroService')
     return true
   }
 
@@ -291,17 +258,11 @@ export class MacroService {
           return newStates
         })
 
-        this.logger.info(
-          `Looping macro "${macro.name}" (loop ${playbackState.loopCount + 1})`,
-          'MacroService',
-        )
+        this.logger.info(`Looping macro "${macro.name}" (loop ${playbackState.loopCount + 1})`, 'MacroService')
         return macro.actions[0]
       } else {
         this.stopPlayback(characterName)
-        this.logger.info(
-          `Completed playback of macro "${macro.name}"`,
-          'MacroService',
-        )
+        this.logger.info(`Completed playback of macro "${macro.name}"`, 'MacroService')
         return null
       }
     }
@@ -325,10 +286,7 @@ export class MacroService {
       return newStates
     })
 
-    this.logger.error(
-      `Playback error for ${characterName}: ${error}`,
-      'MacroService',
-    )
+    this.logger.error(`Playback error for ${characterName}: ${error}`, 'MacroService')
   }
 
   getPlaybackError(characterName: string): string | null {
@@ -342,17 +300,10 @@ export class MacroService {
         const macrosArray: Macro[] = JSON.parse(stored)
         const macrosMap = new Map(macrosArray.map((m) => [m.id, m]))
         this.macros.set(macrosMap)
-        this.logger.info(
-          `Loaded ${macrosArray.length} macros from storage`,
-          'MacroService',
-        )
+        this.logger.info(`Loaded ${macrosArray.length} macros from storage`, 'MacroService')
       }
     } catch (error) {
-      this.logger.error(
-        'Failed to load macros from storage',
-        'MacroService',
-        error,
-      )
+      this.logger.error('Failed to load macros from storage', 'MacroService', error)
     }
   }
 
@@ -360,16 +311,9 @@ export class MacroService {
     try {
       const macrosArray = Array.from(this.macros().values())
       localStorage.setItem('artifacts-mmo-macros', JSON.stringify(macrosArray))
-      this.logger.info(
-        `Saved ${macrosArray.length} macros to storage`,
-        'MacroService',
-      )
+      this.logger.info(`Saved ${macrosArray.length} macros to storage`, 'MacroService')
     } catch (error) {
-      this.logger.error(
-        'Failed to save macros to storage',
-        'MacroService',
-        error,
-      )
+      this.logger.error('Failed to save macros to storage', 'MacroService', error)
     }
   }
 

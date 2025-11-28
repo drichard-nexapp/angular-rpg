@@ -1,9 +1,10 @@
 import type { Character, TilePosition } from '../../domain/types'
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class CharacterUtils {
   static getPosition(character: Character | null): TilePosition | null {
     if (!character) return null
-    if (isNaN(character.x) || isNaN(character.y)) {
+    if (isNaN(character.x) ?? isNaN(character.y)) {
       console.warn('Character has invalid coordinates:', character)
       return null
     }
@@ -20,14 +21,11 @@ export class CharacterUtils {
   }
 
   static getCooldownSeconds(character: Character | null): number {
-    if (!character || !character.cooldown) return 0
+    if (!character?.cooldown) return 0
     return character.cooldown
   }
 
-  static hasRequiredLevel(
-    character: Character | null,
-    requiredLevel: number,
-  ): boolean {
+  static hasRequiredLevel(character: Character | null, requiredLevel: number): boolean {
     if (!character) return false
     return character.level >= requiredLevel
   }
@@ -55,16 +53,8 @@ export class CharacterUtils {
   } | null {
     if (!character) return null
     return {
-      attack:
-        character.attack_fire +
-        character.attack_earth +
-        character.attack_water +
-        character.attack_air,
-      defense:
-        character.dmg_fire +
-        character.dmg_earth +
-        character.dmg_water +
-        character.dmg_air,
+      attack: character.attack_fire + character.attack_earth + character.attack_water + character.attack_air,
+      defense: character.dmg_fire + character.dmg_earth + character.dmg_water + character.dmg_air,
       hp: character.hp,
       maxHp: character.max_hp,
       level: character.level,

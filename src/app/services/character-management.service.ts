@@ -39,10 +39,7 @@ export class CharacterManagementService {
     ]
   }
 
-  async createCharacter(
-    name: string,
-    skin: CharacterSkin,
-  ): Promise<Result<Character>> {
+  async createCharacter(name: string, skin: CharacterSkin): Promise<Result<Character>> {
     try {
       const response = await createCharacterCharactersCreatePost({
         body: {
@@ -98,26 +95,19 @@ export class CharacterManagementService {
 
   validateCharacterName(name: string): ValidationResult {
     const errors: string[] = []
-    const { NAME_MIN_LENGTH, NAME_MAX_LENGTH, NAME_PATTERN } =
-      CharacterManagementService.NAME_CONSTRAINTS
+    const { NAME_MIN_LENGTH, NAME_MAX_LENGTH, NAME_PATTERN } = CharacterManagementService.NAME_CONSTRAINTS
 
     if (!name || name.trim().length === 0) {
       errors.push('Character name is required')
     } else {
       if (name.trim().length < NAME_MIN_LENGTH) {
-        errors.push(
-          `Character name must be at least ${NAME_MIN_LENGTH} characters`,
-        )
+        errors.push(`Character name must be at least ${NAME_MIN_LENGTH} characters`)
       }
       if (name.trim().length > NAME_MAX_LENGTH) {
-        errors.push(
-          `Character name must be at most ${NAME_MAX_LENGTH} characters`,
-        )
+        errors.push(`Character name must be at most ${NAME_MAX_LENGTH} characters`)
       }
       if (!NAME_PATTERN.test(name.trim())) {
-        errors.push(
-          'Character name can only contain letters, numbers, hyphens, and underscores',
-        )
+        errors.push('Character name can only contain letters, numbers, hyphens, and underscores')
       }
     }
 

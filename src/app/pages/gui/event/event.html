@@ -1,0 +1,17 @@
+<div class="active-events-float">
+  <div class="events-float-header">
+    <span class="events-icon">🎉</span>
+    <span class="events-count">{{ activeEvents().length }}</span>
+  </div>
+  <div class="events-float-list">
+    @for (event of activeEvents(); track event.code) {
+      <div class="event-float-item">
+        <div class="event-float-name">{{ event.name }}</div>
+        <div class="event-float-details">
+          <span class="event-float-duration">{{ event.duration }}m</span>
+          <span class="event-float-location">({{ event.map.x }}, {{ event.map.y }})</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

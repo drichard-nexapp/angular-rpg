@@ -1,109 +1,97 @@
 <main class="items-page">
   <div class="page-header">
     <h1>Items</h1>
-    <div class="items-count">
-      Showing {{ filteredItems().length }} of {{ allItems().length }} items
-    </div>
+    <div class="items-count">Showing {{ filteredItems().length }} of {{ allItems().length }} items</div>
   </div>
 
   @if (loading()) {
-  <div class="loading">Loading items...</div>
-  } @if (error()) {
-  <div class="error">{{ error() }}</div>
-  } @if (!loading() && !error()) {
-  <div class="filters-section">
-    <div class="search-box">
-      <input
-        type="text"
-        placeholder="Search by name, code, or description..."
-        [value]="searchTerm()"
-        (input)="setSearchTerm($any($event.target).value)"
-        class="search-input"
-      />
-    </div>
-
-    <div class="filter-controls">
-      <select
-        [value]="typeFilter()"
-        (change)="setTypeFilter($any($event.target).value)"
-        class="type-filter"
-      >
-        <option value="">All Types</option>
-        @for (type of itemTypes(); track type) {
-        <option [value]="type">{{ type }}</option>
-        }
-      </select>
-
-      <label class="craftable-filter">
+    <div class="loading">Loading items...</div>
+  }
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+  @if (!loading() && !error()) {
+    <div class="filters-section">
+      <div class="search-box">
         <input
-          type="checkbox"
-          [checked]="craftableFilter()"
-          (change)="toggleCraftableFilter()"
-        />
-        Craftable Only
-      </label>
+          class="search-input"
+          placeholder="Search by name, code, or description..."
+          type="text"
+          [value]="searchTerm()"
+          (input)="setSearchTerm($any($event.target).value)" />
+      </div>
 
-      <button class="clear-filters-button" (click)="clearFilters()">
-        Clear Filters
-      </button>
+      <div class="filter-controls">
+        <select class="type-filter" [value]="typeFilter()" (change)="setTypeFilter($any($event.target).value)">
+          <option value="">All Types</option>
+          @for (type of itemTypes(); track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+
+        <label class="craftable-filter">
+          <input type="checkbox" [checked]="craftableFilter()" (change)="toggleCraftableFilter()" />
+          Craftable Only
+        </label>
+
+        <button class="clear-filters-button" type="button" (click)="clearFilters()">Clear Filters</button>
+      </div>
     </div>
-  </div>
 
-  <div class="items-grid">
-    @for (item of filteredItems(); track item.code) {
-    <div class="item-card">
-      <div class="item-header">
-        <h3 class="item-name">{{ item.name }}</h3>
-        <span class="item-level">Lv {{ item.level }}</span>
-      </div>
+    <div class="items-grid">
+      @for (item of filteredItems(); track item.code) {
+        <div class="item-card">
+          <div class="item-header">
+            <h3 class="item-name">{{ item.name }}</h3>
+            <span class="item-level">Lv {{ item.level }}</span>
+          </div>
 
-      <div class="item-code">{{ item.code }}</div>
+          <div class="item-code">{{ item.code }}</div>
 
-      <div class="item-type-subtype">
-        <span class="item-type">{{ item.type }}</span>
-        @if (item.subtype) {
-        <span class="item-subtype">{{ item.subtype }}</span>
-        }
-      </div>
+          <div class="item-type-subtype">
+            <span class="item-type">{{ item.type }}</span>
+            @if (item.subtype) {
+              <span class="item-subtype">{{ item.subtype }}</span>
+            }
+          </div>
 
-      @if (item.description) {
-      <p class="item-description">{{ item.description }}</p>
-      } @if (item.craft) {
-      <div class="craft-info">
-        <strong>Craft:</strong> {{ item.craft.skill }} (Lv {{ item.craft.level
-        }}) @if (item.craft.items && item.craft.items.length > 0) {
-        <div class="craft-materials-mini">
-          @for (material of item.craft.items; track material.code) {
-          <span class="material-mini"
-            >{{ material.code }} × {{ material.quantity }}</span
-          >
+          @if (item.description) {
+            <p class="item-description">{{ item.description }}</p>
           }
-        </div>
-        }
-      </div>
-      } @if (item.effects && item.effects.length > 0) {
-      <div class="item-effects">
-        <strong>Effects:</strong>
-        <div class="effects-list">
-          @for (effect of item.effects; track $index) {
-          <span class="effect-item" [title]="effect.description">
-            {{ effect.code }}: {{ effect.value }}
-          </span>
+          @if (item.craft) {
+            <div class="craft-info">
+              <strong>Craft:</strong> {{ item.craft.skill }} (Lv {{ item.craft.level }})
+              @if (item.craft.items && item.craft.items.length > 0) {
+                <div class="craft-materials-mini">
+                  @for (material of item.craft.items; track material.code) {
+                    <span class="material-mini">{{ material.code }} × {{ material.quantity }}</span>
+                  }
+                </div>
+              }
+            </div>
           }
+          @if (item.effects && item.effects.length > 0) {
+            <div class="item-effects">
+              <strong>Effects:</strong>
+              <div class="effects-list">
+                @for (effect of item.effects; track $index) {
+                  <span class="effect-item" [title]="effect.description"> {{ effect.code }}: {{ effect.value }} </span>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="item-footer">
+            <span class="tradeable-badge" [class.non-tradeable]="!item.tradeable">
+              {{ item.tradeable ? 'Tradeable' : 'Non-Tradeable' }}
+            </span>
+          </div>
         </div>
-      </div>
       }
-
-      <div class="item-footer">
-        <span class="tradeable-badge" [class.non-tradeable]="!item.tradeable">
-          {{ item.tradeable ? 'Tradeable' : 'Non-Tradeable' }}
-        </span>
-      </div>
     </div>
-    }
-  </div>
 
-  @if (filteredItems().length === 0) {
-  <div class="no-results">No items found matching your filters.</div>
-  } }
+    @if (filteredItems().length === 0) {
+      <div class="no-results">No items found matching your filters.</div>
+    }
+  }
 </main>

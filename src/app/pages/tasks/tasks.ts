@@ -17,11 +17,7 @@ export class Tasks {
   filterMaxLevel = signal<number | undefined>(undefined)
 
   tasksQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.tasks.list(
-      this.filterSkill(),
-      this.filterMinLevel(),
-      this.filterMaxLevel(),
-    ),
+    queryKey: QUERY_KEYS.tasks.list(this.filterSkill(), this.filterMinLevel(), this.filterMaxLevel()),
     queryFn: async (): Promise<TaskFull[]> => {
       const response = await getAllTasksTasksListGet({
         query: {
@@ -40,7 +36,7 @@ export class Tasks {
   loading = computed((): boolean => this.tasksQuery.isPending())
   error = computed((): string | null => {
     const err = this.tasksQuery.error()
-    return err ? (err as Error).message : null
+    return err ? (err).message : null
   })
 
   clearFilters(): void {

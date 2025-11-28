@@ -15,10 +15,7 @@ export function unwrapApiResponse<T>(response: unknown, defaultValue: T): T {
   return defaultValue
 }
 
-export function unwrapApiItem<T>(
-  response: unknown,
-  defaultValue: T | null = null,
-): T | null {
+export function unwrapApiItem<T>(response: unknown, defaultValue: T | null = null): T | null {
   if (response && typeof response === 'object' && 'data' in response) {
     const outerData = (response as { data?: unknown }).data
 

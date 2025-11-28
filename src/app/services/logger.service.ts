@@ -25,12 +25,7 @@ export class LoggerService {
     this.log('debug', message, context, data)
   }
 
-  private log(
-    level: LogLevel,
-    message: string,
-    context?: string,
-    data?: unknown,
-  ): void {
+  private log(level: LogLevel, message: string, context?: string, data?: unknown): void {
     if (!this.enabled) return
     if (!this.shouldLog(level)) return
 

@@ -13,9 +13,9 @@ export class Equipment {
   protected readonly getItemImageUrl = getItemImageUrl
 
   @Output()
-  public onClose = new EventEmitter()
+  public closeTrigger = new EventEmitter()
 
   public close() {
-    this.onClose.emit()
+    this.closeTrigger.emit()
   }
 }

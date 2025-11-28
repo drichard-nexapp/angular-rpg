@@ -1,37 +1,18 @@
-import {
-  ApplicationConfig,
-  ErrorHandler,
-  provideZonelessChangeDetection,
-  provideAppInitializer,
-} from '@angular/core'
+import { ApplicationConfig, ErrorHandler, provideZonelessChangeDetection, provideAppInitializer } from '@angular/core'
 import { provideRouter } from '@angular/router'
-import {
-  provideHttpClient,
-  withFetch,
-  withInterceptors,
-} from '@angular/common/http'
-import {
-  provideTanStackQuery,
-  QueryClient,
-} from '@tanstack/angular-query-experimental'
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
+import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental'
 
 import { routes } from './app.routes'
 import { initializeApiClient } from './api-client.initializer'
-import {
-  authInterceptor,
-  errorInterceptor,
-  loadingInterceptor,
-} from './interceptors'
+import { authInterceptor, errorInterceptor, loadingInterceptor } from './interceptors'
 import { APP_CONFIG } from './shared/constants'
 import { GlobalErrorHandler } from './services/global-error-handler'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor]),
-      withFetch(),
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor]), withFetch()),
     provideZonelessChangeDetection(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideTanStackQuery(

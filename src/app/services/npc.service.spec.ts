@@ -18,17 +18,9 @@ describe('NpcService', () => {
   } as Character
 
   beforeEach(() => {
-    const characterServiceSpy = jasmine.createSpyObj('CharacterService', [
-      'getSelectedCharacter',
-      'updateCharacter',
-    ])
-    const cooldownServiceSpy = jasmine.createSpyObj('CooldownService', [
-      'isOnCooldown',
-      'setCooldown',
-    ])
-    const errorHandlerSpy = jasmine.createSpyObj('ErrorHandlerService', [
-      'handleError',
-    ])
+    const characterServiceSpy = jasmine.createSpyObj('CharacterService', ['getSelectedCharacter', 'updateCharacter'])
+    const cooldownServiceSpy = jasmine.createSpyObj('CooldownService', ['isOnCooldown', 'setCooldown'])
+    const errorHandlerSpy = jasmine.createSpyObj('ErrorHandlerService', ['handleError'])
 
     TestBed.configureTestingModule({
       providers: [
@@ -40,12 +32,8 @@ describe('NpcService', () => {
     })
 
     service = TestBed.inject(NpcService)
-    characterService = TestBed.inject(
-      CharacterService,
-    ) as jasmine.SpyObj<CharacterService>
-    cooldownService = TestBed.inject(
-      CooldownService,
-    ) as jasmine.SpyObj<CooldownService>
+    characterService = TestBed.inject(CharacterService) as jasmine.SpyObj<CharacterService>
+    cooldownService = TestBed.inject(CooldownService) as jasmine.SpyObj<CooldownService>
   })
 
   it('should be created', () => {

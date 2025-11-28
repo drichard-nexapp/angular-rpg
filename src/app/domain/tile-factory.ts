@@ -10,7 +10,7 @@ import { TerrainTile } from './terrain-tile'
 
 export class TileFactory {
   static createTile(data: TileData): TileBase {
-    if (!data.interactions || !data.interactions.content) {
+    if (!data.interactions?.content) {
       return new TerrainTile(data)
     }
 

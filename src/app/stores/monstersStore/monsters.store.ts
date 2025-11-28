@@ -5,7 +5,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { Monster } from '../../domain/types'
 
 interface MonstersState {
-  monsters: Record<string, Monster>
+  monsters: Record<string, Monster | null>
   lastUpdated: Date | null
   loading: boolean
   add: (monster: Monster) => void
@@ -20,10 +20,11 @@ export class MonstersStore extends ZustandBaseService<MonstersState> {
       monsters: {},
       lastUpdated: null,
       loading: true,
-      add: (monster: Monster) =>
+      add: (monster: Monster) => {
         set((state) => ({
           monsters: { ...state.monsters, [monster.code]: monster },
-        })),
+        }))
+      },
     })
   }
 

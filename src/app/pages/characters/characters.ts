@@ -1,16 +1,8 @@
 import { Component, computed, signal, inject } from '@angular/core'
 import { RouterLink } from '@angular/router'
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms'
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms'
 import { injectQuery } from '@tanstack/angular-query-experimental'
-import {
-  getMyCharactersMyCharactersGet,
-  type CharacterSkin,
-} from '../../../sdk/api'
+import { getMyCharactersMyCharactersGet, type CharacterSkin } from '../../../sdk/api'
 import type { Character } from '../../domain/types'
 import { unwrapApiResponse } from '../../shared/utils'
 import { QUERY_KEYS, APP_CONFIG } from '../../shared/constants'
@@ -47,14 +39,7 @@ export class Characters {
     }),
   })
 
-  availableSkins: CharacterSkin[] = [
-    'men1',
-    'men2',
-    'men3',
-    'women1',
-    'women2',
-    'women3',
-  ]
+  availableSkins: CharacterSkin[] = ['men1', 'men2', 'men3', 'women1', 'women2', 'women3']
 
   charactersQuery = injectQuery(() => ({
     queryKey: QUERY_KEYS.characters.all(),
@@ -69,7 +54,7 @@ export class Characters {
   loading = computed((): boolean => this.charactersQuery.isPending())
   error = computed((): string | null => {
     const err = this.charactersQuery.error()
-    return err ? (err as Error).message : null
+    return err ? (err).message : null
   })
 
   toggleCreateForm(): void {
@@ -88,10 +73,7 @@ export class Characters {
     this.createError.set(null)
 
     const formValue = this.characterForm.getRawValue()
-    const result = await this.characterMgmt.createCharacter(
-      formValue.name,
-      formValue.skin,
-    )
+    const result = await this.characterMgmt.createCharacter(formValue.name, formValue.skin)
 
     if (result.success) {
       await this.charactersQuery.refetch()
@@ -110,7 +92,7 @@ export class Characters {
 
   getNameError(): string | null {
     const control = this.nameControl
-    if (!control || !control.touched) return null
+    if (!control?.touched) return null
 
     const { NAME_MIN_LENGTH, NAME_MAX_LENGTH } = APP_CONFIG.CHARACTER
 

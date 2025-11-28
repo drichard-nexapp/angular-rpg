@@ -6,13 +6,6 @@ export interface ApiErrorResponse {
   }
 }
 
-export interface ApiError {
-  message: string
-  code?: string
-  details?: unknown
-  status?: number
-}
-
 export function isApiError(err: unknown): err is ApiErrorResponse {
   return (
     typeof err === 'object' &&
@@ -22,12 +15,9 @@ export function isApiError(err: unknown): err is ApiErrorResponse {
   )
 }
 
-export function extractErrorMessage(
-  err: unknown,
-  fallback = 'An unexpected error occurred',
-): string {
+export function extractErrorMessage(err: unknown, fallback = 'An unexpected error occurred'): string {
   if (isApiError(err)) {
-    return err.error?.message || fallback
+    return err.error?.message ?? fallback
   }
 
   if (err instanceof Error) {
@@ -39,24 +29,4 @@ export function extractErrorMessage(
   }
 
   return fallback
-}
-
-export function extractApiError(err: unknown): ApiError {
-  if (isApiError(err)) {
-    return {
-      message: err.error?.message || 'An unexpected error occurred',
-      code: err.error?.code,
-      details: err.error?.details,
-    }
-  }
-
-  if (err instanceof Error) {
-    return {
-      message: err.message,
-    }
-  }
-
-  return {
-    message: 'An unexpected error occurred',
-  }
 }

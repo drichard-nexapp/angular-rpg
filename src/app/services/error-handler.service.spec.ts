@@ -105,9 +105,7 @@ describe('ErrorHandlerService', () => {
 
     const error = service.currentError()
     expect(error?.timestamp).toBeDefined()
-    expect(error?.timestamp.getTime()).toBeGreaterThanOrEqual(
-      beforeTime.getTime(),
-    )
+    expect(error?.timestamp.getTime()).toBeGreaterThanOrEqual(beforeTime.getTime())
     expect(error?.timestamp.getTime()).toBeLessThanOrEqual(afterTime.getTime())
   })
 

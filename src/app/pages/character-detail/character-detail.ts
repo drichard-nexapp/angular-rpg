@@ -25,10 +25,7 @@ export class CharacterDetail {
         throw new Error('Character name not provided')
       }
 
-      this.logger.info(
-        `Fetching character: ${this.characterName}`,
-        'CharacterDetail',
-      )
+      this.logger.info(`Fetching character: ${this.characterName}`, 'CharacterDetail')
       const response = await getCharacterCharactersNameGet({
         path: { name: this.characterName },
       })
@@ -43,14 +40,12 @@ export class CharacterDetail {
     staleTime: APP_CONFIG.CACHE.STALE_TIME_1_MIN,
   }))
 
-  character = computed(
-    (): Character | null => this.characterQuery.data() ?? null,
-  )
+  character = computed((): Character | null => this.characterQuery.data() ?? null)
   loading = computed((): boolean => this.characterQuery.isPending())
   error = computed((): string | null => {
     if (!this.characterName) return 'Character name not provided'
     const err = this.characterQuery.error()
-    return err ? (err as Error).message : null
+    return err ? (err).message : null
   })
 
   constructor() {

@@ -1,0 +1,219 @@
+<div class="tile-details-popup">
+  <div class="tile-details-header">
+    <h3>Tile Details</h3>
+    <button class="close-button tile-close" type="button" (click)="close()">×</button>
+  </div>
+  <div class="tile-detail-item">
+    <strong>Position:</strong> ({{ currentTileDetails()!.x }}, {{ currentTileDetails()!.y }})
+  </div>
+  <div class="tile-detail-item"><strong>Skin:</strong> {{ currentTileDetails()!.skin }}</div>
+  @if (selectedCharacter()) {
+    <button
+      class="move-to-tile-button"
+      type="button"
+      [disabled]="isCharacterOnCooldown(selectedCharacter()!)"
+      (click)="moveToSelectedTile()">
+      Move to This Tile
+    </button>
+  }
+  @if (isMonsterTile()) {
+    <button class="show-details-button" type="button" (click)="loadMonsterDetails()">? Show Monster Details</button>
+  }
+  @if (showMonsterDetails()) {
+    @if (this.mapService.currentMonsterDetails(); as monsterDetails) {
+      <app-monster [monsterDetails]="monsterDetails" (closeTrigger)="hideMonsterDetails()" />
+    }
+  }
+  @if (isMonsterTile()) {
+    <button class="fight-button" type="button" [disabled]="!selectedCharacter()" (click)="fightMonster()">
+      @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
+        Queue Fight
+      } @else {
+        Fight
+      }
+    </button>
+  }
+  @if (isResourceTile() && !resourceDetails()) {
+    <button class="show-details-button" type="button" (click)="loadResourceDetails()">? Show Resource Details</button>
+  }
+  @if (resourceDetails()) {
+    <div class="resource-details-section">
+      <img
+        class="resource-image"
+        [alt]="resourceDetails()!.name"
+        [ngSrc]="getResourceImageUrl(resourceDetails()!.code)" />
+      <div class="resource-header">
+        <h4>{{ resourceDetails()!.name }}</h4>
+        <button class="hide-details-button" type="button" (click)="hideResourceDetails()">Hide</button>
+      </div>
+      <div class="resource-info">
+        <div class="resource-info-item"><strong>Skill:</strong> {{ resourceDetails()!.skill }}</div>
+        <div class="resource-info-item"><strong>Level:</strong> {{ resourceDetails()!.level }}</div>
+        @if (resourceDetails()!.drops && resourceDetails()!.drops.length > 0) {
+          <div class="drops-list">
+            <strong>Possible Drops:</strong>
+            @for (drop of resourceDetails()!.drops; track drop.code) {
+              <div class="drop-item-detail">{{ drop.code }} ({{ drop.rate }})</div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+  @if (isResourceTile()) {
+    <button class="gather-button" type="button" [disabled]="!selectedCharacter()" (click)="gatherResource()">
+      @if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
+        Queue Gather
+      } @else {
+        Gather
+      }
+    </button>
+  }
+  @if (isWorkshopTile()) {
+    <div class="workshop-section">
+      <div class="workshop-header">
+        <h4>🔨 Workshop - {{ getWorkshopType() }}</h4>
+      </div>
+      <p class="workshop-description">Craft {{ getWorkshopType() }} items here using materials from your inventory.</p>
+
+      @if (craftableItems().length > 0) {
+        <div class="craftable-items-section">
+          <strong>Available Crafts:</strong>
+          <div class="craftable-items-list">
+            @for (item of craftableItems(); track item.code) {
+              <div class="craftable-item-card">
+                <div class="craft-item-header">
+                  <span class="craft-item-name">{{ item.name }}</span>
+                  <span class="craft-item-level">Lv {{ item.level }}</span>
+                </div>
+                <div class="craft-item-type">{{ item.type }}</div>
+
+                @if (item.craft) {
+                  <div class="craft-requirements">
+                    <div class="craft-skill">
+                      <strong>Skill:</strong> {{ item.craft.skill }} (Lv {{ item.craft.level }})
+                    </div>
+                    @if (item.craft.items && item.craft.items.length > 0) {
+                      <div class="craft-materials">
+                        <strong>Materials:</strong>
+                        @for (material of item.craft.items; track material.code) {
+                          <div
+                            class="craft-material"
+                            [class.material-available]="getInventoryQuantity(material.code) >= material.quantity"
+                            [class.material-missing]="getInventoryQuantity(material.code) < material.quantity">
+                            {{ material.code }} × {{ material.quantity }}
+                            <span class="material-count">
+                              ({{ getInventoryQuantity(material.code) }}/{{ material.quantity }})
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    }
+                    @if (item.craft.quantity) {
+                      <div class="craft-quantity">Crafts: {{ item.craft.quantity }}×</div>
+                    }
+                  </div>
+
+                  <button
+                    class="craft-button"
+                    type="button"
+                    [class.craft-button-disabled]="!canCraftItem(item)"
+                    [disabled]="!selectedCharacter() || craftingInProgress() || !canCraftItem(item)"
+                    (click)="craftItem(item.code, 1)">
+                    @if (craftingInProgress()) {
+                      Crafting...
+                    } @else if (!canCraftItem(item)) {
+                      Missing Materials
+                    } @else if (selectedCharacter() && isCharacterOnCooldown(selectedCharacter()!)) {
+                      Queue Craft
+                    } @else {
+                      Craft
+                    }
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <p class="no-crafts">No crafts available at this time.</p>
+      }
+    </div>
+  }
+  @if (isNpcTile() && !npcDetails()) {
+    <button class="show-details-button" type="button" (click)="loadNpcDetails()">? Show NPC Details</button>
+  }
+  @if (npcDetails()) {
+    <div class="npc-details-section">
+      <div class="npc-header">
+        <h4>{{ npcDetails()!.name }}</h4>
+        <button class="hide-details-button" type="button" (click)="hideNpcDetails()">Hide</button>
+      </div>
+      <div class="npc-info">
+        <div class="npc-info-item"><strong>Type:</strong> {{ npcDetails()!.type }}</div>
+        <div class="npc-info-item"><strong>Description:</strong> {{ npcDetails()!.description }}</div>
+      </div>
+
+      @if (npcDetails()!.type === 'merchant' || npcDetails()!.type === 'trader') {
+        @if (npcItems().length > 0) {
+          <div class="npc-items-section">
+            <strong>Available Items:</strong>
+            <div class="npc-items-list">
+              @for (item of npcItems(); track item.code) {
+                <div class="npc-item-card">
+                  <div class="item-code">{{ item.code }}</div>
+                  <div class="item-prices">
+                    @if (item.buy_price !== undefined) {
+                      <div class="buy-price">
+                        Buy: {{ item.buy_price }}
+                        @if (item.currency === 'gold') {
+                          💰
+                        } @else {
+                          {{ item.currency }}
+                        }
+                      </div>
+                    }
+                    @if (item.sell_price !== undefined) {
+                      <div class="sell-price">
+                        Sell: {{ item.sell_price }}
+                        @if (item.currency === 'gold') {
+                          💰
+                        } @else {
+                          {{ item.currency }}
+                        }
+                      </div>
+                    }
+                  </div>
+                  <div class="item-actions">
+                    @if (item.buy_price !== undefined) {
+                      <button
+                        class="buy-item-button"
+                        type="button"
+                        [disabled]="
+                          !selectedCharacter() || isCharacterOnCooldown(selectedCharacter()!) || npcActionInProgress()
+                        "
+                        (click)="buyItemFromNpc(item.code, 1)">
+                        Buy
+                      </button>
+                    }
+                    @if (item.sell_price !== undefined) {
+                      <button
+                        class="sell-item-button"
+                        type="button"
+                        [disabled]="
+                          !selectedCharacter() || isCharacterOnCooldown(selectedCharacter()!) || npcActionInProgress()
+                        "
+                        (click)="sellItemToNpc(item.code, 1)">
+                        Sell
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

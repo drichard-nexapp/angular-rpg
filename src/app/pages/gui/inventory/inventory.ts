@@ -1,12 +1,4 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  inject,
-  input,
-  Output,
-  signal,
-} from '@angular/core'
+import { Component, computed, EventEmitter, inject, input, Output, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Character, type Item } from '../../../domain/types'
 import { getItemImageUrl } from '../../../shared/asset-urls'
@@ -43,18 +35,14 @@ export class Inventory {
   }))
 
   characterInventory = computed(() => {
-    return this.inventoryService
-      .getInventory(this.selectedCharacter())
-      .filter((s) => s.code)
+    return this.inventoryService.getInventory(this.selectedCharacter()).filter((s) => s.code)
   })
   errorHandler = inject(ErrorHandlerService)
   characters = this.characterService.getCharactersSignal()
 
   selectedCharacter = input.required<Character>()
   items = computed(() => this.itemsQuery.data() ?? [])
-  givingItem = signal<{ code: string; quantity: number; slot: number } | null>(
-    null,
-  )
+  givingItem = signal<{ code: string; quantity: number; slot: number } | null>(null)
   giveTargetCharacter = ''
   giveQuantity = 1
   canEquipItem(itemCode: string): boolean {
@@ -81,10 +69,9 @@ export class Inventory {
     const item = this.givingItem()
     if (!item || !this.giveTargetCharacter) return
 
-    const result = await this.actionService.giveItems(
-      this.giveTargetCharacter,
-      [{ code: item.code, quantity: this.giveQuantity }],
-    )
+    const result = await this.actionService.giveItems(this.giveTargetCharacter, [
+      { code: item.code, quantity: this.giveQuantity },
+    ])
 
     if (result.success) {
       this.errorHandler.handleSuccess(
@@ -95,11 +82,7 @@ export class Inventory {
     }
   }
 
-  async startEquipItem(slot: {
-    code: string
-    quantity: number
-    slot: number
-  }): Promise<void> {
+  async startEquipItem(slot: { code: string; quantity: number; slot: number }): Promise<void> {
     const itemSlot = this.getItemSlot(slot.code)
     if (!itemSlot) {
       this.errorHandler.handleError('Cannot determine item slot', 'Equip Item')
@@ -109,11 +92,7 @@ export class Inventory {
     const item = this.items().find((i) => i.code === slot.code)
     const quantity = item?.type === 'utility' ? 1 : undefined
 
-    const result = await this.actionService.equipItem(
-      slot.code,
-      itemSlot,
-      quantity,
-    )
+    const result = await this.actionService.equipItem(slot.code, itemSlot, quantity)
 
     if (result.success) {
       this.errorHandler.handleSuccess(`Equipped ${slot.code}`, 'Equip Item')
@@ -167,6 +146,7 @@ export class Inventory {
   }
 
   @Output()
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   public onClose = new EventEmitter()
 
   public close() {

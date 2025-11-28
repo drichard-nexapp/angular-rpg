@@ -3,60 +3,58 @@
     <h1>Tasks</h1>
 
     @if (loading()) {
-    <div class="loading">Loading tasks...</div>
-    } @if (error()) {
-    <div class="error">{{ error() }}</div>
-    } @if (!loading() && !error()) {
-    <div class="tasks-container">
-      <div class="tasks-header">
-        <div class="tasks-stats">
-          <h2>Available Tasks: {{ tasks().length }}</h2>
-        </div>
+      <div class="loading">Loading tasks...</div>
+    }
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+    @if (!loading() && !error()) {
+      <div class="tasks-container">
+        <div class="tasks-header">
+          <div class="tasks-stats">
+            <h2>Available Tasks: {{ tasks().length }}</h2>
+          </div>
 
-        @if (filterSkill() || filterMinLevel() || filterMaxLevel()) {
-        <button class="clear-filters-btn" (click)="clearFilters()">
-          Clear Filters
-        </button>
-        }
-      </div>
-
-      <div class="tasks-grid">
-        @if (tasks().length === 0) {
-        <div class="no-tasks">No tasks found</div>
-        } @for (task of tasks(); track task.code) {
-        <div class="task-card">
-          <div class="task-header">
-            <span class="task-type-badge">{{ task.type }}</span>
-            <span class="task-level">Lv {{ task.level }}</span>
-          </div>
-          <div class="task-objective">{{ task.code }}</div>
-          <div class="task-quantity">
-            Quantity: {{ task.min_quantity }}-{{ task.max_quantity }}
-          </div>
-          @if (task.skill) {
-          <div class="task-skill">
-            <span class="skill-icon">⚡</span>
-            {{ task.skill }}
-          </div>
+          @if (filterSkill() || filterMinLevel() || filterMaxLevel()) {
+            <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
           }
-          <div class="task-rewards">
-            <strong>Rewards:</strong>
-            @if (task.rewards.gold) {
-            <span class="reward-gold">💰 {{ task.rewards.gold }}</span>
-            } @if (task.rewards.items && task.rewards.items.length > 0) {
-            <div class="reward-items-list">
-              @for (item of task.rewards.items; track item.code) {
-              <span class="reward-item"
-                >📦 {{ item.code }} ({{ item.quantity }})</span
-              >
-              }
-            </div>
-            }
-          </div>
         </div>
-        }
+
+        <div class="tasks-grid">
+          @if (tasks().length === 0) {
+            <div class="no-tasks">No tasks found</div>
+          }
+          @for (task of tasks(); track task.code) {
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-type-badge">{{ task.type }}</span>
+                <span class="task-level">Lv {{ task.level }}</span>
+              </div>
+              <div class="task-objective">{{ task.code }}</div>
+              <div class="task-quantity">Quantity: {{ task.min_quantity }}-{{ task.max_quantity }}</div>
+              @if (task.skill) {
+                <div class="task-skill">
+                  <span class="skill-icon">⚡</span>
+                  {{ task.skill }}
+                </div>
+              }
+              <div class="task-rewards">
+                <strong>Rewards:</strong>
+                @if (task.rewards.gold) {
+                  <span class="reward-gold">💰 {{ task.rewards.gold }}</span>
+                }
+                @if (task.rewards.items && task.rewards.items.length > 0) {
+                  <div class="reward-items-list">
+                    @for (item of task.rewards.items; track item.code) {
+                      <span class="reward-item">📦 {{ item.code }} ({{ item.quantity }})</span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
       </div>
-    </div>
     }
   </div>
 </main>

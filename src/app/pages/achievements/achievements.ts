@@ -30,42 +30,31 @@ export class Achievements {
   }))
 
   achievementsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.account.achievements(
-      this.accountQuery.data()?.username || '',
-      this.filterCompleted(),
-    ),
+    queryKey: QUERY_KEYS.account.achievements(this.accountQuery.data()?.username || '', this.filterCompleted()),
     queryFn: async (): Promise<AccountAchievementSchema[]> => {
       const username = this.accountQuery.data()?.username
       if (!username) throw new Error('Account not loaded')
 
-      const response =
-        await getAccountAchievementsAccountsAccountAchievementsGet({
-          path: { account: username },
-          query: {
-            completed: this.filterCompleted(),
-          },
-        })
+      const response = await getAccountAchievementsAccountsAccountAchievementsGet({
+        path: { account: username },
+        query: {
+          completed: this.filterCompleted(),
+        },
+      })
 
       return unwrapApiResponse<AccountAchievementSchema[]>(response, [])
     },
     enabled: !!this.accountQuery.data()?.username,
   }))
 
-  achievements = computed(
-    (): AccountAchievementSchema[] => this.achievementsQuery.data() ?? [],
-  )
-  achievementPoints = computed(
-    (): number => this.accountQuery.data()?.achievements_points ?? 0,
-  )
-  loading = computed(
-    (): boolean =>
-      this.accountQuery.isPending() || this.achievementsQuery.isPending(),
-  )
+  achievements = computed((): AccountAchievementSchema[] => this.achievementsQuery.data() ?? [])
+  achievementPoints = computed((): number => this.accountQuery.data()?.achievements_points ?? 0)
+  loading = computed((): boolean => this.accountQuery.isPending() || this.achievementsQuery.isPending())
   error = computed((): string | null => {
     const accountError = this.accountQuery.error()
     const achievementsError = this.achievementsQuery.error()
-    if (accountError) return (accountError as Error).message
-    if (achievementsError) return (achievementsError as Error).message
+    if (accountError) return (accountError).message
+    if (achievementsError) return (achievementsError).message
     return null
   })
 

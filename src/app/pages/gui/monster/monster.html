@@ -1,0 +1,50 @@
+<div class="monster-details-section">
+  <img class="monster-image" [alt]="monsterDetails().name" [src]="getMonsterImageUrl(monsterDetails().code)" />
+  <div class="monster-header">
+    <h4>{{ monsterDetails().name }}</h4>
+    <button class="hide-details-button" (click)="close()">Hide</button>
+  </div>
+  <div class="monster-basic-info">
+    <div class="monster-info-item"><strong>Level:</strong> {{ monsterDetails().level }}</div>
+    <div class="monster-info-item"><strong>Type:</strong> {{ monsterDetails().type }}</div>
+    <div class="monster-info-item"><strong>HP:</strong> {{ monsterDetails().hp }}</div>
+  </div>
+
+  <div class="monster-stats">
+    <strong>Attacks:</strong>
+    <div class="stats-grid">
+      <div class="stat-item">🔥 {{ monsterDetails().attack_fire }}</div>
+      <div class="stat-item">🌍 {{ monsterDetails().attack_earth }}</div>
+      <div class="stat-item">💧 {{ monsterDetails().attack_water }}</div>
+      <div class="stat-item">💨 {{ monsterDetails().attack_air }}</div>
+    </div>
+  </div>
+
+  <div class="monster-stats">
+    <strong>Resistances:</strong>
+    <div class="stats-grid">
+      <div class="stat-item">🔥 {{ monsterDetails().res_fire }}%</div>
+      <div class="stat-item">🌍 {{ monsterDetails().res_earth }}%</div>
+      <div class="stat-item">💧 {{ monsterDetails().res_water }}%</div>
+      <div class="stat-item">💨 {{ monsterDetails().res_air }}%</div>
+    </div>
+  </div>
+
+  <div class="monster-stats">
+    <div class="monster-info-item"><strong>Critical:</strong> {{ monsterDetails().critical_strike }}%</div>
+    <div class="monster-info-item"><strong>Initiative:</strong> {{ monsterDetails().initiative }}</div>
+  </div>
+
+  <div class="monster-rewards">
+    <strong>Rewards:</strong>
+    <div class="monster-info-item">Gold: {{ monsterDetails().min_gold }}-{{ monsterDetails().max_gold }}</div>
+    @if (monsterDetails().drops.length > 0) {
+      <div class="drops-list">
+        <strong>Possible Drops:</strong>
+        @for (drop of monsterDetails().drops; track drop.code) {
+          <div class="drop-item-detail">{{ drop.code }} ({{ drop.rate }})</div>
+        }
+      </div>
+    }
+  </div>
+</div>

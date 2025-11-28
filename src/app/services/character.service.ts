@@ -20,7 +20,7 @@ export class CharacterService {
   private logger = inject(LoggerService)
 
   private selectedCharacter = signal<Character | null>(null)
-  private charactersData = signal<Character[]>([])
+  public charactersData = signal<Character[]>([])
 
   characters = computed(() => this.charactersData())
 
@@ -41,11 +41,7 @@ export class CharacterService {
     const response = await getMyCharactersMyCharactersGet()
     this.logger.info('API response received', 'CharacterService', response)
     const charactersData = unwrapApiResponse<Character[]>(response, [])
-    this.logger.info(
-      `Unwrapped ${charactersData.length} characters`,
-      'CharacterService',
-      charactersData,
-    )
+    this.logger.info(`Unwrapped ${charactersData.length} characters`, 'CharacterService', charactersData)
     this.charactersData.set(charactersData)
 
     for (const char of charactersData) {
@@ -65,10 +61,7 @@ export class CharacterService {
 
       const characterData = unwrapApiItem<Character>(response, null)
       if (characterData) {
-        this.queryClient.setQueryData<Character>(
-          QUERY_KEYS.characters.detail(name),
-          characterData,
-        )
+        this.queryClient.setQueryData<Character>(QUERY_KEYS.characters.detail(name), characterData)
 
         this.charactersData.update((chars) => {
           const index = chars.findIndex((c) => c.name === name)
@@ -92,11 +85,7 @@ export class CharacterService {
         }
       }
     } catch (err) {
-      this.logger.error(
-        `Error fetching character details for ${name}`,
-        'CharacterService',
-        err,
-      )
+      this.logger.error(`Error fetching character details for ${name}`, 'CharacterService', err)
       throw err
     }
   }
@@ -121,10 +110,7 @@ export class CharacterService {
         body: { x, y },
       })
 
-      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(
-        response,
-        null,
-      )
+      const data = unwrapApiItem<{ character: Character; cooldown: Cooldown }>(response, null)
       if (!data) return
 
       const { character, cooldown } = data
@@ -143,10 +129,7 @@ export class CharacterService {
   }
 
   updateCharacter(character: Character): void {
-    this.queryClient.setQueryData<Character>(
-      QUERY_KEYS.characters.detail(character.name),
-      character,
-    )
+    this.queryClient.setQueryData<Character>(QUERY_KEYS.characters.detail(character.name), character)
 
     this.charactersData.update((chars) => {
       const index = chars.findIndex((c) => c.name === character.name)

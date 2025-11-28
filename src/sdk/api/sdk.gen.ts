@@ -228,10 +228,10 @@ import type {
   SpawnEventEventsSpawnPostResponses,
 } from './types.gen'
 
-export type Options<
-  TData extends TDataShape = TDataShape,
-  ThrowOnError extends boolean = boolean,
-> = Options2<TData, ThrowOnError> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<
+  TData,
+  ThrowOnError
+> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -253,11 +253,7 @@ export type Options<
 export const getServerDetailsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetServerDetailsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetServerDetailsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetServerDetailsGetResponses, unknown, ThrowOnError>({
     url: '/',
     ...options,
   })
@@ -271,11 +267,7 @@ export const getServerDetailsGet = <ThrowOnError extends boolean = false>(
 export const getBankDetailsMyBankGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetBankDetailsMyBankGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetBankDetailsMyBankGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetBankDetailsMyBankGetResponses, unknown, ThrowOnError>({
     security: [
       {
         scheme: 'bearer',
@@ -292,16 +284,10 @@ export const getBankDetailsMyBankGet = <ThrowOnError extends boolean = false>(
  *
  * Fetch all items in your bank.
  */
-export const getBankItemsMyBankItemsGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getBankItemsMyBankItemsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetBankItemsMyBankItemsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetBankItemsMyBankItemsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetBankItemsMyBankItemsGetResponses, unknown, ThrowOnError>({
     security: [
       {
         scheme: 'bearer',
@@ -318,16 +304,10 @@ export const getBankItemsMyBankItemsGet = <
  *
  * Fetch your sell orders details.
  */
-export const getGeSellOrdersMyGrandexchangeOrdersGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getGeSellOrdersMyGrandexchangeOrdersGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetGeSellOrdersMyGrandexchangeOrdersGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetGeSellOrdersMyGrandexchangeOrdersGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetGeSellOrdersMyGrandexchangeOrdersGetResponses, unknown, ThrowOnError>({
     security: [
       {
         scheme: 'bearer',
@@ -344,19 +324,10 @@ export const getGeSellOrdersMyGrandexchangeOrdersGet = <
  *
  * Fetch your sales history of the last 7 days.
  */
-export const getGeSellHistoryMyGrandexchangeHistoryGet = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<
-    GetGeSellHistoryMyGrandexchangeHistoryGetData,
-    ThrowOnError
-  >,
+export const getGeSellHistoryMyGrandexchangeHistoryGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetGeSellHistoryMyGrandexchangeHistoryGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetGeSellHistoryMyGrandexchangeHistoryGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetGeSellHistoryMyGrandexchangeHistoryGetResponses, unknown, ThrowOnError>({
     security: [
       {
         scheme: 'bearer',
@@ -373,16 +344,10 @@ export const getGeSellHistoryMyGrandexchangeHistoryGet = <
  *
  * Fetch account details.
  */
-export const getAccountDetailsMyDetailsGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAccountDetailsMyDetailsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAccountDetailsMyDetailsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAccountDetailsMyDetailsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAccountDetailsMyDetailsGetResponses, unknown, ThrowOnError>({
     security: [
       {
         scheme: 'bearer',
@@ -399,9 +364,7 @@ export const getAccountDetailsMyDetailsGet = <
  *
  * Change your account password. Changing the password reset the account token.
  */
-export const changePasswordMyChangePasswordPost = <
-  ThrowOnError extends boolean = false,
->(
+export const changePasswordMyChangePasswordPost = <ThrowOnError extends boolean = false>(
   options: Options<ChangePasswordMyChangePasswordPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -430,9 +393,7 @@ export const changePasswordMyChangePasswordPost = <
  * Moves a character on the map using either the map's ID or X and Y position.
  * Provide either 'map_id' or both 'x' and 'y' coordinates in the request body.
  */
-export const actionMoveMyNameActionMovePost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionMoveMyNameActionMovePost = <ThrowOnError extends boolean = false>(
   options: Options<ActionMoveMyNameActionMovePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -461,13 +422,8 @@ export const actionMoveMyNameActionMovePost = <
  * Execute a transition from the current map to another layer.
  * The character must be on a map that has a transition available.
  */
-export const actionTransitionMyNameActionTransitionPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionTransitionMyNameActionTransitionPostData,
-    ThrowOnError
-  >,
+export const actionTransitionMyNameActionTransitionPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionTransitionMyNameActionTransitionPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionTransitionMyNameActionTransitionPostResponses,
@@ -490,9 +446,7 @@ export const actionTransitionMyNameActionTransitionPost = <
  *
  * Recovers hit points by resting. (1 second per 5 HP, minimum 3 seconds)
  */
-export const actionRestMyNameActionRestPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionRestMyNameActionRestPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionRestMyNameActionRestPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -516,9 +470,7 @@ export const actionRestMyNameActionRestPost = <
  *
  * Equip an item on your character.
  */
-export const actionEquipItemMyNameActionEquipPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionEquipItemMyNameActionEquipPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionEquipItemMyNameActionEquipPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -546,9 +498,7 @@ export const actionEquipItemMyNameActionEquipPost = <
  *
  * Unequip an item on your character.
  */
-export const actionUnequipItemMyNameActionUnequipPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionUnequipItemMyNameActionUnequipPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionUnequipItemMyNameActionUnequipPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -576,9 +526,7 @@ export const actionUnequipItemMyNameActionUnequipPost = <
  *
  * Use an item as a consumable.
  */
-export const actionUseItemMyNameActionUsePost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionUseItemMyNameActionUsePost = <ThrowOnError extends boolean = false>(
   options: Options<ActionUseItemMyNameActionUsePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -607,9 +555,7 @@ export const actionUseItemMyNameActionUsePost = <
  * Start a fight against a monster on the character's map.
  * Add participants for multi-character fights (up to 3 characters, only for boss).
  */
-export const actionFightMyNameActionFightPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionFightMyNameActionFightPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionFightMyNameActionFightPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -637,9 +583,7 @@ export const actionFightMyNameActionFightPost = <
  *
  * Harvest a resource on the character's map.
  */
-export const actionGatheringMyNameActionGatheringPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionGatheringMyNameActionGatheringPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionGatheringMyNameActionGatheringPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -663,9 +607,7 @@ export const actionGatheringMyNameActionGatheringPost = <
  *
  * Craft an item. The character must be on a map with a workshop.
  */
-export const actionCraftingMyNameActionCraftingPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionCraftingMyNameActionCraftingPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionCraftingMyNameActionCraftingPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -693,13 +635,8 @@ export const actionCraftingMyNameActionCraftingPost = <
  *
  * Deposit gold in a bank on the character's map.
  */
-export const actionDepositBankGoldMyNameActionBankDepositGoldPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionDepositBankGoldMyNameActionBankDepositGoldPostData,
-    ThrowOnError
-  >,
+export const actionDepositBankGoldMyNameActionBankDepositGoldPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionDepositBankGoldMyNameActionBankDepositGoldPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionDepositBankGoldMyNameActionBankDepositGoldPostResponses,
@@ -727,13 +664,8 @@ export const actionDepositBankGoldMyNameActionBankDepositGoldPost = <
  * Deposit multiple items in a bank on the character's map.
  * The cooldown will be 3 seconds multiplied by the number of different items deposited.
  */
-export const actionDepositBankItemMyNameActionBankDepositItemPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionDepositBankItemMyNameActionBankDepositItemPostData,
-    ThrowOnError
-  >,
+export const actionDepositBankItemMyNameActionBankDepositItemPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionDepositBankItemMyNameActionBankDepositItemPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionDepositBankItemMyNameActionBankDepositItemPostResponses,
@@ -761,13 +693,8 @@ export const actionDepositBankItemMyNameActionBankDepositItemPost = <
  * Take items from your bank and put them in the character's inventory.
  * The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
  */
-export const actionWithdrawBankItemMyNameActionBankWithdrawItemPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionWithdrawBankItemMyNameActionBankWithdrawItemPostData,
-    ThrowOnError
-  >,
+export const actionWithdrawBankItemMyNameActionBankWithdrawItemPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionWithdrawBankItemMyNameActionBankWithdrawItemPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionWithdrawBankItemMyNameActionBankWithdrawItemPostResponses,
@@ -794,13 +721,8 @@ export const actionWithdrawBankItemMyNameActionBankWithdrawItemPost = <
  *
  * Withdraw gold from your bank.
  */
-export const actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostData,
-    ThrowOnError
-  >,
+export const actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostResponses,
@@ -827,13 +749,8 @@ export const actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost = <
  *
  * Buy a 20 slots bank expansion.
  */
-export const actionBuyBankExpansionMyNameActionBankBuyExpansionPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionBuyBankExpansionMyNameActionBankBuyExpansionPostData,
-    ThrowOnError
-  >,
+export const actionBuyBankExpansionMyNameActionBankBuyExpansionPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionBuyBankExpansionMyNameActionBankBuyExpansionPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionBuyBankExpansionMyNameActionBankBuyExpansionPostResponses,
@@ -856,9 +773,7 @@ export const actionBuyBankExpansionMyNameActionBankBuyExpansionPost = <
  *
  * Buy an item from an NPC on the character's map.
  */
-export const actionNpcBuyItemMyNameActionNpcBuyPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionNpcBuyItemMyNameActionNpcBuyPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionNpcBuyItemMyNameActionNpcBuyPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -886,9 +801,7 @@ export const actionNpcBuyItemMyNameActionNpcBuyPost = <
  *
  * Sell an item to an NPC on the character's map.
  */
-export const actionNpcSellItemMyNameActionNpcSellPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionNpcSellItemMyNameActionNpcSellPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionNpcSellItemMyNameActionNpcSellPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -916,9 +829,7 @@ export const actionNpcSellItemMyNameActionNpcSellPost = <
  *
  * Recycling an item. The character must be on a map with a workshop (only for equipments and weapons).
  */
-export const actionRecyclingMyNameActionRecyclingPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionRecyclingMyNameActionRecyclingPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionRecyclingMyNameActionRecyclingPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -946,13 +857,8 @@ export const actionRecyclingMyNameActionRecyclingPost = <
  *
  * Buy an item at the Grand Exchange on the character's map.
  */
-export const actionGeBuyItemMyNameActionGrandexchangeBuyPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionGeBuyItemMyNameActionGrandexchangeBuyPostData,
-    ThrowOnError
-  >,
+export const actionGeBuyItemMyNameActionGrandexchangeBuyPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionGeBuyItemMyNameActionGrandexchangeBuyPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionGeBuyItemMyNameActionGrandexchangeBuyPostResponses,
@@ -980,13 +886,8 @@ export const actionGeBuyItemMyNameActionGrandexchangeBuyPost = <
  * Create a sell order at the Grand Exchange on the character's map.
  * Please note there is a 3% listing tax, charged at the time of posting, on the total price.
  */
-export const actionGeCreateSellOrderMyNameActionGrandexchangeSellPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostData,
-    ThrowOnError
-  >,
+export const actionGeCreateSellOrderMyNameActionGrandexchangeSellPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostResponses,
@@ -1013,13 +914,8 @@ export const actionGeCreateSellOrderMyNameActionGrandexchangeSellPost = <
  *
  * Cancel a sell order at the Grand Exchange on the character's map.
  */
-export const actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostData,
-    ThrowOnError
-  >,
+export const actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostResponses,
@@ -1046,13 +942,8 @@ export const actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost = <
  *
  * Complete a task.
  */
-export const actionCompleteTaskMyNameActionTaskCompletePost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionCompleteTaskMyNameActionTaskCompletePostData,
-    ThrowOnError
-  >,
+export const actionCompleteTaskMyNameActionTaskCompletePost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionCompleteTaskMyNameActionTaskCompletePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionCompleteTaskMyNameActionTaskCompletePostResponses,
@@ -1075,13 +966,8 @@ export const actionCompleteTaskMyNameActionTaskCompletePost = <
  *
  * Exchange 6 tasks coins for a random reward. Rewards are exclusive items or resources.
  */
-export const actionTaskExchangeMyNameActionTaskExchangePost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionTaskExchangeMyNameActionTaskExchangePostData,
-    ThrowOnError
-  >,
+export const actionTaskExchangeMyNameActionTaskExchangePost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionTaskExchangeMyNameActionTaskExchangePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionTaskExchangeMyNameActionTaskExchangePostResponses,
@@ -1104,13 +990,8 @@ export const actionTaskExchangeMyNameActionTaskExchangePost = <
  *
  * Accepting a new task.
  */
-export const actionAcceptNewTaskMyNameActionTaskNewPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionAcceptNewTaskMyNameActionTaskNewPostData,
-    ThrowOnError
-  >,
+export const actionAcceptNewTaskMyNameActionTaskNewPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionAcceptNewTaskMyNameActionTaskNewPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionAcceptNewTaskMyNameActionTaskNewPostResponses,
@@ -1133,9 +1014,7 @@ export const actionAcceptNewTaskMyNameActionTaskNewPost = <
  *
  * Trading items with a Tasks Master.
  */
-export const actionTaskTradeMyNameActionTaskTradePost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionTaskTradeMyNameActionTaskTradePost = <ThrowOnError extends boolean = false>(
   options: Options<ActionTaskTradeMyNameActionTaskTradePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1163,13 +1042,8 @@ export const actionTaskTradeMyNameActionTaskTradePost = <
  *
  * Cancel a task for 1 tasks coin.
  */
-export const actionTaskCancelMyNameActionTaskCancelPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionTaskCancelMyNameActionTaskCancelPostData,
-    ThrowOnError
-  >,
+export const actionTaskCancelMyNameActionTaskCancelPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionTaskCancelMyNameActionTaskCancelPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionTaskCancelMyNameActionTaskCancelPostResponses,
@@ -1192,9 +1066,7 @@ export const actionTaskCancelMyNameActionTaskCancelPost = <
  *
  * Give gold to another character in your account on the same map.
  */
-export const actionGiveGoldMyNameActionGiveGoldPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionGiveGoldMyNameActionGiveGoldPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionGiveGoldMyNameActionGiveGoldPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1223,9 +1095,7 @@ export const actionGiveGoldMyNameActionGiveGoldPost = <
  * Give items to another character in your account on the same map.
  * The cooldown will be 3 seconds multiplied by the number of different items given.
  */
-export const actionGiveItemsMyNameActionGiveItemPost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionGiveItemsMyNameActionGiveItemPost = <ThrowOnError extends boolean = false>(
   options: Options<ActionGiveItemsMyNameActionGiveItemPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1253,9 +1123,7 @@ export const actionGiveItemsMyNameActionGiveItemPost = <
  *
  * Delete an item from your character's inventory.
  */
-export const actionDeleteItemMyNameActionDeletePost = <
-  ThrowOnError extends boolean = false,
->(
+export const actionDeleteItemMyNameActionDeletePost = <ThrowOnError extends boolean = false>(
   options: Options<ActionDeleteItemMyNameActionDeletePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1283,13 +1151,8 @@ export const actionDeleteItemMyNameActionDeletePost = <
  *
  * Change the skin of your character.
  */
-export const actionChangeSkinMyNameActionChangeSkinPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    ActionChangeSkinMyNameActionChangeSkinPostData,
-    ThrowOnError
-  >,
+export const actionChangeSkinMyNameActionChangeSkinPost = <ThrowOnError extends boolean = false>(
+  options: Options<ActionChangeSkinMyNameActionChangeSkinPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     ActionChangeSkinMyNameActionChangeSkinPostResponses,
@@ -1316,9 +1179,7 @@ export const actionChangeSkinMyNameActionChangeSkinPost = <
  *
  * History of the last 5000 actions of all your characters.
  */
-export const getAllCharactersLogsMyLogsGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAllCharactersLogsMyLogsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllCharactersLogsMyLogsGetData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
@@ -1342,9 +1203,7 @@ export const getAllCharactersLogsMyLogsGet = <
  *
  * History of the last actions of your character.
  */
-export const getCharacterLogsMyLogsNameGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getCharacterLogsMyLogsNameGet = <ThrowOnError extends boolean = false>(
   options: Options<GetCharacterLogsMyLogsNameGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -1368,16 +1227,10 @@ export const getCharacterLogsMyLogsNameGet = <
  *
  * List of your characters.
  */
-export const getMyCharactersMyCharactersGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getMyCharactersMyCharactersGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetMyCharactersMyCharactersGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetMyCharactersMyCharactersGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetMyCharactersMyCharactersGetResponses, unknown, ThrowOnError>({
     security: [
       {
         scheme: 'bearer',
@@ -1392,9 +1245,7 @@ export const getMyCharactersMyCharactersGet = <
 /**
  * Create Account
  */
-export const createAccountAccountsCreatePost = <
-  ThrowOnError extends boolean = false,
->(
+export const createAccountAccountsCreatePost = <ThrowOnError extends boolean = false>(
   options: Options<CreateAccountAccountsCreatePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1416,9 +1267,7 @@ export const createAccountAccountsCreatePost = <
  *
  * Request a password reset.
  */
-export const forgotPasswordAccountsForgotPasswordPost = <
-  ThrowOnError extends boolean = false,
->(
+export const forgotPasswordAccountsForgotPasswordPost = <ThrowOnError extends boolean = false>(
   options: Options<ForgotPasswordAccountsForgotPasswordPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1440,9 +1289,7 @@ export const forgotPasswordAccountsForgotPasswordPost = <
  *
  * Reset password with a token. Use /forgot_password to get a token by email.
  */
-export const resetPasswordAccountsResetPasswordPost = <
-  ThrowOnError extends boolean = false,
->(
+export const resetPasswordAccountsResetPasswordPost = <ThrowOnError extends boolean = false>(
   options: Options<ResetPasswordAccountsResetPasswordPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1464,13 +1311,8 @@ export const resetPasswordAccountsResetPasswordPost = <
  *
  * Retrieve the achievements of a account.
  */
-export const getAccountAchievementsAccountsAccountAchievementsGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    GetAccountAchievementsAccountsAccountAchievementsGetData,
-    ThrowOnError
-  >,
+export const getAccountAchievementsAccountsAccountAchievementsGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetAccountAchievementsAccountsAccountAchievementsGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
     GetAccountAchievementsAccountsAccountAchievementsGetResponses,
@@ -1487,13 +1329,8 @@ export const getAccountAchievementsAccountsAccountAchievementsGet = <
  *
  * Account character lists.
  */
-export const getAccountCharactersAccountsAccountCharactersGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    GetAccountCharactersAccountsAccountCharactersGetData,
-    ThrowOnError
-  >,
+export const getAccountCharactersAccountsAccountCharactersGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetAccountCharactersAccountsAccountCharactersGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
     GetAccountCharactersAccountsAccountCharactersGetResponses,
@@ -1510,9 +1347,7 @@ export const getAccountCharactersAccountsAccountCharactersGet = <
  *
  * Retrieve the details of an account.
  */
-export const getAccountAccountsAccountGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAccountAccountsAccountGet = <ThrowOnError extends boolean = false>(
   options: Options<GetAccountAccountsAccountGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -1530,16 +1365,10 @@ export const getAccountAccountsAccountGet = <
  *
  * List of all achievements.
  */
-export const getAllAchievementsAchievementsGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAllAchievementsAchievementsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllAchievementsAchievementsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllAchievementsAchievementsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllAchievementsAchievementsGetResponses, unknown, ThrowOnError>({
     url: '/achievements',
     ...options,
   })
@@ -1550,9 +1379,7 @@ export const getAllAchievementsAchievementsGet = <
  *
  * Retrieve the details of an achievement.
  */
-export const getAchievementAchievementsCodeGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAchievementAchievementsCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetAchievementAchievementsCodeGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -1573,11 +1400,7 @@ export const getAchievementAchievementsCodeGet = <
 export const getAllBadgesBadgesGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllBadgesBadgesGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllBadgesBadgesGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllBadgesBadgesGetResponses, unknown, ThrowOnError>({
     url: '/badges',
     ...options,
   })
@@ -1591,11 +1414,7 @@ export const getAllBadgesBadgesGet = <ThrowOnError extends boolean = false>(
 export const getBadgeBadgesCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetBadgeBadgesCodeGetData, ThrowOnError>,
 ) => {
-  return (options.client ?? client).get<
-    GetBadgeBadgesCodeGetResponses,
-    GetBadgeBadgesCodeGetErrors,
-    ThrowOnError
-  >({
+  return (options.client ?? client).get<GetBadgeBadgesCodeGetResponses, GetBadgeBadgesCodeGetErrors, ThrowOnError>({
     url: '/badges/{code}',
     ...options,
   })
@@ -1606,9 +1425,7 @@ export const getBadgeBadgesCodeGet = <ThrowOnError extends boolean = false>(
  *
  * Create new character on your account. You can create up to 5 characters.
  */
-export const createCharacterCharactersCreatePost = <
-  ThrowOnError extends boolean = false,
->(
+export const createCharacterCharactersCreatePost = <ThrowOnError extends boolean = false>(
   options: Options<CreateCharacterCharactersCreatePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1636,9 +1453,7 @@ export const createCharacterCharactersCreatePost = <
  *
  * Delete character on your account.
  */
-export const deleteCharacterCharactersDeletePost = <
-  ThrowOnError extends boolean = false,
->(
+export const deleteCharacterCharactersDeletePost = <ThrowOnError extends boolean = false>(
   options: Options<DeleteCharacterCharactersDeletePostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
@@ -1666,16 +1481,10 @@ export const deleteCharacterCharactersDeletePost = <
  *
  * Fetch active characters details.
  */
-export const getActiveCharactersCharactersActiveGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getActiveCharactersCharactersActiveGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetActiveCharactersCharactersActiveGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetActiveCharactersCharactersActiveGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetActiveCharactersCharactersActiveGetResponses, unknown, ThrowOnError>({
     url: '/characters/active',
     ...options,
   })
@@ -1686,9 +1495,7 @@ export const getActiveCharactersCharactersActiveGet = <
  *
  * Retrieve the details of a character.
  */
-export const getCharacterCharactersNameGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getCharacterCharactersNameGet = <ThrowOnError extends boolean = false>(
   options: Options<GetCharacterCharactersNameGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -1709,11 +1516,7 @@ export const getCharacterCharactersNameGet = <
 export const getAllEffectsEffectsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllEffectsEffectsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllEffectsEffectsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllEffectsEffectsGetResponses, unknown, ThrowOnError>({
     url: '/effects',
     ...options,
   })
@@ -1727,11 +1530,7 @@ export const getAllEffectsEffectsGet = <ThrowOnError extends boolean = false>(
 export const getEffectEffectsCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetEffectEffectsCodeGetData, ThrowOnError>,
 ) => {
-  return (options.client ?? client).get<
-    GetEffectEffectsCodeGetResponses,
-    GetEffectEffectsCodeGetErrors,
-    ThrowOnError
-  >({
+  return (options.client ?? client).get<GetEffectEffectsCodeGetResponses, GetEffectEffectsCodeGetErrors, ThrowOnError>({
     url: '/effects/{code}',
     ...options,
   })
@@ -1742,16 +1541,10 @@ export const getEffectEffectsCodeGet = <ThrowOnError extends boolean = false>(
  *
  * Fetch active events details.
  */
-export const getAllActiveEventsEventsActiveGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAllActiveEventsEventsActiveGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllActiveEventsEventsActiveGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllActiveEventsEventsActiveGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllActiveEventsEventsActiveGetResponses, unknown, ThrowOnError>({
     url: '/events/active',
     ...options,
   })
@@ -1765,11 +1558,7 @@ export const getAllActiveEventsEventsActiveGet = <
 export const getAllEventsEventsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllEventsEventsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllEventsEventsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllEventsEventsGetResponses, unknown, ThrowOnError>({
     url: '/events',
     ...options,
   })
@@ -1813,13 +1602,8 @@ export const spawnEventEventsSpawnPost = <ThrowOnError extends boolean = false>(
  *
  * Fetch the sales history of the item for the last 7 days.
  */
-export const getGeSellHistoryGrandexchangeHistoryCodeGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    GetGeSellHistoryGrandexchangeHistoryCodeGetData,
-    ThrowOnError
-  >,
+export const getGeSellHistoryGrandexchangeHistoryCodeGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetGeSellHistoryGrandexchangeHistoryCodeGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
     GetGeSellHistoryGrandexchangeHistoryCodeGetResponses,
@@ -1836,16 +1620,10 @@ export const getGeSellHistoryGrandexchangeHistoryCodeGet = <
  *
  * Fetch all sell orders.
  */
-export const getGeSellOrdersGrandexchangeOrdersGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getGeSellOrdersGrandexchangeOrdersGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetGeSellOrdersGrandexchangeOrdersGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetGeSellOrdersGrandexchangeOrdersGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetGeSellOrdersGrandexchangeOrdersGetResponses, unknown, ThrowOnError>({
     url: '/grandexchange/orders',
     ...options,
   })
@@ -1856,9 +1634,7 @@ export const getGeSellOrdersGrandexchangeOrdersGet = <
  *
  * Retrieve the sell order of a item.
  */
-export const getGeSellOrderGrandexchangeOrdersIdGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getGeSellOrderGrandexchangeOrdersIdGet = <ThrowOnError extends boolean = false>(
   options: Options<GetGeSellOrderGrandexchangeOrdersIdGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -1879,11 +1655,7 @@ export const getGeSellOrderGrandexchangeOrdersIdGet = <
 export const getAllItemsItemsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllItemsItemsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllItemsItemsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllItemsItemsGetResponses, unknown, ThrowOnError>({
     url: '/items',
     ...options,
   })
@@ -1897,11 +1669,7 @@ export const getAllItemsItemsGet = <ThrowOnError extends boolean = false>(
 export const getItemItemsCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetItemItemsCodeGetData, ThrowOnError>,
 ) => {
-  return (options.client ?? client).get<
-    GetItemItemsCodeGetResponses,
-    GetItemItemsCodeGetErrors,
-    ThrowOnError
-  >({
+  return (options.client ?? client).get<GetItemItemsCodeGetResponses, GetItemItemsCodeGetErrors, ThrowOnError>({
     url: '/items/{code}',
     ...options,
   })
@@ -1912,13 +1680,8 @@ export const getItemItemsCodeGet = <ThrowOnError extends boolean = false>(
  *
  * Fetch leaderboard details.
  */
-export const getCharactersLeaderboardLeaderboardCharactersGet = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<
-    GetCharactersLeaderboardLeaderboardCharactersGetData,
-    ThrowOnError
-  >,
+export const getCharactersLeaderboardLeaderboardCharactersGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetCharactersLeaderboardLeaderboardCharactersGetData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
     GetCharactersLeaderboardLeaderboardCharactersGetResponses,
@@ -1935,19 +1698,10 @@ export const getCharactersLeaderboardLeaderboardCharactersGet = <
  *
  * Fetch leaderboard details.
  */
-export const getAccountsLeaderboardLeaderboardAccountsGet = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<
-    GetAccountsLeaderboardLeaderboardAccountsGetData,
-    ThrowOnError
-  >,
+export const getAccountsLeaderboardLeaderboardAccountsGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAccountsLeaderboardLeaderboardAccountsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAccountsLeaderboardLeaderboardAccountsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAccountsLeaderboardLeaderboardAccountsGetResponses, unknown, ThrowOnError>({
     url: '/leaderboard/accounts',
     ...options,
   })
@@ -1961,11 +1715,7 @@ export const getAccountsLeaderboardLeaderboardAccountsGet = <
 export const getAllMapsMapsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllMapsMapsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllMapsMapsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllMapsMapsGetResponses, unknown, ThrowOnError>({
     url: '/maps',
     ...options,
   })
@@ -1979,11 +1729,7 @@ export const getAllMapsMapsGet = <ThrowOnError extends boolean = false>(
 export const getLayerMapsMapsLayerGet = <ThrowOnError extends boolean = false>(
   options: Options<GetLayerMapsMapsLayerGetData, ThrowOnError>,
 ) => {
-  return (options.client ?? client).get<
-    GetLayerMapsMapsLayerGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options.client ?? client).get<GetLayerMapsMapsLayerGetResponses, unknown, ThrowOnError>({
     url: '/maps/{layer}',
     ...options,
   })
@@ -1994,9 +1740,7 @@ export const getLayerMapsMapsLayerGet = <ThrowOnError extends boolean = false>(
  *
  * Retrieve the details of a map by layer and coordinates.
  */
-export const getMapByPositionMapsLayerXYGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getMapByPositionMapsLayerXYGet = <ThrowOnError extends boolean = false>(
   options: Options<GetMapByPositionMapsLayerXyGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -2035,11 +1779,7 @@ export const getMapByIdMapsIdMapIdGet = <ThrowOnError extends boolean = false>(
 export const getAllMonstersMonstersGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllMonstersMonstersGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllMonstersMonstersGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllMonstersMonstersGetResponses, unknown, ThrowOnError>({
     url: '/monsters',
     ...options,
   })
@@ -2071,11 +1811,7 @@ export const getMonsterMonstersCodeGet = <ThrowOnError extends boolean = false>(
 export const getAllNpcsNpcsDetailsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllNpcsNpcsDetailsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllNpcsNpcsDetailsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllNpcsNpcsDetailsGetResponses, unknown, ThrowOnError>({
     url: '/npcs/details',
     ...options,
   })
@@ -2104,9 +1840,7 @@ export const getNpcNpcsDetailsCodeGet = <ThrowOnError extends boolean = false>(
  *
  * Retrieve the items list of a NPC. If the NPC has items to buy, sell or trade, they will be displayed.
  */
-export const getNpcItemsNpcsItemsCodeGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getNpcItemsNpcsItemsCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetNpcItemsNpcsItemsCodeGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -2124,16 +1858,10 @@ export const getNpcItemsNpcsItemsCodeGet = <
  *
  * Retrieve the list of all NPC items.
  */
-export const getAllNpcsItemsNpcsItemsGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAllNpcsItemsNpcsItemsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllNpcsItemsNpcsItemsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllNpcsItemsNpcsItemsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllNpcsItemsNpcsItemsGetResponses, unknown, ThrowOnError>({
     url: '/npcs/items',
     ...options,
   })
@@ -2144,16 +1872,10 @@ export const getAllNpcsItemsNpcsItemsGet = <
  *
  * Fetch resources details.
  */
-export const getAllResourcesResourcesGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAllResourcesResourcesGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllResourcesResourcesGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllResourcesResourcesGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllResourcesResourcesGetResponses, unknown, ThrowOnError>({
     url: '/resources',
     ...options,
   })
@@ -2164,9 +1886,7 @@ export const getAllResourcesResourcesGet = <
  *
  * Retrieve the details of a resource.
  */
-export const getResourceResourcesCodeGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getResourceResourcesCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetResourceResourcesCodeGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -2187,11 +1907,7 @@ export const getResourceResourcesCodeGet = <
 export const getAllTasksTasksListGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllTasksTasksListGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllTasksTasksListGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllTasksTasksListGetResponses, unknown, ThrowOnError>({
     url: '/tasks/list',
     ...options,
   })
@@ -2205,11 +1921,7 @@ export const getAllTasksTasksListGet = <ThrowOnError extends boolean = false>(
 export const getTaskTasksListCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetTaskTasksListCodeGetData, ThrowOnError>,
 ) => {
-  return (options.client ?? client).get<
-    GetTaskTasksListCodeGetResponses,
-    GetTaskTasksListCodeGetErrors,
-    ThrowOnError
-  >({
+  return (options.client ?? client).get<GetTaskTasksListCodeGetResponses, GetTaskTasksListCodeGetErrors, ThrowOnError>({
     url: '/tasks/list/{code}',
     ...options,
   })
@@ -2220,16 +1932,10 @@ export const getTaskTasksListCodeGet = <ThrowOnError extends boolean = false>(
  *
  * Fetch the list of all tasks rewards. To obtain these rewards, you must exchange 6 task coins with a tasks master.
  */
-export const getAllTasksRewardsTasksRewardsGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getAllTasksRewardsTasksRewardsGet = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllTasksRewardsTasksRewardsGetData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    GetAllTasksRewardsTasksRewardsGetResponses,
-    unknown,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).get<GetAllTasksRewardsTasksRewardsGetResponses, unknown, ThrowOnError>({
     url: '/tasks/rewards',
     ...options,
   })
@@ -2240,9 +1946,7 @@ export const getAllTasksRewardsTasksRewardsGet = <
  *
  * Retrieve the details of a tasks reward.
  */
-export const getTasksRewardTasksRewardsCodeGet = <
-  ThrowOnError extends boolean = false,
->(
+export const getTasksRewardTasksRewardsCodeGet = <ThrowOnError extends boolean = false>(
   options: Options<GetTasksRewardTasksRewardsCodeGetData, ThrowOnError>,
 ) => {
   return (options.client ?? client).get<
@@ -2261,13 +1965,8 @@ export const getTasksRewardTasksRewardsCodeGet = <
  * Simulate combat with fake characters against a monster multiple times.
  * Member or founder account required.
  */
-export const fightSimulationSimulationFightSimulationPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    FightSimulationSimulationFightSimulationPostData,
-    ThrowOnError
-  >,
+export const fightSimulationSimulationFightSimulationPost = <ThrowOnError extends boolean = false>(
+  options: Options<FightSimulationSimulationFightSimulationPostData, ThrowOnError>,
 ) => {
   return (options.client ?? client).post<
     FightSimulationSimulationFightSimulationPostResponses,
@@ -2297,11 +1996,7 @@ export const fightSimulationSimulationFightSimulationPost = <
 export const generateTokenTokenPost = <ThrowOnError extends boolean = false>(
   options?: Options<GenerateTokenTokenPostData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).post<
-    GenerateTokenTokenPostResponses,
-    GenerateTokenTokenPostErrors,
-    ThrowOnError
-  >({
+  return (options?.client ?? client).post<GenerateTokenTokenPostResponses, GenerateTokenTokenPostErrors, ThrowOnError>({
     security: [
       {
         scheme: 'basic',

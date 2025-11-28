@@ -1,11 +1,12 @@
 {
   "name": "angular-app",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration=local",
     "format": "bunx prettier . --write",
-    "lint": "bunx eslint ./src",
+    "lint": "eslint",
     "tsc": "tsc",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -33,11 +34,13 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "20.3.9",
+    "@angular-eslint/builder": "21.0.1",
     "@angular/cli": "20.3.9",
     "@angular/compiler-cli": "20.3.10",
     "@eslint/js": "^9.39.1",
     "@ngneat/spectator": "22.1.0",
     "@types/jasmine": "5.1.4",
+    "angular-eslint": "21.0.1",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "jasmine-core": "5.1.2",
@@ -54,6 +57,6 @@
     "stylelint-scss": "^6.12.1",
     "testing-library-selector": "0.3.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "8.46.4"
+    "typescript-eslint": "^8.48.0"
   }
 }

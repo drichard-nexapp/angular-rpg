@@ -40,7 +40,7 @@ export class ErrorHandlerService {
 
     this.errors.update((errors) => [...errors, appError])
 
-    setTimeout(() => this.clearError(appError), 5000)
+    setTimeout(() => { this.clearError(appError); }, 5000)
   }
 
   clearError(error: AppError): void {
@@ -62,7 +62,7 @@ export class ErrorHandlerService {
 
     this.successes.update((successes) => [...successes, appSuccess])
 
-    setTimeout(() => this.clearSuccess(appSuccess), 3000)
+    setTimeout(() => { this.clearSuccess(appSuccess); }, 3000)
   }
 
   clearSuccess(success: AppSuccess): void {

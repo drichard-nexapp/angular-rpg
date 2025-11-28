@@ -1,8 +1,5 @@
 import { Injectable, signal } from '@angular/core'
-import type {
-  QueuedAction,
-  ActionQueueState,
-} from '../domain/action-queue.types'
+import type { QueuedAction, ActionQueueState } from '../domain/action-queue.types'
 import { LoggerService } from './logger.service'
 
 @Injectable({
@@ -26,10 +23,7 @@ export class ActionQueueService {
     return this.getQueue(characterName).length
   }
 
-  enqueue(
-    characterName: string,
-    action: Omit<QueuedAction, 'id' | 'queuedAt'>,
-  ): boolean {
+  enqueue(characterName: string, action: Omit<QueuedAction, 'id' | 'queuedAt'>): boolean {
     const currentQueue = this.getQueue(characterName)
 
     if (currentQueue.length >= this.MAX_QUEUE_SIZE) {
@@ -124,10 +118,7 @@ export class ActionQueueService {
       return newQueues
     })
 
-    this.logger.info(
-      `Removed action ${actionId} from ${characterName} queue`,
-      'ActionQueueService',
-    )
+    this.logger.info(`Removed action ${actionId} from ${characterName} queue`, 'ActionQueueService')
     return true
   }
 
@@ -158,9 +149,7 @@ export class ActionQueueService {
         newQueues.set(characterName, {
           ...existingState,
           isExecuting,
-          lastExecutedAt: isExecuting
-            ? Date.now()
-            : existingState.lastExecutedAt,
+          lastExecutedAt: isExecuting ? Date.now() : existingState.lastExecutedAt,
         })
       }
 
@@ -184,10 +173,7 @@ export class ActionQueueService {
       return newQueues
     })
 
-    this.logger.error(
-      `Queue execution error for ${characterName}: ${error}`,
-      'ActionQueueService',
-    )
+    this.logger.error(`Queue execution error for ${characterName}: ${error}`, 'ActionQueueService')
   }
 
   getError(characterName: string): string | null {

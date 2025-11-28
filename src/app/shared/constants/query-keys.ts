@@ -1,8 +1,7 @@
 export const QUERY_KEYS = {
   account: {
     details: () => ['account-details'] as const,
-    achievements: (username: string, completed?: boolean) =>
-      ['achievements', username, completed] as const,
+    achievements: (username: string, completed?: boolean) => ['achievements', username, completed] as const,
   },
   characters: {
     all: () => ['my-characters'] as const,
@@ -23,8 +22,7 @@ export const QUERY_KEYS = {
     items: (code: string) => ['npc-items', code] as const,
   },
   tasks: {
-    list: (skill?: string, minLevel?: number, maxLevel?: number) =>
-      ['tasks', skill, minLevel, maxLevel] as const,
+    list: (skill?: string, minLevel?: number, maxLevel?: number) => ['tasks', skill, minLevel, maxLevel] as const,
   },
   events: {
     active: () => ['active-events'] as const,

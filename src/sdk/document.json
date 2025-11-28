@@ -8796,16 +8796,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "description",
-          "points",
-          "type",
-          "total",
-          "rewards",
-          "current"
-        ],
+        "required": ["name", "code", "description", "points", "type", "total", "rewards", "current"],
         "title": "AccountAchievementSchema"
       },
       "AccountDetails": {
@@ -8861,14 +8852,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "username",
-          "member",
-          "status",
-          "skins",
-          "achievements_points",
-          "banned"
-        ],
+        "required": ["username", "member", "status", "skins", "achievements_points", "banned"],
         "title": "AccountDetails"
       },
       "AccountDetailsSchema": {
@@ -8913,13 +8897,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "position",
-          "account",
-          "status",
-          "achievements_points",
-          "gold"
-        ],
+        "required": ["position", "account", "status", "achievements_points", "gold"],
         "title": "AccountLeaderboardSchema"
       },
       "AccountLeaderboardType": {
@@ -9005,15 +8983,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "description",
-          "points",
-          "type",
-          "total",
-          "rewards"
-        ],
+        "required": ["name", "code", "description", "points", "type", "total", "rewards"],
         "title": "AchievementSchema"
       },
       "AchievementType": {
@@ -9169,15 +9139,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "map",
-          "previous_map",
-          "duration",
-          "expiration",
-          "created_at"
-        ],
+        "required": ["name", "code", "map", "previous_map", "duration", "expiration", "created_at"],
         "title": "ActiveEventSchema"
       },
       "AddAccountSchema": {
@@ -10472,17 +10434,7 @@
       },
       "CharacterSkin": {
         "type": "string",
-        "enum": [
-          "men1",
-          "men2",
-          "men3",
-          "women1",
-          "women2",
-          "women3",
-          "corrupted1",
-          "zombie1",
-          "marauder1"
-        ],
+        "enum": ["men1", "men2", "men3", "women1", "women2", "women3", "corrupted1", "zombie1", "marauder1"],
         "title": "CharacterSkin"
       },
       "CharacterTransitionDataSchema": {
@@ -10659,15 +10611,7 @@
       },
       "ConditionOperator": {
         "type": "string",
-        "enum": [
-          "eq",
-          "ne",
-          "gt",
-          "lt",
-          "cost",
-          "has_item",
-          "achievement_unlocked"
-        ],
+        "enum": ["eq", "ne", "gt", "lt", "cost", "has_item", "achievement_unlocked"],
         "title": "ConditionOperator"
       },
       "ConditionSchema": {
@@ -10729,13 +10673,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "total_seconds",
-          "remaining_seconds",
-          "started_at",
-          "expiration",
-          "reason"
-        ],
+        "required": ["total_seconds", "remaining_seconds", "started_at", "expiration", "reason"],
         "title": "CooldownSchema"
       },
       "CraftSchema": {
@@ -10774,15 +10712,7 @@
       },
       "CraftSkill": {
         "type": "string",
-        "enum": [
-          "weaponcrafting",
-          "gearcrafting",
-          "jewelrycrafting",
-          "cooking",
-          "woodcutting",
-          "mining",
-          "alchemy"
-        ],
+        "enum": ["weaponcrafting", "gearcrafting", "jewelrycrafting", "cooking", "woodcutting", "mining", "alchemy"],
         "title": "CraftSkill"
       },
       "CraftingSchema": {
@@ -11792,17 +11722,7 @@
       },
       "EffectSubtype": {
         "type": "string",
-        "enum": [
-          "stat",
-          "other",
-          "heal",
-          "buff",
-          "debuff",
-          "special",
-          "gathering",
-          "teleport",
-          "gold"
-        ],
+        "enum": ["stat", "other", "heal", "buff", "debuff", "special", "gathering", "teleport", "gold"],
         "title": "EffectSubtype"
       },
       "EffectType": {
@@ -12212,15 +12132,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "created_at",
-          "code",
-          "quantity",
-          "price",
-          "total_price",
-          "tax"
-        ],
+        "required": ["id", "created_at", "code", "quantity", "price", "total_price", "tax"],
         "title": "GEOrderCreatedSchema"
       },
       "GEOrderCreationrSchema": {
@@ -12453,15 +12365,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "order_id",
-          "seller",
-          "buyer",
-          "code",
-          "quantity",
-          "price",
-          "sold_at"
-        ],
+        "required": ["order_id", "seller", "buyer", "code", "quantity", "price", "sold_at"],
         "title": "GeOrderHistorySchema"
       },
       "GiveGoldDataSchema": {
@@ -12740,15 +12644,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "code",
-          "level",
-          "type",
-          "subtype",
-          "description",
-          "tradeable"
-        ],
+        "required": ["name", "code", "level", "type", "subtype", "description", "tradeable"],
         "title": "ItemSchema"
       },
       "ItemSlot": {
@@ -12843,15 +12739,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "character",
-          "account",
-          "type",
-          "description",
-          "content",
-          "cooldown",
-          "created_at"
-        ],
+        "required": ["character", "account", "type", "description", "content", "cooldown", "created_at"],
         "title": "LogSchema"
       },
       "LogType": {
@@ -12922,15 +12810,7 @@
       },
       "MapContentType": {
         "type": "string",
-        "enum": [
-          "monster",
-          "resource",
-          "workshop",
-          "bank",
-          "grand_exchange",
-          "tasks_master",
-          "npc"
-        ],
+        "enum": ["monster", "resource", "workshop", "bank", "grand_exchange", "tasks_master", "npc"],
         "title": "MapContentType"
       },
       "MapLayer": {
@@ -13001,16 +12881,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "map_id",
-          "name",
-          "skin",
-          "x",
-          "y",
-          "layer",
-          "access",
-          "interactions"
-        ],
+        "required": ["map_id", "name", "skin", "x", "y", "layer", "access", "interactions"],
         "title": "MapSchema"
       },
       "MonsterResponseSchema": {
@@ -13981,14 +13852,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "version",
-          "server_time",
-          "max_level",
-          "max_skill_level",
-          "characters_online",
-          "rate_limits"
-        ],
+        "required": ["version", "server_time", "max_level", "max_skill_level", "characters_online", "rate_limits"],
         "title": "StatusSchema"
       },
       "StorageEffectSchema": {
@@ -14130,14 +13994,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code",
-          "level",
-          "type",
-          "min_quantity",
-          "max_quantity",
-          "rewards"
-        ],
+        "required": ["code", "level", "type", "min_quantity", "max_quantity", "rewards"],
         "title": "TaskFullSchema"
       },
       "TaskResponseSchema": {

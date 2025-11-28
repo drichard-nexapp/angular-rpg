@@ -11,7 +11,7 @@ export interface MaterialRequirement {
 })
 export class InventoryService {
   getInventory(character: Character | null): Inventory[] {
-    if (!character || !character.inventory) {
+    if (!character?.inventory) {
       return []
     }
     return character.inventory
@@ -23,10 +23,7 @@ export class InventoryService {
     return slot ? slot.quantity : 0
   }
 
-  hasItems(
-    character: Character | null,
-    requirements: MaterialRequirement[],
-  ): boolean {
+  hasItems(character: Character | null, requirements: MaterialRequirement[]): boolean {
     if (!character) {
       return false
     }
@@ -38,16 +35,14 @@ export class InventoryService {
   }
 
   canCraftItem(character: Character | null, item: Item): boolean {
-    if (!item.craft || !item.craft.items) {
+    if (!item.craft?.items) {
       return false
     }
 
-    const requirements: MaterialRequirement[] = item.craft.items.map(
-      (material) => ({
-        code: material.code,
-        quantity: material.quantity,
-      }),
-    )
+    const requirements: MaterialRequirement[] = item.craft.items.map((material) => ({
+      code: material.code,
+      quantity: material.quantity,
+    }))
 
     return this.hasItems(character, requirements)
   }
@@ -62,7 +57,7 @@ export class InventoryService {
     }
 
     const used = this.getInventory(character).length
-    const max = character.inventory_max_items || 0
+    const max = character.inventory_max_items ?? 0
     const percentage = max > 0 ? (used / max) * 100 : 0
 
     return { used, max, percentage }
@@ -79,10 +74,7 @@ export class InventoryService {
     return availableSlots >= requiredSlots
   }
 
-  getMissingMaterials(
-    character: Character | null,
-    requirements: MaterialRequirement[],
-  ): MaterialRequirement[] {
+  getMissingMaterials(character: Character | null, requirements: MaterialRequirement[]): MaterialRequirement[] {
     return requirements
       .map((requirement) => {
         const available = this.getItemQuantity(character, requirement.code)
@@ -99,10 +91,7 @@ export class InventoryService {
     character: Character | null,
     requirements: MaterialRequirement[],
   ): Record<string, { required: number; available: number; missing: number }> {
-    const result: Record<
-      string,
-      { required: number; available: number; missing: number }
-    > = {}
+    const result: Record<string, { required: number; available: number; missing: number }> = {}
 
     requirements.forEach((requirement) => {
       const available = this.getItemQuantity(character, requirement.code)

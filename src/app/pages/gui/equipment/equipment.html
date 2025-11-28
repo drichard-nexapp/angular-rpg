@@ -7,218 +7,172 @@
     <div class="equipment-slot">
       <div class="slot-label">Weapon</div>
       @if (selectedCharacter().weapon_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().weapon_slot)"
-        [alt]="selectedCharacter().weapon_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().weapon_slot"
+          [src]="getItemImageUrl(selectedCharacter().weapon_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().weapon_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().weapon_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Shield</div>
       @if (selectedCharacter().shield_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().shield_slot)"
-        [alt]="selectedCharacter().shield_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().shield_slot"
+          [src]="getItemImageUrl(selectedCharacter().shield_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().shield_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().shield_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Helmet</div>
       @if (selectedCharacter().helmet_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().helmet_slot)"
-        [alt]="selectedCharacter().helmet_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().helmet_slot"
+          [src]="getItemImageUrl(selectedCharacter().helmet_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().helmet_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().helmet_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Body Armor</div>
       @if (selectedCharacter().body_armor_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().body_armor_slot)"
-        [alt]="selectedCharacter().body_armor_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().body_armor_slot"
+          [src]="getItemImageUrl(selectedCharacter().body_armor_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().body_armor_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().body_armor_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Leg Armor</div>
       @if (selectedCharacter().leg_armor_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().leg_armor_slot)"
-        [alt]="selectedCharacter().leg_armor_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().leg_armor_slot"
+          [src]="getItemImageUrl(selectedCharacter().leg_armor_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().leg_armor_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().leg_armor_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Boots</div>
       @if (selectedCharacter().boots_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().boots_slot)"
-        [alt]="selectedCharacter().boots_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().boots_slot"
+          [src]="getItemImageUrl(selectedCharacter().boots_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().boots_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().boots_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Ring 1</div>
       @if (selectedCharacter().ring1_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().ring1_slot)"
-        [alt]="selectedCharacter().ring1_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().ring1_slot"
+          [src]="getItemImageUrl(selectedCharacter().ring1_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().ring1_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().ring1_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Ring 2</div>
       @if (selectedCharacter().ring2_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().ring2_slot)"
-        [alt]="selectedCharacter().ring2_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().ring2_slot"
+          [src]="getItemImageUrl(selectedCharacter().ring2_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().ring2_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().ring2_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Amulet</div>
       @if (selectedCharacter().amulet_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().amulet_slot)"
-        [alt]="selectedCharacter().amulet_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().amulet_slot"
+          [src]="getItemImageUrl(selectedCharacter().amulet_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().amulet_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().amulet_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Artifact 1</div>
       @if (selectedCharacter().artifact1_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().artifact1_slot)"
-        [alt]="selectedCharacter().artifact1_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().artifact1_slot"
+          [src]="getItemImageUrl(selectedCharacter().artifact1_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().artifact1_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().artifact1_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Artifact 2</div>
       @if (selectedCharacter().artifact2_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().artifact2_slot)"
-        [alt]="selectedCharacter().artifact2_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().artifact2_slot"
+          [src]="getItemImageUrl(selectedCharacter().artifact2_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().artifact2_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().artifact2_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Artifact 3</div>
       @if (selectedCharacter().artifact3_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().artifact3_slot)"
-        [alt]="selectedCharacter().artifact3_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().artifact3_slot"
+          [src]="getItemImageUrl(selectedCharacter().artifact3_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().artifact3_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().artifact3_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Utility 1</div>
       @if (selectedCharacter().utility1_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().utility1_slot)"
-        [alt]="selectedCharacter().utility1_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().utility1_slot"
+          [src]="getItemImageUrl(selectedCharacter().utility1_slot)" />
       }
       <div class="slot-item">
-        {{ selectedCharacter().utility1_slot || 'Empty' }} @if
-        (selectedCharacter().utility1_slot) {
-        <span class="utility-quantity"
-          >× {{ selectedCharacter().utility1_slot_quantity }}</span
-        >
+        {{ selectedCharacter().utility1_slot || 'Empty' }}
+        @if (selectedCharacter().utility1_slot) {
+          <span class="utility-quantity">× {{ selectedCharacter().utility1_slot_quantity }}</span>
         }
       </div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Utility 2</div>
       @if (selectedCharacter().utility2_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().utility2_slot)"
-        [alt]="selectedCharacter().utility2_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().utility2_slot"
+          [src]="getItemImageUrl(selectedCharacter().utility2_slot)" />
       }
       <div class="slot-item">
-        {{ selectedCharacter().utility2_slot || 'Empty' }} @if
-        (selectedCharacter().utility2_slot) {
-        <span class="utility-quantity"
-          >× {{ selectedCharacter().utility2_slot_quantity }}</span
-        >
+        {{ selectedCharacter().utility2_slot || 'Empty' }}
+        @if (selectedCharacter().utility2_slot) {
+          <span class="utility-quantity">× {{ selectedCharacter().utility2_slot_quantity }}</span>
         }
       </div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Bag</div>
       @if (selectedCharacter().bag_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().bag_slot)"
-        [alt]="selectedCharacter().bag_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().bag_slot"
+          [src]="getItemImageUrl(selectedCharacter().bag_slot)" />
       }
       <div class="slot-item">{{ selectedCharacter().bag_slot || 'Empty' }}</div>
     </div>
     <div class="equipment-slot">
       <div class="slot-label">Rune</div>
       @if (selectedCharacter().rune_slot) {
-      <img
-        [src]="getItemImageUrl(selectedCharacter().rune_slot)"
-        [alt]="selectedCharacter().rune_slot"
-        class="equipment-image"
-      />
+        <img
+          class="equipment-image"
+          [alt]="selectedCharacter().rune_slot"
+          [src]="getItemImageUrl(selectedCharacter().rune_slot)" />
       }
-      <div class="slot-item">
-        {{ selectedCharacter().rune_slot || 'Empty' }}
-      </div>
+      <div class="slot-item">{{ selectedCharacter().rune_slot || 'Empty' }}</div>
     </div>
   </div>
 </div>
