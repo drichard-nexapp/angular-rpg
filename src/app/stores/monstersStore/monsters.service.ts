@@ -5,12 +5,17 @@ import { getMonsterMonstersCodeGet } from '../../../sdk/api'
 import { unwrapApiItem } from '../../shared/utils'
 import type { Monster } from '../../domain/types'
 import { subDays } from 'date-fns'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Injectable({
   providedIn: 'root',
 })
 export class MonstersService {
   private monstersStore = inject(MonstersStore)
+
+  loading = toSignal(this.monstersStore.useStore((state) => state.loading))
+  monsters = toSignal(this.monstersStore.useStore((state) => state.monsters))
+  lastUpdated = toSignal(this.monstersStore.useStore((state) => state.lastUpdated))
 
   async fetchMonsterDetails(code: string) {
     if (!code) return null

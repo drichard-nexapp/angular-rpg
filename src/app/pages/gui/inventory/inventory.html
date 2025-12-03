@@ -1,8 +1,5 @@
 <div class="inventory-panel">
-  <div class="inventory-header">
-    <h3>📦 Inventory - {{ selectedCharacter()!.name }}</h3>
-    <button class="close-panel-button" (click)="close()">×</button>
-  </div>
+  <app-panel-header [title]="'📦 Inventory - ' + selectedCharacter()!.name" (close)="close()" />
   <div class="inventory-capacity-bar">
     {{ characterInventory().length }}/{{ selectedCharacter()!.inventory_max_items }} slots
   </div>

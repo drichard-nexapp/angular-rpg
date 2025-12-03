@@ -1,0 +1,86 @@
+<main class="main">
+  <div class="content">
+    <h1>Effects</h1>
+
+    @if (loading()) {
+      <div class="loading">Loading effects...</div>
+    }
+    @if (!loading()) {
+      <div class="effects-container">
+        <div class="effects-header">
+          <div class="effects-stats">
+            <h2>Available Effects: {{ effectsLength() }}</h2>
+          </div>
+
+          @if (searchTerm() || typeFilter() || subtypeFilter()) {
+            <button class="clear-filters-btn" type="button" (click)="clearFilters()">Clear Filters</button>
+          }
+        </div>
+
+        <div class="effects-filters">
+          <div class="filter-group">
+            <label for="search">Search:</label>
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by name, code, or description..."
+              [value]="searchTerm()"
+              (input)="setSearchTerm($any($event.target).value)" />
+          </div>
+
+          <div class="filter-group">
+            <label for="type">Type:</label>
+            <select id="type" [value]="typeFilter()" (change)="setTypeFilter($any($event.target).value)">
+              <option value="">All Types</option>
+              @for (type of types(); track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="subtype">Subtype:</label>
+            <select id="subtype" [value]="subtypeFilter()" (change)="setSubtypeFilter($any($event.target).value)">
+              <option value="">All Subtypes</option>
+              @for (subtype of subtypes(); track subtype) {
+                <option [value]="subtype">{{ subtype }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="effects-grid">
+          @if (filteredEffects().length === 0) {
+            <div class="no-effects">No effects found</div>
+          }
+          @for (effect of filteredEffects(); track effect.code) {
+            <div class="effect-card" [attr.data-type]="effect.type" [attr.data-subtype]="effect.subtype">
+              <div class="effect-header">
+                <div class="effect-icon">
+                  @if (effect.type === 'equipment') {
+                    ⚔️
+                  } @else if (effect.type === 'consumable') {
+                    🧪
+                  } @else if (effect.type === 'combat') {
+                    ⚡
+                  }
+                </div>
+                <div class="effect-title">
+                  <span class="effect-name">{{ effect.name }}</span>
+                  <span class="effect-code">{{ effect.code }}</span>
+                </div>
+              </div>
+
+              <div class="effect-badges">
+                <span class="effect-type-badge" [attr.data-type]="effect.type">{{ effect.type }}</span>
+                <span class="effect-subtype-badge" [attr.data-subtype]="effect.subtype">{{ effect.subtype }}</span>
+              </div>
+
+              <div class="effect-description">{{ effect.description }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</main>

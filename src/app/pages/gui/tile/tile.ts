@@ -15,12 +15,12 @@ import { ErrorHandlerService } from '../../../services/error-handler.service'
 import { CharacterService } from '../../../services/character.service'
 import { CooldownService } from '../../../services/cooldown.service'
 import { getResourceImageUrl } from '../../../shared/asset-urls'
-import { NgOptimizedImage } from '@angular/common'
 
 @Component({
   selector: 'app-tile',
   templateUrl: './tile.html',
-  imports: [Monster, NgOptimizedImage],
+  styleUrl: './tile.scss',
+  imports: [Monster],
 })
 export class Tile {
   private inventoryService = inject(InventoryService)

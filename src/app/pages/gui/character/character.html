@@ -1,0 +1,74 @@
+<div class="characters-layer">
+  @if (selectedCharacter() && openMenu() === CharacterMenu.Inventory) {
+    <app-inventory [selectedCharacter]="selectedCharacter()!" (onClose)="toggleMenu(CharacterMenu.Inventory)" />
+  }
+  @if (selectedCharacter() && openMenu() === CharacterMenu.Skills) {
+    <app-skill [selectedCharacter]="selectedCharacter()!" (closeTrigger)="toggleMenu(CharacterMenu.Skills)" />
+  }
+  @if (selectedCharacter() && openMenu() === CharacterMenu.Equipment) {
+    <app-equipment [selectedCharacter]="selectedCharacter()!" (closeTrigger)="toggleMenu(CharacterMenu.Equipment)" />
+  }
+
+  <div class="characters-section">
+    <div class="section-label">Characters</div>
+    <div class="characters-row">
+      @for (character of characters(); track character.name) {
+        <div
+          class="character"
+          role="button"
+          tabindex="0"
+          [class.on-cooldown]="isCharacterOnCooldown(character)"
+          [class.selected]="isSelected(character)"
+          (click)="selectCharacter(character)">
+          <div class="character-name">{{ character.name }}</div>
+          <div class="character-stats-inline">
+            <div class="stat-inline">HP: {{ character.hp }}/{{ character.max_hp }}</div>
+            <div class="stat-inline">XP: {{ character.xp }}/{{ character.max_xp }}</div>
+          </div>
+          @if (isCharacterOnCooldown(character)) {
+            <div class="cooldown-indicator">{{ getCharacterCooldown(character.name)?.remainingSeconds }}s</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (selectedCharacter()) {
+    <div class="actions-section">
+      <div class="section-label">Actions</div>
+      <div class="actions-row">
+        <button
+          class="rest-button action-button"
+          type="button"
+          [disabled]="isCharacterHpFull(selectedCharacter()!)"
+          (click)="actionService.restCharacter()">
+          💤 Rest
+        </button>
+
+        <button
+          class="panel-toggle-button action-button"
+          type="button"
+          [class.active]="openMenu() === CharacterMenu.Inventory"
+          (click)="toggleMenu(CharacterMenu.Inventory)">
+          📦 Inventory
+        </button>
+
+        <button
+          class="panel-toggle-button action-button"
+          type="button"
+          [class.active]="openMenu() === CharacterMenu.Skills"
+          (click)="toggleMenu(CharacterMenu.Skills)">
+          📊 Skills
+        </button>
+
+        <button
+          class="panel-toggle-button action-button"
+          type="button"
+          [class.active]="openMenu() === CharacterMenu.Equipment"
+          (click)="toggleMenu(CharacterMenu.Equipment)">
+          ⚔️ Equipment
+        </button>
+      </div>
+    </div>
+  }
+</div>

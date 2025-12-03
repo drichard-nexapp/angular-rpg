@@ -5,14 +5,11 @@
     @if (loading()) {
       <div class="loading">Loading tasks...</div>
     }
-    @if (error()) {
-      <div class="error">{{ error() }}</div>
-    }
-    @if (!loading() && !error()) {
+    @if (!loading()) {
       <div class="tasks-container">
         <div class="tasks-header">
           <div class="tasks-stats">
-            <h2>Available Tasks: {{ tasks().length }}</h2>
+            <h2>Available Tasks: {{ filteredTasks().length }}</h2>
           </div>
 
           @if (filterSkill() || filterMinLevel() || filterMaxLevel()) {
@@ -21,10 +18,10 @@
         </div>
 
         <div class="tasks-grid">
-          @if (tasks().length === 0) {
+          @if (filteredTasks().length === 0) {
             <div class="no-tasks">No tasks found</div>
           }
-          @for (task of tasks(); track task.code) {
+          @for (task of filteredTasks(); track task.code) {
             <div class="task-card">
               <div class="task-header">
                 <span class="task-type-badge">{{ task.type }}</span>

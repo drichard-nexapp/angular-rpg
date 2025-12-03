@@ -93,13 +93,13 @@ p {
 
 main {
   width: 100%;
-  min-height: 100%;
+  height: calc(100vh - 52px);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
   box-sizing: inherit;
   position: relative;
+  overflow: hidden;
 }
 
 .characters-list {

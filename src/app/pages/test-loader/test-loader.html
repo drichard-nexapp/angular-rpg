@@ -1,0 +1,51 @@
+<div class="test-loader-container">
+  <h1>Test Data Loader</h1>
+
+  <button class="load-button" type="button" (click)="loadData()">Load Data from JSON File</button>
+
+  @if (dataLoader.loading()) {
+    <div class="loading">Loading...</div>
+  }
+
+  @if (dataLoader.error()) {
+    <div class="error">Error: {{ dataLoader.error() }}</div>
+  }
+
+  @if (dataLoader.data()) {
+    <div class="data-display">
+      <h2>Loaded Data:</h2>
+
+      <div class="message-box">
+        <strong>Message:</strong> {{ dataLoader.data()!.message }}
+      </div>
+
+      <div class="users-section">
+        <h3>Users:</h3>
+        @for (user of dataLoader.data()!.users; track user.id) {
+          <div class="user-card">
+            <div class="user-name">{{ user.name }}</div>
+            <div class="user-role">Role: {{ user.role }}</div>
+          </div>
+        }
+      </div>
+
+      <div class="settings-section">
+        <h3>Settings:</h3>
+        <div class="setting-item">
+          <strong>Theme:</strong> {{ dataLoader.data()!.settings.theme }}
+        </div>
+        <div class="setting-item">
+          <strong>Language:</strong> {{ dataLoader.data()!.settings.language }}
+        </div>
+        <div class="setting-item">
+          <strong>Notifications:</strong> {{ dataLoader.data()!.settings.notifications ? 'Enabled' : 'Disabled' }}
+        </div>
+      </div>
+
+      <details class="raw-data">
+        <summary>View Raw JSON</summary>
+        <pre>{{ dataLoader.data() | json }}</pre>
+      </details>
+    </div>
+  }
+</div>

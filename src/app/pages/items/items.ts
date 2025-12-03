@@ -1,9 +1,6 @@
-import { Component, computed, signal } from '@angular/core'
-import { injectQuery } from '@tanstack/angular-query-experimental'
-import { getAllItemsItemsGet, type ItemSchema } from '../../../sdk/api'
-import { unwrapApiResponse } from '../../shared/utils'
-import { QUERY_KEYS } from '../../shared/constants'
-import { APP_CONFIG } from '../../shared/constants'
+import { Component, computed, inject, signal } from '@angular/core'
+import type { ItemSchema } from '../../../sdk/api'
+import { ItemsService } from '../../stores/itemsStore/items.service'
 
 @Component({
   selector: 'app-items',
@@ -12,25 +9,20 @@ import { APP_CONFIG } from '../../shared/constants'
   styleUrl: './items.scss',
 })
 export class Items {
+  protected itemsService = inject(ItemsService)
+
   searchTerm = signal<string>('')
   typeFilter = signal<string>('')
   craftableFilter = signal<boolean>(false)
 
-  itemsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.items.all(),
-    queryFn: async (): Promise<ItemSchema[]> => {
-      const response = await getAllItemsItemsGet({
-        query: { size: 100 },
-      })
-      return unwrapApiResponse<ItemSchema[]>(response, [])
-    },
-    staleTime: APP_CONFIG.CACHE.STALE_TIME_LONG,
-  }))
+  loading = this.itemsService.loading
 
-  allItems = computed((): ItemSchema[] => this.itemsQuery.data() ?? [])
+  constructor() {
+    this.itemsService.initialize()
+  }
 
   filteredItems = computed((): ItemSchema[] => {
-    let items = this.allItems()
+    let items = this.itemsService.items() ?? []
 
     const search = this.searchTerm().toLowerCase()
     if (search) {
@@ -54,16 +46,14 @@ export class Items {
     return items
   })
 
-  itemTypes = computed((): string[] => {
-    const types = new Set(this.allItems().map((item) => item.type))
-    return Array.from(types).sort()
+  itemsLength = computed((): number => {
+    return this.itemsService.items()?.length ?? 0
   })
 
-  loading = computed((): boolean => this.itemsQuery.isPending())
-  error = computed((): string | null => {
-    const itemsError = this.itemsQuery.error()
-    if (itemsError) return (itemsError).message
-    return null
+  itemTypes = computed((): string[] => {
+    const items = this.itemsService.items() ?? []
+    const types = new Set(items.map((item) => item.type))
+    return Array.from(types).sort()
   })
 
   setSearchTerm(term: string): void {

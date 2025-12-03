@@ -1,9 +1,10 @@
 import { Component, EventEmitter, input, Output } from '@angular/core'
 import { Character } from '../../../domain/types'
+import { PanelHeader } from '../shared/panel-header/panel-header'
 
 @Component({
   selector: 'app-skill',
-  imports: [],
+  imports: [PanelHeader],
   templateUrl: './skill.html',
   styleUrl: './skill.scss',
 })

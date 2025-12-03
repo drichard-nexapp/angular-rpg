@@ -1,0 +1,81 @@
+<main class="main">
+  <div class="content">
+    <h1>Badges</h1>
+
+    @if (loading()) {
+      <div class="loading">Loading badges...</div>
+    }
+    @if (!loading()) {
+      <div class="badges-container">
+        <div class="badges-header">
+          <div class="badges-stats">
+            <h2>Available Badges: {{ badgesLength() }}</h2>
+          </div>
+
+          @if (searchTerm() || seasonFilter() !== undefined) {
+            <button class="clear-filters-btn" type="button" (click)="clearFilters()">Clear Filters</button>
+          }
+        </div>
+
+        <div class="badges-filters">
+          <div class="filter-group">
+            <label for="search">Search:</label>
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by code or description..."
+              [value]="searchTerm()"
+              (input)="setSearchTerm($any($event.target).value)" />
+          </div>
+
+          <div class="filter-group">
+            <label for="season">Season:</label>
+            <select id="season" [value]="seasonFilter() ?? ''" (change)="setSeasonFilter($any($event.target).value)">
+              <option value="">All Seasons</option>
+              @for (season of seasons(); track season) {
+                <option [value]="season">Season {{ season }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="badges-grid">
+          @if (filteredBadges().length === 0) {
+            <div class="no-badges">No badges found</div>
+          }
+          @for (badge of filteredBadges(); track badge.code) {
+            <div class="badge-card">
+              <div class="badge-header">
+                <div class="badge-icon">🏆</div>
+                <div class="badge-title">
+                  <span class="badge-code">{{ badge.code }}</span>
+                  @if (badge.season !== undefined) {
+                    <span class="badge-season">Season {{ badge.season }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="badge-description">{{ badge.description }}</div>
+
+              @if (badge.conditions && badge.conditions.length > 0) {
+                <div class="badge-conditions">
+                  <strong>Conditions:</strong>
+                  <div class="conditions-list">
+                    @for (condition of badge.conditions; track $index) {
+                      <div class="condition-item">
+                        <span class="condition-code">{{ condition.code }}</span>
+                        @if (condition.quantity !== undefined) {
+                          <span class="condition-quantity">x{{ condition.quantity }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</main>

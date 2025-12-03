@@ -1,12 +1,25 @@
-<main class="main">
-  <div class="content">
+<div class="gui-layout">
+  <div class="gui-header">
     <h1>Maps</h1>
-
+    <div class="layer-selector">
+      <label for="layer-select">Layer:</label>
+      <select
+        id="layer-select"
+        [(ngModel)]="currentLayer"
+        (ngModelChange)="onLayerChange($event)">
+        <option value="overworld">Overworld</option>
+        <option value="underground">Underground</option>
+        <option value="interior">Interior</option>
+      </select>
+    </div>
     <app-error-display />
+  </div>
 
+  <div class="gui-map-container">
     @if (activeEvents().length > 0) {
       <app-event [activeEvents]="activeEvents()" />
     }
+
     @if (currentTileDetails()) {
       <app-tile
         [currentTileDetails]="currentTileDetails()!"
@@ -18,62 +31,10 @@
       [characters]="characters()"
       [selectedCharacter]="selectedCharacter()"
       [selectedTile]="selectedTile()"
-      (tileClick)="onTileClick($event)" />
-
-    @if (selectedCharacter() && showInventory()) {
-      <app-inventory [selectedCharacter]="selectedCharacter()!" (onClose)="toggleInventory()" />
-    }
-    @if (selectedCharacter() && showSkills()) {
-      <app-skill [selectedCharacter]="selectedCharacter()!" (closeTrigger)="toggleSkills()" />
-    }
-    @if (selectedCharacter() && showEquipment()) {
-      <app-equipment [selectedCharacter]="selectedCharacter()!" (closeTrigger)="toggleEquipment()" />
-    }
-
-    <div class="characters-layer">
-      @for (character of characters(); track character.name) {
-        <div
-          class="character"
-          role="button"
-          tabindex="0"
-          [class.on-cooldown]="isCharacterOnCooldown(character)"
-          [class.selected]="isSelected(character)"
-          (click)="selectCharacter(character)">
-          <div class="character-name">{{ character.name }}</div>
-          <div class="character-stats-inline">
-            <div class="stat-inline">HP: {{ character.hp }}/{{ character.max_hp }}</div>
-            <div class="stat-inline">XP: {{ character.xp }}/{{ character.max_xp }}</div>
-          </div>
-          @if (isCharacterOnCooldown(character)) {
-            <div class="cooldown-indicator">{{ getCharacterCooldown(character.name)?.remainingSeconds }}s</div>
-          }
-        </div>
-      }
-      @if (selectedCharacter()) {
-        <button
-          class="rest-button"
-          type="button"
-          [disabled]="isCharacterHpFull(selectedCharacter()!)"
-          (click)="actionService.restCharacter()">
-          @if (isCharacterOnCooldown(selectedCharacter()!)) {
-            Queue Rest
-          } @else {
-            Rest
-          }
-        </button>
-
-        <button class="panel-toggle-button" type="button" [class.active]="showInventory()" (click)="toggleInventory()">
-          📦 Inventory
-        </button>
-
-        <button class="panel-toggle-button" type="button" [class.active]="showSkills()" (click)="toggleSkills()">
-          📊 Skills
-        </button>
-
-        <button class="panel-toggle-button" type="button" [class.active]="showEquipment()" (click)="toggleEquipment()">
-          ⚔️ Equipment
-        </button>
-      }
-    </div>
+      [currentLayer]="currentLayer()"
+      (tileClick)="onTileClick($event)"
+      (characterClick)="onCharacterClick($event)" />
   </div>
-</main>
+
+  <app-character />
+</div>

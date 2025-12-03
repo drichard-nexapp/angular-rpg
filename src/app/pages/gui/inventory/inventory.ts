@@ -10,10 +10,11 @@ import { unwrapApiResponse } from '../../../shared/utils'
 import { ErrorHandlerService } from '../../../services/error-handler.service'
 import { ActionService } from '../../../services/action.service'
 import { CharacterService } from '../../../services/character.service'
+import { PanelHeader } from '../shared/panel-header/panel-header'
 
 @Component({
   selector: 'app-inventory',
-  imports: [FormsModule],
+  imports: [FormsModule, PanelHeader],
   templateUrl: './inventory.html',
   styleUrl: './inventory.scss',
 })

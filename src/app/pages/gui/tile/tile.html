@@ -41,7 +41,7 @@
       <img
         class="resource-image"
         [alt]="resourceDetails()!.name"
-        [ngSrc]="getResourceImageUrl(resourceDetails()!.code)" />
+        [src]="getResourceImageUrl(resourceDetails()!.code)" />
       <div class="resource-header">
         <h4>{{ resourceDetails()!.name }}</h4>
         <button class="hide-details-button" type="button" (click)="hideResourceDetails()">Hide</button>

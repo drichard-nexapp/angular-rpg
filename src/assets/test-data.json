@@ -1,0 +1,25 @@
+{
+  "message": "Hello from JSON file!",
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "role": "user"
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "role": "moderator"
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "language": "en",
+    "notifications": true
+  }
+}

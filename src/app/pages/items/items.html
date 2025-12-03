@@ -1,16 +1,12 @@
 <main class="items-page">
   <div class="page-header">
     <h1>Items</h1>
-    <div class="items-count">Showing {{ filteredItems().length }} of {{ allItems().length }} items</div>
+    <div class="items-count">Showing {{ filteredItems().length }} of {{ itemsLength() }} items</div>
   </div>
 
   @if (loading()) {
     <div class="loading">Loading items...</div>
-  }
-  @if (error()) {
-    <div class="error">{{ error() }}</div>
-  }
-  @if (!loading() && !error()) {
+  } @else {
     <div class="filters-section">
       <div class="search-box">
         <input

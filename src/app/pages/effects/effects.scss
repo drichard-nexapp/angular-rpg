@@ -1,0 +1,257 @@
+.effects-container {
+  margin-top: 2rem;
+}
+
+.effects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+
+  .effects-stats {
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+  }
+
+  .clear-filters-btn {
+    padding: 0.5rem 1rem;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #d0d0d0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
+    }
+  }
+}
+
+.effects-filters {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input,
+    select {
+      padding: 0.6rem;
+      border: 2px solid #dee2e6;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: #9c27b0;
+      }
+    }
+
+    input {
+      min-width: 300px;
+    }
+
+    select {
+      min-width: 150px;
+      cursor: pointer;
+    }
+  }
+}
+
+.effects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.no-effects {
+  text-align: center;
+  padding: 3rem;
+  color: #777;
+  font-style: italic;
+  font-size: 1.2rem;
+  grid-column: 1 / -1;
+}
+
+.effect-card {
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
+
+  &[data-type='equipment'] {
+    border-color: #3498db;
+
+    &:hover {
+      border-color: #2980b9;
+      box-shadow: 0 4px 12px rgb(52 152 219 / 25%);
+    }
+  }
+
+  &[data-type='consumable'] {
+    border-color: #27ae60;
+
+    &:hover {
+      border-color: #229954;
+      box-shadow: 0 4px 12px rgb(39 174 96 / 25%);
+    }
+  }
+
+  &[data-type='combat'] {
+    border-color: #e74c3c;
+
+    &:hover {
+      border-color: #c0392b;
+      box-shadow: 0 4px 12px rgb(231 76 60 / 25%);
+    }
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .effect-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f0f0f0;
+
+    .effect-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .effect-title {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .effect-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      .effect-code {
+        font-size: 0.85rem;
+        font-family: 'Courier New', monospace;
+        color: #888;
+        background: #f5f5f5;
+        padding: 2px 6px;
+        border-radius: 3px;
+        width: fit-content;
+      }
+    }
+  }
+
+  .effect-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+
+    .effect-type-badge,
+    .effect-subtype-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .effect-type-badge {
+      color: white;
+
+      &[data-type='equipment'] {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      }
+
+      &[data-type='consumable'] {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+      }
+
+      &[data-type='combat'] {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      }
+    }
+
+    .effect-subtype-badge {
+      background: #f8f9fa;
+      color: #555;
+      border: 1px solid #dee2e6;
+
+      &[data-subtype='buff'] {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-color: #4caf50;
+      }
+
+      &[data-subtype='debuff'] {
+        background: #ffebee;
+        color: #c62828;
+        border-color: #ef5350;
+      }
+
+      &[data-subtype='heal'] {
+        background: #e3f2fd;
+        color: #1565c0;
+        border-color: #2196f3;
+      }
+
+      &[data-subtype='stat'] {
+        background: #fff3e0;
+        color: #e65100;
+        border-color: #ff9800;
+      }
+
+      &[data-subtype='other'] {
+        background: #f3e5f5;
+        color: #6a1b9a;
+        border-color: #9c27b0;
+      }
+    }
+  }
+
+  .effect-description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #777;
+  font-size: 1.2rem;
+}

@@ -1,8 +1,5 @@
 <div class="skills-panel">
-  <div class="skills-header">
-    <h3>📊 Skills - {{ selectedCharacter()!.name }}</h3>
-    <button class="close-panel-button" type="button" (click)="close()">×</button>
-  </div>
+  <app-panel-header [title]="'📊 Skills - ' + selectedCharacter()!.name" (close)="close()" />
   <div class="skills-grid">
     <div class="skill-card">
       <div class="skill-name">⚔️ Combat</div>

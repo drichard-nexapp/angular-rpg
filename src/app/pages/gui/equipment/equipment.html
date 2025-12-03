@@ -1,8 +1,5 @@
 <div class="equipment-panel">
-  <div class="equipment-header">
-    <h3>⚔️ Equipment - {{ selectedCharacter().name }}</h3>
-    <button class="close-panel-button" (click)="close()">×</button>
-  </div>
+  <app-panel-header [title]="'⚔️ Equipment - ' + selectedCharacter().name" (close)="close()" />
   <div class="equipment-grid">
     <div class="equipment-slot">
       <div class="slot-label">Weapon</div>

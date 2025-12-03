@@ -4,6 +4,7 @@ import type { ActiveEvent } from '../../../domain/types'
 @Component({
   selector: 'app-event',
   templateUrl: './event.html',
+  styleUrl: './event.scss',
   imports: [],
 })
 export class Event {

@@ -1,0 +1,241 @@
+.badges-container {
+  margin-top: 2rem;
+}
+
+.badges-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+
+  .badges-stats {
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+  }
+
+  .clear-filters-btn {
+    padding: 0.5rem 1rem;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #d0d0d0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
+    }
+  }
+}
+
+.badges-filters {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input,
+    select {
+      padding: 0.6rem;
+      border: 2px solid #dee2e6;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: #ffd700;
+      }
+    }
+
+    input {
+      min-width: 300px;
+    }
+
+    select {
+      min-width: 200px;
+      cursor: pointer;
+    }
+  }
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.no-badges {
+  text-align: center;
+  padding: 3rem;
+  color: #777;
+  font-style: italic;
+  font-size: 1.2rem;
+  grid-column: 1 / -1;
+}
+
+.badge-card {
+  background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%);
+  border: 3px solid #ffd700;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  box-shadow:
+    0 2px 8px rgb(255 215 0 / 20%),
+    0 0 0 0 rgb(255 215 0 / 0);
+
+  &:hover {
+    border-color: #ffb700;
+    box-shadow:
+      0 8px 24px rgb(255 215 0 / 30%),
+      0 0 20px rgb(255 215 0 / 15%);
+    transform: translateY(-4px) scale(1.02);
+  }
+
+  .badge-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #ffe57f;
+
+    .badge-icon {
+      font-size: 2.5rem;
+      line-height: 1;
+      animation: shine 2s ease-in-out infinite;
+    }
+
+    .badge-title {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .badge-code {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #b8860b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .badge-season {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #d4a017;
+        background: #fff;
+        padding: 3px 8px;
+        border-radius: 12px;
+        width: fit-content;
+        border: 1px solid #ffd700;
+      }
+    }
+  }
+
+  .badge-description {
+    font-size: 0.95rem;
+    color: #5d4e37;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .badge-conditions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid #ffe57f;
+
+    strong {
+      display: block;
+      margin-bottom: 0.75rem;
+      color: #b8860b;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .conditions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .condition-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 2px solid #ffd700;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #fffef5;
+        transform: translateX(4px);
+      }
+
+      .condition-code {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #5d4e37;
+      }
+
+      .condition-quantity {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #d4a017;
+        background: #fff8e1;
+        padding: 3px 8px;
+        border-radius: 4px;
+        border: 1px solid #ffd700;
+      }
+    }
+  }
+}
+
+@keyframes shine {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.1) rotate(5deg);
+    filter: brightness(1.2);
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #777;
+  font-size: 1.2rem;
+}

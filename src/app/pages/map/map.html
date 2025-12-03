@@ -4,7 +4,6 @@
 @if (!loading()) {
   @for (layer of layers(); track layer) {
     <section class="layer-section">
-      <h2>{{ layer }}</h2>
       <div #mapContainer class="map-container">
         <div class="map-grid">
           @for (row of grid(); track $index) {
@@ -27,7 +26,8 @@
                             <img
                               class="character-marker-image"
                               [alt]="character.name"
-                              [src]="getCharacterSkinImageUrl(character.skin)" />
+                              [src]="getCharacterSkinImageUrl(character.skin)"
+                              (click)="onCharacterClick($event, character)" />
                           }
                         </div>
                       }

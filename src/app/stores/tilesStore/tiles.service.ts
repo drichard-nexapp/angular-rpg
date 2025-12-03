@@ -5,6 +5,7 @@ import { getLayerMapsMapsLayerGet, getMapByPositionMapsLayerXYGet } from '../../
 import { unwrapApiItem, unwrapApiResponse } from '../../shared/utils'
 import { TilesStore } from './tiles.store'
 import { subDays } from 'date-fns'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +13,16 @@ import { subDays } from 'date-fns'
 export class TilesService {
   private tilesStore = inject(TilesStore)
 
-  async initLayer(layer: 'overworld') {
+  loading = toSignal(this.tilesStore.useStore((state) => state.loading))
+  tiles = toSignal(this.tilesStore.useStore((state) => state.tiles))
+  lastUpdated = toSignal(this.tilesStore.useStore((state) => state.lastUpdated))
+
+  async initLayer(layer: 'overworld' | 'underground' | 'interior') {
     const tiles = await this.fetchAllLayerTiles(layer)
     return { name: layer, tiles }
   }
 
-  async fetchTileDetails(layer: 'overworld', pos: { x: number; y: number }) {
+  async fetchTileDetails(layer: 'overworld' | 'underground' | 'interior', pos: { x: number; y: number }) {
     const response = await getMapByPositionMapsLayerXYGet({
       path: {
         layer: layer,
@@ -36,7 +41,7 @@ export class TilesService {
 
     while (hasMore) {
       const layerResponse = await getLayerMapsMapsLayerGet({
-        path: { layer: layerName as 'overworld' },
+        path: { layer: layerName as 'overworld' | 'underground' | 'interior' },
         query: { page, size: 100 },
       })
 
@@ -57,9 +62,14 @@ export class TilesService {
     this.tilesStore.initStore()
     const state = this.tilesStore.getState()
 
-    if (state.lastUpdated && state.lastUpdated <= subDays(new Date(), 7))
-      void this.initLayer('overworld').then(({ tiles }) => {
-        const tilesById = tiles.reduce((acc, val) => {
+    if (!state.lastUpdated || state.lastUpdated <= subDays(new Date(), 7)) {
+      void Promise.all([
+        this.initLayer('overworld'),
+        this.initLayer('underground'),
+        this.initLayer('interior'),
+      ]).then((results) => {
+        const allTiles = results.flatMap((result) => result.tiles)
+        const tilesById = allTiles.reduce((acc, val) => {
           return { ...acc, [val.map_id]: val }
         }, {})
         this.tilesStore.setState({
@@ -68,5 +78,8 @@ export class TilesService {
           lastUpdated: new Date(),
         })
       })
+    } else {
+      this.tilesStore.setState({ loading: false })
+    }
   }
 }

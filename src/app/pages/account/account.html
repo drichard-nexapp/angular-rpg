@@ -1,0 +1,121 @@
+<main class="main">
+  <div class="content">
+    <div class="account-header">
+      <h1>My Account</h1>
+      <button class="refresh-btn" type="button" (click)="refresh()" [disabled]="accountService.loading()">
+        🔄 Refresh
+      </button>
+    </div>
+
+    @if (accountService.loading()) {
+      <div class="loading">Loading account details...</div>
+    }
+
+    @if (accountService.error()) {
+      <div class="error">Error: {{ accountService.error() }}</div>
+    }
+
+    @if (accountService.accountData() && !accountService.loading()) {
+      <div class="account-container">
+        <div class="account-card main-info">
+          <div class="card-header">
+            <div class="card-icon">👤</div>
+            <h2>Account Information</h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Username:</span>
+              <span class="value username">{{ accountService.accountData()!.username }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email:</span>
+              <span class="value">{{ accountService.accountData()!.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Status:</span>
+              <span class="value status" [attr.data-status]="accountService.accountData()!.status">
+                {{ accountService.accountData()!.status }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">Member:</span>
+              <span class="value" [class.member-active]="accountService.accountData()!.member">
+                {{ accountService.accountData()!.member ? '✓ Yes' : '✗ No' }}
+              </span>
+            </div>
+            @if (accountService.accountData()!.member_expiration) {
+              <div class="info-item full-width">
+                <span class="label">Member Until:</span>
+                <span class="value">{{ accountService.accountData()!.member_expiration | date: 'medium' }}</span>
+              </div>
+            }
+            <div class="info-item">
+              <span class="label">Banned:</span>
+              <span class="value" [class.banned]="accountService.accountData()!.banned">
+                {{ accountService.accountData()!.banned ? '⚠️ Yes' : '✓ No' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-card stats-info">
+          <div class="card-header">
+            <div class="card-icon">📊</div>
+            <h2>Statistics</h2>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card gems">
+              <div class="stat-icon">💎</div>
+              <div class="stat-details">
+                <div class="stat-label">Gems</div>
+                <div class="stat-value">{{ accountService.accountData()!.gems }}</div>
+              </div>
+            </div>
+            <div class="stat-card tokens">
+              <div class="stat-icon">🎟️</div>
+              <div class="stat-details">
+                <div class="stat-label">Event Tokens</div>
+                <div class="stat-value">{{ accountService.accountData()!.event_token }}</div>
+              </div>
+            </div>
+            <div class="stat-card achievements">
+              <div class="stat-icon">🏆</div>
+              <div class="stat-details">
+                <div class="stat-label">Achievement Points</div>
+                <div class="stat-value">{{ accountService.accountData()!.achievements_points }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @if (accountService.accountData()!.badges && accountService.accountData()!.badges!.length > 0) {
+          <div class="account-card badges-info">
+            <div class="card-header">
+              <div class="card-icon">🏅</div>
+              <h2>Badges</h2>
+            </div>
+            <div class="badges-list">
+              @for (badge of accountService.accountData()!.badges; track badge) {
+                <div class="badge-chip">{{ badge }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (accountService.accountData()!.skins && accountService.accountData()!.skins.length > 0) {
+          <div class="account-card skins-info">
+            <div class="card-header">
+              <div class="card-icon">🎨</div>
+              <h2>Owned Skins</h2>
+            </div>
+            <div class="skins-list">
+              @for (skin of accountService.accountData()!.skins; track skin) {
+                <div class="skin-chip">{{ skin }}</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</main>

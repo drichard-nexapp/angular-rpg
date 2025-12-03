@@ -1,0 +1,301 @@
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+  }
+
+  .refresh-btn {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #357abd 0%, #2d5a8f 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgb(74 144 226 / 30%);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.account-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.account-card {
+  background: #fff;
+  border: 3px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #f0f0f0;
+
+    .card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: #333;
+      font-weight: 700;
+    }
+  }
+}
+
+.main-info {
+  border-color: #4a90e2;
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      &.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+
+        &.username {
+          color: #4a90e2;
+          font-size: 1.3rem;
+          font-weight: 700;
+        }
+
+        &.status {
+          padding: 6px 12px;
+          border-radius: 6px;
+          width: fit-content;
+          text-transform: uppercase;
+          font-size: 0.9rem;
+
+          &[data-status='active'] {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+          }
+
+          &[data-status='inactive'] {
+            background: #fff3e0;
+            color: #e65100;
+            border: 2px solid #ff9800;
+          }
+
+          &[data-status='banned'] {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef5350;
+          }
+        }
+
+        &.member-active {
+          color: #27ae60;
+        }
+
+        &.banned {
+          color: #e74c3c;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+.stats-info {
+  border-color: #9c27b0;
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+
+    .stat-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border: 2px solid #dee2e6;
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+      }
+
+      &.gems {
+        border-color: #9c27b0;
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+
+        &:hover {
+          box-shadow: 0 4px 12px rgb(156 39 176 / 25%);
+        }
+      }
+
+      &.tokens {
+        border-color: #ff9800;
+        background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+
+        &:hover {
+          box-shadow: 0 4px 12px rgb(255 152 0 / 25%);
+        }
+      }
+
+      &.achievements {
+        border-color: #ffd700;
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+
+        &:hover {
+          box-shadow: 0 4px 12px rgb(255 215 0 / 25%);
+        }
+      }
+
+      .stat-icon {
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+
+      .stat-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .stat-label {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #666;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #333;
+        }
+      }
+    }
+  }
+}
+
+.badges-info {
+  border-color: #ffd700;
+
+  .badges-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .badge-chip {
+      background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+      border: 2px solid #ffd700;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #b8860b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgb(255 215 0 / 20%);
+      transition: all 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgb(255 215 0 / 30%);
+      }
+    }
+  }
+}
+
+.skins-info {
+  border-color: #e91e63;
+
+  .skins-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .skin-chip {
+      background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+      border: 2px solid #e91e63;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #c2185b;
+      text-transform: capitalize;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgb(233 30 99 / 20%);
+      transition: all 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgb(233 30 99 / 30%);
+      }
+    }
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #777;
+  font-size: 1.2rem;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #c62828;
+  font-weight: 600;
+}

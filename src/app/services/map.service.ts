@@ -10,19 +10,20 @@ import { QUERY_KEYS, APP_CONFIG } from '../shared/constants'
 })
 export class MapService {
   private currentTilePosition = signal<TilePosition | null>(null)
+  private currentLayer = signal<'overworld' | 'underground' | 'interior'>('overworld')
   public currentMonsterDetails = signal<Monster | null>(null)
   private currentResourceCode = signal<string | null>(null)
   private currentNpcCode = signal<string | null>(null)
 
   tileDetailsQuery = injectQuery(() => ({
-    queryKey: QUERY_KEYS.maps.tileDetails(this.currentTilePosition()?.x ?? 0, this.currentTilePosition()?.y || 0),
+    queryKey: QUERY_KEYS.maps.tileDetails(this.currentTilePosition()?.x ?? 0, this.currentTilePosition()?.y ?? 0),
     queryFn: async (): Promise<MapTile | null> => {
       const pos = this.currentTilePosition()
       if (!pos) return null
 
       const response = await getMapByPositionMapsLayerXYGet({
         path: {
-          layer: APP_CONFIG.MAP.DEFAULT_LAYER,
+          layer: this.currentLayer(),
           x: pos.x,
           y: pos.y,
         },
@@ -72,6 +73,14 @@ export class MapService {
 
   getTilePosition(): TilePosition | null {
     return this.currentTilePosition()
+  }
+
+  setCurrentLayer(layer: 'overworld' | 'underground' | 'interior'): void {
+    this.currentLayer.set(layer)
+  }
+
+  getCurrentLayer(): 'overworld' | 'underground' | 'interior' {
+    return this.currentLayer()
   }
 
   setResourceCode(code: string | null): void {

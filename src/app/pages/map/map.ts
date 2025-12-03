@@ -27,11 +27,15 @@ export class Map {
   characters = input.required<Character[]>()
   selectedCharacter = input<Character | null>(null)
   selectedTile = input<MapTile | null>(null)
+  currentLayer = input<'overworld' | 'underground' | 'interior'>('overworld')
   hoveredTile = signal<MapTile | null>(null)
 
   tileClick = output<MapTile>()
+  characterClick = output<string>()
   protected readonly grid = computed(() => {
-    const tiles = Object.values(this.store()?.tiles ?? [])
+    const allTiles = Object.values(this.store()?.tiles ?? [])
+    const layer = this.currentLayer()
+    const tiles = allTiles.filter((t) => t.layer === layer)
     if (tiles.length === 0) return []
 
     const minX = Math.min(...tiles.map((t) => t.x))
@@ -75,8 +79,16 @@ export class Map {
     this.tileClick.emit(tile)
   }
 
+  onCharacterClick(event: Event, character: Character): void {
+    event.stopPropagation()
+    if (character.layer) {
+      this.characterClick.emit(character.layer)
+    }
+  }
+
   hasCharacter(tile: MapTile | null): boolean {
     if (!tile) return false
+    const layer = this.currentLayer()
     return this.characters().some((char) => {
       if (!CharacterUtils.hasValidPosition(char)) {
         this.logger.warn(`Character ${char.name} has invalid position`, 'Map', {
@@ -87,7 +99,7 @@ export class Map {
         })
         return false
       }
-      return char.x === tile.x && char.y === tile.y
+      return char.x === tile.x && char.y === tile.y && char.layer === layer
     })
   }
 
@@ -99,11 +111,12 @@ export class Map {
 
   getCharactersAt(tile: MapTile | null): Character[] {
     if (!tile) return []
+    const layer = this.currentLayer()
     return this.characters().filter((char) => {
       if (!CharacterUtils.hasValidPosition(char)) {
         return false
       }
-      return char.x === tile.x && char.y === tile.y
+      return char.x === tile.x && char.y === tile.y && char.layer === layer
     })
   }
 
